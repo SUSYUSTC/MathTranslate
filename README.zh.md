@@ -1,7 +1,7 @@
 # MathTranslate
 [![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/SUSYUSTC/MathTranslate/blob/main/README.md)
 
-这是项目的目的是将科研论文从任何语言翻译到任何语言，同时完美兼容数学符号。大多数翻译软件无法很好地处理公式，这会让人感到恼火。
+本工具可以将科研论文从任何语言翻译到任何语言，同时完美兼容数学符号。大多数翻译软件无法很好地处理公式，这会让人感到恼火。
 该项目基于以下两个工具：
 1. mathpix: 提供了一个将text+equation图片转换成latex代码的接口。
 2. translate-shell: 提供google translate的终端界面
