@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import os
 import sys
+language_from = 'en'
+language_to = 'zh-CN'
 
 
 def is_connected(line_above, line_below):
@@ -90,10 +92,10 @@ text_original = connect_paragraphs(text_original)
 text_converted, eqs = convert_equations(text_original)
 text_converted = text_converted.replace('\\pm', '$\\pm$')
 text_converted = split_titles(text_converted)
-with open("/home/jiace/bin/tmp/temp.txt", "w") as file:
+with open("old_convert.tex", "w") as file:
     print(text_converted, file=file)
-os.system('trans -b -i /home/jiace/bin/tmp/temp.txt -from en -to zh-CN -o /home/jiace/bin/tmp/temp2.txt')
-text_translated = open("/home/jiace/bin/tmp/temp2.txt").read()
+os.system(f'trans -b -i old_convert.tex -from {language_from} -to {language_to} -o new_convert.tex')
+text_translated = open("new_convert.tex").read()
 text_final = text_translated
 
 for count, eq in enumerate(eqs):
