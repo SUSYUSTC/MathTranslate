@@ -1,5 +1,6 @@
 # MathTranslate
-[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/SUSYUSTC/MathTranslate/main/README.md)
+[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/SUSYUSTC/MathTranslate/blob/main/README.md)
+
 
 这是一个将带有大量数学符号的论文，在保持数学公式与符号不变的前提下，从任何语言翻译成任何语言的项目。在大多数翻译软件中，您无法保留公式，这会让您很苦恼。
 该项目基于以下两个工具：
