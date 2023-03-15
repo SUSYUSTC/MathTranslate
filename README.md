@@ -28,7 +28,7 @@ Here's an example of what you get finally.
 
 ## Features
 1. If your screenshot images are in order, the paragraphs splited by pages/figures will be automatically connected
-2. The mathpix generation operation (which is time-consuming) is cached. This means that you don't have to prepare all the screenshots one time. You could just get 1-2 and then decide whether to add more.
+2. The mathpix generation operation (which is time-consuming) is cached. This means that you don't have to run the whole stuff again if you only add 1 additional screenshot. You could just try 1-2 at the beginning and then decide whether to add more.
 
 
 ## Examples
