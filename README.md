@@ -1,4 +1,7 @@
 # MathTranslate
+[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/SUSYUSTC/MathTranslate/blob/main/README.md)
+[![zh](https://img.shields.io/badge/lang-zh-yellow.svg)](https://github.com/SUSYUSTC/MathTranslate/blob/main/README.zh.md)
+
 This is a project to provide translation of scientific papers with heavy math symbols from any language to any language while keeping the math symbols unchanged. In most translation softwares you wouldn't be able to keep equations and it would annoy you.
 This project is based on the following two tools:
 1. mathpix: it provides an interface to convert text+equation images to latex code.
@@ -26,7 +29,7 @@ Here's an example of what you get finally.
 
 4. Run `translate.sh` in this folder then `main.pdf` (and `main.tex`) is all you need!
 5. Since this project is small, sometimes you need to slightly change the final tex file for compilation.
-6. The current code is translating English into Chinese. If you want to translate from/to other languages, you just need to change `language_from` and `language_to` in `MathTranslate/scripts/translate_tex.py`
+6. The default code is translating English into Chinese. If you want to translate from/to other languages, you just need to change `language_from` and `language_to` in `MathTranslate/scripts/translate_tex.py`
 
 ## Features
 1. If your screenshot images are in order, the paragraphs splited by pages/figures will be automatically connected
