@@ -3,6 +3,7 @@ import os
 import sys
 language_from = 'en'
 language_to = 'zh-CN'
+# the code list for languages can bet obtained by running "trans -R" in your terminal
 
 
 def is_connected(line_above, line_below):
