@@ -19,8 +19,9 @@ Here's an example of what you get finally.
 ## Usage
 1. In `MathTranslate/scripts/mpix.py`, replace 'YOUR_APP_ID' and 'YOUR_APP_KEY' with the OCR ID and key you get from mathpix website (the rate limit is 200 times per minute which is more than enough unless you want to translate a huge batch)
 2. Add directory `MathTranslate/scripts` to PATH
-3. Screenshot each part of your paper one by one and name them by part1.png, part2.png, ... partXXX.png in your directory as showed in the following figure.
+3. Screenshot each part of your paper one by one and name them by part1.png, part2.png, ... partXXX.png in your directory as showed in the following figure. Basically each screenshot is half-page/one-page depending the paper layout and you just need to avoid including figures.
 <img src="https://user-images.githubusercontent.com/30529122/225232807-88c1dba4-f513-4688-9c6c-6dc7fa708cda.png" width="500">
+
 4. Run `translate.sh` in this folder then `main.pdf` (and `main.tex`) is all you need!
 5. Since this project is small, sometimes you need to slightly change the final tex file for compilation.
 6. The current code is translating English into Chinese. If you want to translate from/to other languages, you just need to change `language_from` and `language_to` in `MathTranslate/scripts/translate_tex.py`
