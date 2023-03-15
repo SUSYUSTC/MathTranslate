@@ -7,7 +7,7 @@ This project is based on the following two tools:
 1. mathpix: it provides an interface to convert text+equation images to latex code.
 2. translate-shell: it provides a terminal interface to google translate
 
-The main work in this project is to translate a latex file from one language to another and an interface to combine them.
+The main work in this project is to translate a latex file from one language to another and to develop an interface of the above two tools.
 
 Here's an example of what you get finally.
 <p float="left">
@@ -24,7 +24,7 @@ Here's an example of what you get finally.
 ## Usage
 1. In `MathTranslate/scripts/mpix.py`, replace 'YOUR_APP_ID' and 'YOUR_APP_KEY' with the OCR ID and key you get from mathpix website (the rate limit is 200 times per minute which is more than enough unless you want to translate a huge batch)
 2. Add directory `MathTranslate/scripts` to PATH
-3. Screenshot each part of your paper one by one and name them by part1.png, part2.png, ... partXXX.png in your directory as showed in the following figure. Basically each screenshot is half-page/one-page depending the paper layout and you just need to avoid including figures.
+3. Screenshot each part of your paper one by one and name them by part1.png, part2.png, ... partXXX.png in your directory as showed in the following figure. Basically each screenshot is half-page/one-page depending the paper layout and you just need to avoid including figures. Later developments will simplify this process and finally use single pdf as input.
 <img src="https://user-images.githubusercontent.com/30529122/225232807-88c1dba4-f513-4688-9c6c-6dc7fa708cda.png" width="500">
 
 4. Run `translate.sh` in this folder then `main.pdf` (and `main.tex`) is all you need!
@@ -34,7 +34,6 @@ Here's an example of what you get finally.
 ## Features
 1. If your screenshot images are in order, the paragraphs splited by pages/figures will be automatically connected
 2. The mathpix generation operation (which is time-consuming) is cached. This means that you don't have to run the whole stuff again if you only add 1 additional screenshot. You could just try 1-2 at the beginning and then decide whether to add more.
-
 
 ## Examples
 In the example directory, run `translate.sh` and you would expect to get the same with `main.tex` and `main.pdf`.
