@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import sys
+import mtranslate
 language_from = 'en'
 language_to = 'zh-CN'
 # the code list for languages can be obtained by running "trans -R" in your terminal
@@ -87,16 +88,15 @@ tex_end = r'''
 '''
 
 input_path = sys.argv[1]
-output_path = sys.argv[2]
+input_path_base, input_path_ext = os.path.splitext(input_path)
+assert input_path_ext != '.tex', "The input file should not end with .tex! Please change to .txt or something else"
+output_path = input_path_base + '.tex'
 text_original = open(input_path).read()
 text_original = connect_paragraphs(text_original)
 text_converted, eqs = convert_equations(text_original)
 text_converted = text_converted.replace('\\pm', '$\\pm$')
 text_converted = split_titles(text_converted)
-with open("old_convert.tex", "w") as file:
-    print(text_converted, file=file)
-os.system(f'trans -b -i old_convert.tex -from {language_from} -to {language_to} -o new_convert.tex')
-text_translated = open("new_convert.tex").read()
+text_translated = mtranslate.translate(text_converted, language_to, language_from)
 text_final = text_translated
 
 for count, eq in enumerate(eqs):
