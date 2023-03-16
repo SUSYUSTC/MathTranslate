@@ -11,7 +11,7 @@
 
 This is a project to provide translation of scientific papers with heavy math symbols from any language to any language while keeping the math symbols unchanged. In most translation softwares you wouldn't be able to keep equations and it would annoy you.
 This project is based on the following two tools:
-1. [mathpix](https://mathpix.com/): it provides an interface to convert text+equation images to latex code. Unfortunately it is not totally free. The price can be seen at  https://mathpix.com/pricing.
+1. [mathpix](https://mathpix.com/): it provides an interface to convert text+equation images to latex code. Unfortunately it is not totally free. The price can be seen at  https://mathpix.com/pricing. In further developments we will try our best to reduce the number of requests to save your money. (This project itself is 100% free and open-source!)
 2. [translate-shell](https://github.com/soimort/translate-shell): it provides a command line interface to google translate
 
 The main work in this project is to translate a latex file from one language to another and to develop an interface of the above two tools.
@@ -38,7 +38,7 @@ We are now supporting all operating systems! You only need to have python and pi
 <img src="https://user-images.githubusercontent.com/30529122/225747242-07b89c34-4f16-40f9-bebc-d0c0b1c4c8e8.png" width="600">
 
 2. Add directory `MathTranslate/scripts` to PATH
-3. Use mathpix to screenshot what you want to translate, copy the output latex code and save in a txt file. Let's say the filename is main.txt.
+3. Use mathpix to screenshot what you want to translate, copy the output latex code and save in a txt file. Let's say the filename is main.txt. mathpix currently recognizes continuous text (which can be one or more paragraphs). You can also screenshot and copy multiple separated texts and put them in the same txt file, we will automatically identify and merge the paragraphs separated by pictures or pages in the next step.
 4. Run `translate_tex.py main.txt`. You will get a translated tex file `main.tex` and a corresponding pdf file `main.pdf` in case `xelatex` is installed on your machine.
 5. Since this project is small, sometimes you need to slightly change the final tex file for compilation.
 6. The default code is translating English into Chinese. If you want to translate from/to other languages, you just need to change `language_from` and `language_to` in `MathTranslate/scripts/translate_tex.py`
@@ -48,6 +48,7 @@ In the example directory, you can see `english.tex` which is the mathpix output 
 
 ## Further developments
 1. Automatically extract images from pdf, process images in a batch and output a single translated pdf by one click!
-2. A more user-friendly interface.
+2. Reduce the number of mathpix requests by open-source techniques.
+3. A more user-friendly interface.
 
-If you are interested in making contribution, please contact me by susyustc@gmail.com or Wechat account sunjiace2262.
+If you are interested in making contributions, please contact me by susyustc@gmail.com or Wechat account sunjiace2262.
