@@ -25,8 +25,8 @@
 虽然它目前是一个小项目，但我们知道这个项目受到的关注比我们预期的要多得多。 我们正在计划更多的开发，以获得更好的用户体验。
 
 ## 安装需求
-1. 暂时只适用于Linux。 对于 Windows 用户，您可以使用适用于 Linux 的 Windows 子系统 (WSL)。 我们将很快支持其他系统。
-1. 一个 [mathpix](https://mathpix.com/) 帐户。 不幸的是，它是完全免费的。目前 mathpix 免费提供 100 个截图（注册时需要一封教育电子邮件）或者以每月 5 美元的价格提供 5000 个截图。
+1. 暂时只适用于Linux。 对于 Windows 用户，您可以使用 Windows Subsystem for Linux (WSL)。 我们将很快支持其他系统。
+1. 一个 [mathpix](https://mathpix.com/) 帐户。 不幸的是，它是完全免费的。目前 mathpix 免费提供 100 个截图（注册时需要一封edu电子邮件）或者以每月 5 美元的价格提供 5000 个截图。
 2. translate-shell: `sudo apt-get install translate-shell`
 3. texlive (或者任何可以从tex生成pdf的工具): `sudo apt-get install texlive-full`
 
