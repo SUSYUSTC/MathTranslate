@@ -24,20 +24,22 @@ Here's an example of what you get finally.
 
 Although it is currently a small project, we are aware that this project has received much more attention that we expected. We are planning more developments for better user experience.
 
+## Releases
+### Mar 16, 2023
+We are now supporting all operating systems! You only need to have python and pip to do everything.
+
 ## Requirements
-1. Only works for Linux temporarily. For windows user you can use Windows Subsystem for Linux (WSL). We will soon support other systems.
-2. A python3 interpreter.
-3. A [mathpix](https://mathpix.com/) account. Unfortunatedly it is not totally free. The current price is free for 100 screenshots (requires an educational email in registeration) and $5 per month for 5000 screenshots.
-4. translate-shell: `sudo apt-get install translate-shell`
-5. texlive (or any other tool to generate pdf from tex): `sudo apt-get install texlive-full`
+1. A [mathpix](https://mathpix.com/) account. Unfortunatedly it is not totally free. The current price is free for 100 screenshots (requires an educational email in registeration) and $5 per month for 5000 screenshots.
+2. Python3 and library `mtranslate`: `pip install mtranslate`
+3. texlive (or any other tool to generate pdf from tex)
 
 ## Usage
 1. Download mathpix. In the Settings-Formatting, change "Inline math delimiters" and "Block mode delimiters" to "\\( ... \\)" and "\\[ ... \\]", respectively.
 <img src="https://user-images.githubusercontent.com/30529122/225747242-07b89c34-4f16-40f9-bebc-d0c0b1c4c8e8.png" width="600">
 
 2. Add directory `MathTranslate/scripts` to PATH
-3. Use mathpix to screenshot what you want to translate, copy the output latex code and save in a tex file. Let's say the filename is old.tex.
-4. Run `translate_tex.py old.tex new.tex` in this folder (you could change "new" to anything you like). You will get a translated tex file new.tex and a corresponding pdf file in case `xelatex` is installed on your machine.
+3. Use mathpix to screenshot what you want to translate, copy the output latex code and save in a txt file. Let's say the filename is main.txt.
+4. Run `translate_tex.py main.txt`. You will get a translated tex file `main.tex` and a corresponding pdf file `main.pdf` in case `xelatex` is installed on your machine.
 5. Since this project is small, sometimes you need to slightly change the final tex file for compilation.
 6. The default code is translating English into Chinese. If you want to translate from/to other languages, you just need to change `language_from` and `language_to` in `MathTranslate/scripts/translate_tex.py`
 
@@ -45,8 +47,7 @@ Although it is currently a small project, we are aware that this project has rec
 In the example directory, you can see `english.tex` which is the mathpix output of a part of a recent paper. Run `translate_tex.py english.tex chinese.tex` and you would expect to get the same output with the existing `chinese.tex` and `chinese.pdf`.
 
 ## Further developments
-1. Support for different operating systems.
-2. Automatically extract images from pdf, process images in a batch and output a single translated pdf by one click!
-3. A more user-friendly interface.
+1. Automatically extract images from pdf, process images in a batch and output a single translated pdf by one click!
+2. A more user-friendly interface.
 
 If you are interested in making contribution, please contact me by susyustc@gmail.com or Wechat account sunjiace2262.
