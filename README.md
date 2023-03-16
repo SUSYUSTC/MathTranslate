@@ -50,4 +50,4 @@ In the example directory, run `translate.sh` and you would expect to get the sam
 2. Automatically extract text boxes from pdf file to avoid screenshots
 3. Make it more user-friendly
 
-If you are interested in making contribution, please contact me by susyustc@gmail.com.
+If you are interested in making contribution, please contact me by susyustc@gmail.com or Wechat account sunjiace2262.
