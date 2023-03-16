@@ -50,4 +50,4 @@
 2. 自动从pdf文件中提取文本框以避免截图
 3. 简化用户界面
 
-如果您有兴趣做出贡献，请通过 susyustc@gmail.com 与我联系。
+如果您有兴趣做出贡献，请通过 susyustc@gmail.com 与我联系或加我微信号 sunjiace2262。
