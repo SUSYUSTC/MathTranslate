@@ -11,7 +11,7 @@
 
 大多数翻译软件无法很好地处理论文中的数学公式，许多科研工作者为此饱受困扰。本项目可以将含有大量数学公式的科研论文在任何语言之间翻译。
 该项目基于以下两个工具：
-1. [mathpix](https://mathpix.com/): 提供了一个将 text+equation 图片转换成 latex 代码的接口。不幸的是它不是完全免费的，价格可以在 https://mathpix.com/pricing 查看，但我们在后续开发中会尽量减少需要的使用次数以节省您的开支。（我们的软件本身是完全免费开源的！）
+1. [mathpix](https://mathpix.com/): 提供了一个将 text+equation 图片转换成 latex 代码的接口。不幸的是它不是完全免费的，价格可以在 https://mathpix.com/pricing 查看。在后续开发中我们会尽量减少需要的使用次数以节省您的开支。（我们的软件本身是完全免费开源的！）
 2. [translate-shell](https://github.com/soimort/translate-shell): 提供 google translate 的终端界面。
 
 该项目的主要工作是将 LaTex 文件从一种语言翻译成另一种语言，并提供一个将以上两个工具组合起来的界面。
@@ -47,7 +47,8 @@
 在示例目录中，您可以看到 `main.txt`，它是最近一篇论文的一部分的 mathpix 输出。 运行 `translate_tex.py main.txt`，您会获得 `main.tex` 和 `main.pdf` 。
 
 ## 进一步开发
-1. 自动从pdf文件中提取文本框以避免截图
-2. 简化用户界面
+1. 自动从pdf中提取图片，批量处理图片，一键输出整个翻译好的pdf！
+2. 通过开源软件减少 mathpix 的请求次数。
+3. 简化用户界面。
 
 如果您有兴趣做出贡献，请通过 susyustc@gmail.com 与我联系或加我微信号 sunjiace2262。
