@@ -31,7 +31,9 @@ Although it is currently a small project, we are aware that this project has rec
 4. texlive (or any other tool to generate pdf from tex): `sudo apt-get install texlive-full`
 
 ## Usage
-1. Download mathpix. In the Settings-Formatting, change "Inline math delimiters" and "Block mode delimiters" to "\( ... \)" and "\[ ... \]", respectively.
+1. Download mathpix. In the Settings-Formatting, change "Inline math delimiters" and "Block mode delimiters" to "\\( ... \\)" and "\\[ ... \\]", respectively.
+<img src="https://user-images.githubusercontent.com/30529122/225747242-07b89c34-4f16-40f9-bebc-d0c0b1c4c8e8.png" width="600">
+
 2. Add directory `MathTranslate/scripts` to PATH
 3. Use mathpix to screenshot what you want to translate, copy the output latex code and save in a tex file. Let's say the filename is old.tex.
 4. Run `translate_tex.py old.tex new.tex` in this folder (you could change "new" to anything you like). You will get a translated tex file new.tex and a corresponding pdf file in case `xelatex` is installed on your machine.
