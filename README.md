@@ -14,7 +14,7 @@ This project is based on the following two tools:
 1. [mathpix](https://mathpix.com/): it provides an interface to convert text+equation images to latex code. Unfortunately it is not totally free. The price can be seen at  https://mathpix.com/pricing. In further developments we will try our best to reduce the number of requests to save your money. (This project itself is 100% free and open-source!)
 2. google translate
 
-The main work in this project is to translate a latex file from one language to another and to develop an interface of the above two tools.
+The main work of this project is to translate LaTex files based on Google Translate of plain text, with mathpix combined we can finally translate pdf (or other formats) to pdf.
 
 Here's an example of what you get finally.
 <p float="left">
