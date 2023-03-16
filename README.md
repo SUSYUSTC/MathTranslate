@@ -40,7 +40,7 @@ In the example directory, run `translate.sh` and you would expect to get the sam
 
 ## Further developments
 1. Make it compatible on different operating systems
-2. Automatically extract text boxes from pdf file
+2. Automatically extract text boxes from pdf file to avoid screenshots
 3. Make it more user-friendly
 
 If you are interested in making contribution, please contact me by susyustc@gmail.com.
