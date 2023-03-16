@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://github.com/SUSYUSTC/MathTranslate">
-    <img width=20% src="logo_zh.jpg">
+    <img width=30% src="logo_zh.jpg">
   </a>
 </p>
 
