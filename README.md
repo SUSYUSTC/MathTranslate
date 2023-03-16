@@ -44,7 +44,7 @@ We are now supporting all operating systems! You only need to have python and pi
 6. The default code is translating English into Chinese. If you want to translate from/to other languages, you just need to change `language_from` and `language_to` in `MathTranslate/scripts/translate_tex.py`
 
 ## Examples
-In the example directory, you can see `main.tex` which is the mathpix output of a part of a recent paper. Run `translate_tex.py main.txt` and you will get the `main.tex` and `main.pdf`.
+In the example directory, you can see `main.txt` which is the mathpix output of a part of a recent paper. Run `translate_tex.py main.txt` and you will get the `main.tex` and `main.pdf`.
 
 ## Further developments
 1. Automatically extract images from pdf, process images in a batch and output a single translated pdf by one click!
