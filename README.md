@@ -27,7 +27,7 @@ Although it is currently a small project, we are aware that this project has rec
 ## Requirements
 1. Only works for Linux temporarily. For windows user you can use Windows Subsystem for Linux (WSL). We will soon support other systems.
 2. A python3 interpreter.
-3. A [mathpix](https://mathpix.com/) account. Unfortunatedly it is totally free. The current price is free for 100 screenshots (requires an educational email in registeration) and $5 per month for 5000 screenshots.
+3. A [mathpix](https://mathpix.com/) account. Unfortunatedly it is not totally free. The current price is free for 100 screenshots (requires an educational email in registeration) and $5 per month for 5000 screenshots.
 4. translate-shell: `sudo apt-get install translate-shell`
 5. texlive (or any other tool to generate pdf from tex): `sudo apt-get install texlive-full`
 
