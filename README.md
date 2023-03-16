@@ -2,6 +2,13 @@
 [![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/SUSYUSTC/MathTranslate/blob/main/README.md)
 [![zh](https://img.shields.io/badge/lang-zh-yellow.svg)](https://github.com/SUSYUSTC/MathTranslate/blob/main/README.zh.md)
 
+<p align="center">
+  <a href="https://github.com/SUSYUSTC/MathTranslate">
+    <img width=30% src="logo.jpg">
+  </a>
+</p>
+
+
 This is a project to provide translation of scientific papers with heavy math symbols from any language to any language while keeping the math symbols unchanged. In most translation softwares you wouldn't be able to keep equations and it would annoy you.
 This project is based on the following two tools:
 1. mathpix: it provides an interface to convert text+equation images to latex code.

@@ -1,5 +1,13 @@
 # MathTranslate
 [![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/SUSYUSTC/MathTranslate/blob/main/README.md)
+[![zh](https://img.shields.io/badge/lang-zh-yellow.svg)](https://github.com/SUSYUSTC/MathTranslate/blob/main/README.zh.md)
+
+<p align="center">
+  <a href="https://github.com/SUSYUSTC/MathTranslate">
+    <img width=30% src="logo.jpg">
+  </a>
+</p>
+
 
 本工具可以将科研论文从任何语言翻译到任何语言，同时完美兼容数学符号。大多数翻译软件无法很好地处理公式，这会让人感到恼火。
 该项目基于以下两个工具：
