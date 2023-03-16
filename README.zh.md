@@ -26,9 +26,10 @@
 
 ## 安装需求
 1. 暂时只适用于Linux。 对于 Windows 用户，您可以使用 Windows Subsystem for Linux (WSL)。 我们将很快支持其他系统。
-1. 一个 [mathpix](https://mathpix.com/) 帐户。 不幸的是，它不是完全免费的。目前 mathpix 免费提供 100 个截图（注册时需要一封edu电子邮件）或者以每月 5 美元的价格提供 5000 个截图。
-2. translate-shell: `sudo apt-get install translate-shell`
-3. texlive (或者任何可以从tex生成pdf的工具): `sudo apt-get install texlive-full`
+2. Python3。建议使用 conda 安装。
+3. 一个 [mathpix](https://mathpix.com/) 帐户。 不幸的是，它不是完全免费的。目前 mathpix 免费提供 100 个截图（注册时需要一封edu电子邮件）或者以每月 5 美元的价格提供 5000 个截图。
+4. translate-shell: `sudo apt-get install translate-shell`
+5. texlive (或者任何可以从tex生成pdf的工具): `sudo apt-get install texlive-full`
 
 ## 使用
 1. 下载mathpix。 在 Settings-Formatting 中，将“Inline math delimiters”和“Block mode delimiters”分别改为“\\( ... \\)”和“\\[ ... \\]”。
