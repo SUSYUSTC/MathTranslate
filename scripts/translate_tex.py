@@ -4,7 +4,52 @@ import sys
 import mtranslate
 language_from = 'en'
 language_to = 'zh-CN'
-# the code list for languages can be obtained by running "trans -R" in your terminal
+# Here's the full list of symbols for languages (provided by google translate command line software)
+'''
+┌───────────────────────┬───────────────────────┬───────────────────────┐
+│ Afrikaans      -   af │ Hebrew         -   he │ Portuguese     -   pt │
+│ Albanian       -   sq │ Hill Mari      -  mrj │ Punjabi        -   pa │
+│ Amharic        -   am │ Hindi          -   hi │ Querétaro Otomi-  otq │
+│ Arabic         -   ar │ Hmong          -  hmn │ Romanian       -   ro │
+│ Armenian       -   hy │ Hmong Daw      -  mww │ Russian        -   ru │
+│ Azerbaijani    -   az │ Hungarian      -   hu │ Samoan         -   sm │
+│ Bashkir        -   ba │ Icelandic      -   is │ Scots Gaelic   -   gd │
+│ Basque         -   eu │ Igbo           -   ig │ Serbian (Cyr...-sr-Cyrl
+│ Belarusian     -   be │ Indonesian     -   id │ Serbian (Latin)-sr-Latn
+│ Bengali        -   bn │ Irish          -   ga │ Sesotho        -   st │
+│ Bosnian        -   bs │ Italian        -   it │ Shona          -   sn │
+│ Bulgarian      -   bg │ Japanese       -   ja │ Sindhi         -   sd │
+│ Cantonese      -  yue │ Javanese       -   jv │ Sinhala        -   si │
+│ Catalan        -   ca │ Kannada        -   kn │ Slovak         -   sk │
+│ Cebuano        -  ceb │ Kazakh         -   kk │ Slovenian      -   sl │
+│ Chichewa       -   ny │ Khmer          -   km │ Somali         -   so │
+│ Chinese Simp...- zh-CN│ Klingon        -  tlh │ Spanish        -   es │
+│ Chinese Trad...- zh-TW│ Klingon (pIqaD)tlh-Qaak Sundanese      -   su │
+│ Corsican       -   co │ Korean         -   ko │ Swahili        -   sw │
+│ Croatian       -   hr │ Kurdish        -   ku │ Swedish        -   sv │
+│ Czech          -   cs │ Kyrgyz         -   ky │ Tahitian       -   ty │
+│ Danish         -   da │ Lao            -   lo │ Tajik          -   tg │
+│ Dutch          -   nl │ Latin          -   la │ Tamil          -   ta │
+│ Eastern Mari   -  mhr │ Latvian        -   lv │ Tatar          -   tt │
+│ Emoji          -  emj │ Lithuanian     -   lt │ Telugu         -   te │
+│ English        -   en │ Luxembourgish  -   lb │ Thai           -   th │
+│ Esperanto      -   eo │ Macedonian     -   mk │ Tongan         -   to │
+│ Estonian       -   et │ Malagasy       -   mg │ Turkish        -   tr │
+│ Fijian         -   fj │ Malay          -   ms │ Udmurt         -  udm │
+│ Filipino       -   tl │ Malayalam      -   ml │ Ukrainian      -   uk │
+│ Finnish        -   fi │ Maltese        -   mt │ Urdu           -   ur │
+│ French         -   fr │ Maori          -   mi │ Uzbek          -   uz │
+│ Frisian        -   fy │ Marathi        -   mr │ Vietnamese     -   vi │
+│ Galician       -   gl │ Mongolian      -   mn │ Welsh          -   cy │
+│ Georgian       -   ka │ Myanmar        -   my │ Xhosa          -   xh │
+│ German         -   de │ Nepali         -   ne │ Yiddish        -   yi │
+│ Greek          -   el │ Norwegian      -   no │ Yoruba         -   yo │
+│ Gujarati       -   gu │ Papiamento     -  pap │ Yucatec Maya   -  yua │
+│ Haitian Creole -   ht │ Pashto         -   ps │ Zulu           -   zu │
+│ Hausa          -   ha │ Persian        -   fa │                       │
+│ Hawaiian       -  haw │ Polish         -   pl │                       │
+└───────────────────────┴───────────────────────┴───────────────────────┘
+'''
 
 
 def is_connected(line_above, line_below):
