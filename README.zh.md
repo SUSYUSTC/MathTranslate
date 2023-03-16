@@ -9,12 +9,12 @@
 </p>
 
 
-本工具可以将科研论文从任何语言翻译到任何语言，同时完美兼容数学符号。大多数翻译软件无法很好地处理公式，这会让人感到恼火。
+大多数翻译软件无法很好地处理论文中的数学公式，许多科研工作者为此饱受困扰。本项目可以将含有大量数学公式的科研论文在任何语言之间翻译。
 该项目基于以下两个工具：
 1. mathpix: 提供了一个将text+equation图片转换成latex代码的接口。
 2. translate-shell: 提供google translate的终端界面
 
-该项目的主要工作是将LaTex文件从一种语言翻译成另一种语言，和并提供一个将以上两个工具组合起来的界面。
+该项目的主要工作是将LaTex文件从一种语言翻译成另一种语言，并提供一个将以上两者组合起来的界面。
 
 这里是示例：
 <p float="left">
@@ -26,7 +26,7 @@
 1. 一个带有OCR的mathpix账号 https://mathpix.com/docs/ocr/overview
 2. 带有`requests`库的python 3：可以通过`pip install requests`安装
 3. translate-shell: 可以通过`sudo apt-get install translate-shell`安装
-4. texlive (或者任何一个可以从tex生成pdf的工具): 可以通过`sudo apt-get install texlive-full`安装
+4. texlive (或者任何可以从tex生成pdf的工具): 可以通过`sudo apt-get install texlive-full`安装
 
 ## 使用
 1. 在 `MathTranslate/scripts/mpix.py` 中，将 'YOUR_APP_ID' 和 'YOUR_APP_KEY' 替换为您从 mathpix 网站获得的 OCR ID 和密钥（速率限制为每分钟 200 次，这已经足够了，除非您想翻译大批量文档）
