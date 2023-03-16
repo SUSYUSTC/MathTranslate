@@ -3,7 +3,7 @@ import os
 import sys
 language_from = 'en'
 language_to = 'zh-CN'
-# the code list for languages can bet obtained by running "trans -R" in your terminal
+# the code list for languages can be obtained by running "trans -R" in your terminal
 
 
 def is_connected(line_above, line_below):
@@ -106,3 +106,5 @@ with open(output_path, "w") as file:
     print(tex_begin, file=file)
     print(text_final, file=file)
     print(tex_end, file=file)
+
+os.system(f'xelatex {output_path}')
