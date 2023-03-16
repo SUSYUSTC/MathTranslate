@@ -26,12 +26,14 @@
 
 ## 安装需求
 1. 暂时只适用于Linux。 对于 Windows 用户，您可以使用 Windows Subsystem for Linux (WSL)。 我们将很快支持其他系统。
-1. 一个 [mathpix](https://mathpix.com/) 帐户。 不幸的是，它是完全免费的。目前 mathpix 免费提供 100 个截图（注册时需要一封edu电子邮件）或者以每月 5 美元的价格提供 5000 个截图。
+1. 一个 [mathpix](https://mathpix.com/) 帐户。 不幸的是，它不是完全免费的。目前 mathpix 免费提供 100 个截图（注册时需要一封edu电子邮件）或者以每月 5 美元的价格提供 5000 个截图。
 2. translate-shell: `sudo apt-get install translate-shell`
 3. texlive (或者任何可以从tex生成pdf的工具): `sudo apt-get install texlive-full`
 
 ## 使用
 1. 下载mathpix。 在 Settings-Formatting 中，将“Inline math delimiters”和“Block mode delimiters”分别改为“\( ... \)”和“\[ ... \]”。
+ <img src="https://user-images.githubusercontent.com/30529122/225747242-07b89c34-4f16-40f9-bebc-d0c0b1c4c8e8.png" width="600">
+ 
 2. 添加目录 `MathTranslate/scripts` 到 PATH。
 3. 用mathpix把你要翻译的内容截图，复制输出的latex代码，保存到tex文件中。假设文件名为 old.tex。
 
