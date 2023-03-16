@@ -12,7 +12,7 @@
 This is a project to provide translation of scientific papers with heavy math symbols from any language to any language while keeping the math symbols unchanged. In most translation softwares you wouldn't be able to keep equations and it would annoy you.
 This project is based on the following two tools:
 1. [mathpix](https://mathpix.com/): it provides an interface to convert text+equation images to latex code. Unfortunately it is not totally free. The price can be seen at  https://mathpix.com/pricing. In further developments we will try our best to reduce the number of requests to save your money. (This project itself is 100% free and open-source!)
-2. [translate-shell](https://github.com/soimort/translate-shell): it provides a command line interface to google translate
+2. google translate
 
 The main work in this project is to translate a latex file from one language to another and to develop an interface of the above two tools.
 
