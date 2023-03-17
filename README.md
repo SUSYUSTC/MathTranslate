@@ -18,8 +18,8 @@ The main work of this project is to translate LaTex files based on Google Transl
 
 Here's an example of what you get finally.
 <p float="left">
-<img src="https://user-images.githubusercontent.com/30529122/225237425-9341b03e-25b5-4617-b606-5e3813de3ec2.png" width="260">
-<img src="https://user-images.githubusercontent.com/30529122/225234174-78af1e5f-aeff-4dd8-9f4c-d948edc35318.png" width="400">
+<img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/screenshot.png" width="400">
+<img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/translated.png" width="360">
 </p>
 
 Although it is currently a small project, we are aware that this project has received much more attention that we expected. We are planning more developments for better user experience.
@@ -44,7 +44,7 @@ We are now supporting all operating systems! You only need to have python and pi
 6. The default code is translating English into Chinese. If you want to translate from/to other languages, you just need to change `language_from` and `language_to` in `MathTranslate/scripts/translate_tex.py`
 
 ## Examples
-In the example directory, you can see `main.txt` which is the mathpix output of a part of a recent paper. Run `translate_tex.py main.txt` and you will get the `main.tex` and `main.pdf`.
+In the example directory, you can see `main.txt` which is the mathpix output of a part of `paper.pdf`. Run `translate_tex.py main.txt` and you will get the `main.tex` and `main.pdf`. `translated.png` is what you should expect to see in the `main.pdf`.
 
 ## Further developments
 1. Automatically extract images from pdf, process images in a batch and output a single translated pdf by one click!
