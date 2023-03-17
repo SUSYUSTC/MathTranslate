@@ -1,5 +1,5 @@
 example_old
-*.swp
-*egg*
+**.swp
+**egg**
 build
-*pycache*
+**pycache**
