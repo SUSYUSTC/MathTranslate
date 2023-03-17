@@ -18,8 +18,8 @@ The main work of this project is to translate LaTex files based on Google Transl
 
 Here's an example of what you get finally.
 <p float="left">
-<img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/screenshot.png" width="400">
-<img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/translated.png" width="360">
+<img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/screenshot.png" width="300">
+<img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/translated.png" width="400">
 </p>
 
 Although it is currently a small project, we are aware that this project has received much more attention that we expected. We are planning more developments for better user experience.
