@@ -1,1 +1,1 @@
-rm -f ./main.aux ./main.log
+rm -f ./main.aux ./main.log ./main.tex ./main.pdf

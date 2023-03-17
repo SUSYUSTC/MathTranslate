@@ -75,7 +75,7 @@ def connect_paragraphs(text):
 
 def is_title(line_above, line_below):
     if len(line_above) > 0 and len(line_below) > 0:
-        if line_above[-1] != '.' and line_above[0].isupper() and line_below[0].isupper():
+        if line_above[-1] != '.' and (not line_above[0].islower()) and line_below[0].isupper():
             return True
     return False
 
@@ -124,7 +124,8 @@ def convert_equations(text):
 
 
 tex_begin = r'''
-\documentclass[UTF8]{ctexart}
+\documentclass[UTF8]{article}
+\usepackage{xeCJK}
 \usepackage{amsmath,amssymb}
 \begin{document}
 '''
