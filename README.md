@@ -1,6 +1,7 @@
 # MathTranslate
-[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/SUSYUSTC/MathTranslate/blob/main/README.md)
-[![zh](https://img.shields.io/badge/lang-zh-yellow.svg)](https://github.com/SUSYUSTC/MathTranslate/blob/main/README.zh.md)
+
+<p align="center"> English | <a href="README_zh.md"> 简体中文 </a></p>
+
 
 <p align="center">
   <a href="https://github.com/SUSYUSTC/MathTranslate">
