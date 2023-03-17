@@ -31,7 +31,7 @@
 ## 安装需求
 1. 一个 [mathpix](https://mathpix.com/) 帐户。 不幸的是，它不是完全免费的。目前 mathpix 免费提供 100 个截图（注册时需要一封edu电子邮件）或者以每月 5 美元的价格提供 5000 个截图。
 2. Python3 和 [mtranslate](https://pypi.org/project/mtranslate) 包: `pip install mtranslate`
-3. texlive (或者任何可以从tex生成pdf的工具)
+3. texlive (或者任何可以从tex生成pdf的工具)，中文输出需要 CJK 包。
 
 ## 使用
 1. 下载 mathpix 。 在 Settings-Formatting 中，将“Inline math delimiters”和“Block mode delimiters”分别改为“\\( ... \\)”和“\\[ ... \\]”。

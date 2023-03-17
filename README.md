@@ -31,7 +31,7 @@ We are now supporting all operating systems! You only need to have python and pi
 ## Requirements
 1. A [mathpix](https://mathpix.com/) account. Unfortunatedly it is not totally free. The current price is free for 100 screenshots (requires an educational email in registeration) and $5 per month for 5000 screenshots.
 2. Python3 and library `mtranslate`: `pip install mtranslate`
-3. texlive (or any other tool to generate pdf from tex)
+3. texlive (or any other tool to generate pdf from tex). For Chinese you would need CJK package.
 
 ## Usage
 1. Download mathpix. In the Settings-Formatting, change "Inline math delimiters" and "Block mode delimiters" to "\\( ... \\)" and "\\[ ... \\]", respectively.
