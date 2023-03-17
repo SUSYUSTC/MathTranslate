@@ -18,8 +18,8 @@
 
 这里是示例：
 <p float="left">
-<img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/screenshot.png" width="500">
-<img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/translated.png" width="450">
+<img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/screenshot.png" width="400">
+<img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/translated.png" width="360">
 </p>
 
 虽然它目前是一个小项目，但我们知道这个项目受到的关注比我们预期的要多得多。 我们正在计划更多的开发，以获得更好的用户体验。
