@@ -13,50 +13,72 @@ tex_end = r'''
 \end{document}
 '''
 
+
 language_list = '''
-┌───────────────────────┬───────────────────────┬───────────────────────┐
-│ Afrikaans      -   af │ Hebrew         -   he │ Portuguese     -   pt │
-│ Albanian       -   sq │ Hill Mari      -  mrj │ Punjabi        -   pa │
-│ Amharic        -   am │ Hindi          -   hi │ Querétaro Otomi-  otq │
-│ Arabic         -   ar │ Hmong          -  hmn │ Romanian       -   ro │
-│ Armenian       -   hy │ Hmong Daw      -  mww │ Russian        -   ru │
-│ Azerbaijani    -   az │ Hungarian      -   hu │ Samoan         -   sm │
-│ Bashkir        -   ba │ Icelandic      -   is │ Scots Gaelic   -   gd │
-│ Basque         -   eu │ Igbo           -   ig │ Serbian (Cyr...-sr-Cyrl
-│ Belarusian     -   be │ Indonesian     -   id │ Serbian (Latin)-sr-Latn
-│ Bengali        -   bn │ Irish          -   ga │ Sesotho        -   st │
-│ Bosnian        -   bs │ Italian        -   it │ Shona          -   sn │
-│ Bulgarian      -   bg │ Japanese       -   ja │ Sindhi         -   sd │
-│ Cantonese      -  yue │ Javanese       -   jv │ Sinhala        -   si │
-│ Catalan        -   ca │ Kannada        -   kn │ Slovak         -   sk │
-│ Cebuano        -  ceb │ Kazakh         -   kk │ Slovenian      -   sl │
-│ Chichewa       -   ny │ Khmer          -   km │ Somali         -   so │
-│ Chinese Simp...- zh-CN│ Klingon        -  tlh │ Spanish        -   es │
-│ Chinese Trad...- zh-TW│ Klingon (pIqaD)tlh-Qaak Sundanese      -   su │
-│ Corsican       -   co │ Korean         -   ko │ Swahili        -   sw │
-│ Croatian       -   hr │ Kurdish        -   ku │ Swedish        -   sv │
-│ Czech          -   cs │ Kyrgyz         -   ky │ Tahitian       -   ty │
-│ Danish         -   da │ Lao            -   lo │ Tajik          -   tg │
-│ Dutch          -   nl │ Latin          -   la │ Tamil          -   ta │
-│ Eastern Mari   -  mhr │ Latvian        -   lv │ Tatar          -   tt │
-│ Emoji          -  emj │ Lithuanian     -   lt │ Telugu         -   te │
-│ English        -   en │ Luxembourgish  -   lb │ Thai           -   th │
-│ Esperanto      -   eo │ Macedonian     -   mk │ Tongan         -   to │
-│ Estonian       -   et │ Malagasy       -   mg │ Turkish        -   tr │
-│ Fijian         -   fj │ Malay          -   ms │ Udmurt         -  udm │
-│ Filipino       -   tl │ Malayalam      -   ml │ Ukrainian      -   uk │
-│ Finnish        -   fi │ Maltese        -   mt │ Urdu           -   ur │
-│ French         -   fr │ Maori          -   mi │ Uzbek          -   uz │
-│ Frisian        -   fy │ Marathi        -   mr │ Vietnamese     -   vi │
-│ Galician       -   gl │ Mongolian      -   mn │ Welsh          -   cy │
-│ Georgian       -   ka │ Myanmar        -   my │ Xhosa          -   xh │
-│ German         -   de │ Nepali         -   ne │ Yiddish        -   yi │
-│ Greek          -   el │ Norwegian      -   no │ Yoruba         -   yo │
-│ Gujarati       -   gu │ Papiamento     -  pap │ Yucatec Maya   -  yua │
-│ Haitian Creole -   ht │ Pashto         -   ps │ Zulu           -   zu │
-│ Hausa          -   ha │ Persian        -   fa │                       │
-│ Hawaiian       -  haw │ Polish         -   pl │                       │
-└───────────────────────┴───────────────────────┴───────────────────────┘
+Afrikaans            af
+Irish                ga
+Albanian             sq
+Italian              it
+Arabic               ar
+Japanese             ja
+Azerbaijani          az
+Kannada              kn
+Basque               eu
+Korean               ko
+Bengali              bn
+Latin                la
+Belarusian           be
+Latvian              lv
+Bulgarian            bg
+Lithuanian           lt
+Catalan              ca
+Macedonian           mk
+Chinese_Simplified   zh-CN
+Malay                ms
+Chinese_Traditional  zh-TW
+Maltese              mt
+Croatian             hr
+Norwegian            no
+Czech                cs
+Persian              fa
+Danish               da
+Polish               pl
+Dutch                nl
+Portuguese           pt
+English              en
+Romanian             ro
+Esperanto            eo
+Russian              ru
+Estonian             et
+Serbian              sr
+Filipino             tl
+Slovak               sk
+Finnish              fi
+Slovenian            sl
+French               fr
+Spanish              es
+Galician             gl
+Swahili              sw
+Georgian             ka
+Swedish              sv
+German               de
+Tamil                ta
+Greek                el
+Telugu               te
+Gujarati             gu
+Thai                 th
+Haitian_Creole       ht
+Turkish              tr
+Hebrew               iw
+Ukrainian            uk
+Hindi                hi
+Urdu                 ur
+Hungarian            hu
+Vietnamese           vi
+Icelandic            is
+Welsh                cy
+Indonesian           id
+Yiddish              yi
 '''
 
 
@@ -155,13 +177,17 @@ def translate_tex(input_path, output_path, language_to, language_from):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("file", nargs=1, type=str, description='input file')
-    parser.add_argument("-from", default='en', dest='l_from', description='language from')
-    parser.add_argument("-to", default='zh-CN', dest='l_to', description='language to')
-    parser.add_argument("--list", action='store_true', description='list all languages')
+    parser.add_argument("file", nargs='?', type=str, help='input file')
+    parser.add_argument("-from", default='en', dest='l_from', help='language from, default is en (english)')
+    parser.add_argument("-to", default='zh-CN', dest='l_to', help='language to, default is zh-CN (chinese)')
+    parser.add_argument("--list", action='store_true', help='list codes for languages')
     options = parser.parse_args()
-    if options.l:
+    if options.list:
         print(language_list)
+        sys.exit()
+
+    if options.file is None:
+        parser.print_help()
         sys.exit()
 
     input_path = options.file

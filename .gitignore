@@ -2,3 +2,4 @@ example_old
 *.swp
 *egg*
 build
+*pycache*
