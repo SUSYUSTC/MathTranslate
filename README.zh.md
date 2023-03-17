@@ -50,7 +50,7 @@
 3. texlive (或者任何可以从tex生成pdf的工具)，中文输出需要 CJK 包。
 
 ## 使用
-1. 下载 mathpix 。 在 Settings-Formatting 中，将“Inline math delimiters”和“Block mode delimiters”分别改为“\\( ... \\)”和“\\[ ... \\]”。
+1. 下载 mathpix。 在 Settings-Formatting 中，将“Inline math delimiters”和“Block mode delimiters”分别改为“\\( ... \\)”和“\\[ ... \\]”。
  <img src="https://user-images.githubusercontent.com/30529122/225747242-07b89c34-4f16-40f9-bebc-d0c0b1c4c8e8.png" width="600">
  
 2. 添加目录 `MathTranslate/scripts` 到 PATH。
@@ -67,4 +67,4 @@
 2. 通过开源软件减少 mathpix 的请求次数。
 3. 简化用户界面。
 
-如果您有兴趣做出贡献，请通过 susyustc@gmail.com 与我联系或加我微信号 sunjiace2262。
+如果您有兴趣做出贡献，请通过 susyustc@gmail.com 与我联系。
