@@ -1,12 +1,14 @@
-2.1 Molecular orbital based machine learning (MOB-ML)
-The total energy of a given chemical system can be written as the sum of the Hartree-Fock and correlation energies. The correlation energy, \( E_{\text {corr }} \), can be further decomposed into pair energies, \( \epsilon_{i j} \), associated with occupied molecular orbitals (MO) \( i \) and \( j \), such that \( E_{\mathrm{corr}}=\sum_{i j} \epsilon_{i j} \). MOB-ML learns pair energies by \( \epsilon_{i j} \approx \epsilon^{\mathrm{ML}}\left(\boldsymbol{f}_{i j}\right) \), where the features \( \boldsymbol{f}_{i j} \) describe the interactions between the molecular orbitals.[13] Due to the different scales of the values, the diagonal pair energies \( \epsilon_{\mathrm{d}}=\left\{\epsilon_{i j} \mid i=j\right\} \) and the offdiagonal pair energies \( \epsilon_{\mathrm{o}}=\left\{\epsilon_{i j} \mid i \neq j\right\} \) are trained separately, effectively producing two different models.
-2.2 Gaussian Processes (GP)
-Gaussian Processes (GP) are non-parametric kernel-based machine learning methods that predict the probabilistic distribution of unobserved data. Given the observed data \( (X, y), X \in \mathbb{R}^{N \times d}, y \in \mathbb{R}^{N} \) with a Gaussian noise \( \sigma^{2} \in \mathbb{R} \) and a prior covariance function or kernel \( K: \mathbb{R}^{d} \times \mathbb{R}^{d} \rightarrow \mathbb{R} \), the prediction \( f\left(X^{\prime}\right) \) test points \( X^{\prime} \in \mathbb{R}^{M \times d} \) is a joint Gaussian distribution such that
+Because the DS equations are algebraic when \( D=0 \), we can derive this asymptotic behavior analytically: We substitute \( G_{2 n}=(-1)^{n+1}(2 n-1) ! g_{2 n} \), multiply the \( 2 n \)th DS equation by \( x^{2 n} \), sum from \( n=1 \) to \( \infty \), and define the generating function \( u(x) \equiv x g_{2}+x^{3} g_{4}+x^{5} g_{6}+\cdots \). The differential equation satisfied by \( u(x) \) is nonlinear:
 \[
-\mathbb{E}\left[f\left(X^{\prime}\right)\right]=K\left(X^{\prime}, X\right) \hat{K}^{-1} y, \quad \operatorname{Var}\left[f\left(X^{\prime}\right)\right]=K\left(X^{\prime}, X\right) \hat{K}^{-1} K\left(X, X^{\prime}\right),
+u^{\prime \prime}(x)=3 u^{\prime}(x) u(x)-u^{3}(x)-x
 \]
-where \( \hat{K}=K(X, X)+\sigma^{2} I \). The hyperparameters, which include the Gaussian noise and kernel parameters, are learned in GP training by maximizing the log marginal likelihood
+where \( u(0)=0 \) and \( u^{\prime}(0)=G_{2} \). We linearize (5) by substituting \( u(x)=-y^{\prime}(x) / y(x) \) and get \( y^{\prime \prime \prime}(x)=x y(x) \), where \( y(0)=1, y^{\prime}(0)=0, y^{\prime \prime}(0)=-G_{2} \). The exact solution satisfying these initial conditions is
 \[
-L=-\frac{1}{2} y^{T} \hat{K}^{-1} y-\frac{1}{2} \log |\hat{K}|-\frac{N}{2} \log 2 \pi .
+y(x)=\frac{2 \sqrt{2}}{\Gamma(1 / 4)} \int_{0}^{\infty} d t \cos (x t) e^{-t^{4} / 4} .
 \]
-The typical way to calculate the above quantities is the Cholesky decomposition, which has a time complexity of \( O\left(N^{3}\right) \) and a memory complexity of \( O\left(N^{2}\right) \). Such complexities limit the training size of GP-based models, such as MOB-ML, to around 50000 data points.
+If \( y(x)=0 \), the generating function \( u(x) \) becomes infinite, so the smallest value of \( |x| \) at which \( y(x)=0 \) is the radius of convergence of the series for \( u(x) \). A simple plot shows that \( y(x) \) vanishes at \( x_{0}= \pm 2.4419682 \ldots \) [9]. Therefore, \( r=1 / x_{0}=0.409506 \ldots \), which confirms (4).
+
+The asymptotic behavior in (4) indicates that \( G_{2 n} \) grows much faster than the \( \gamma_{2 n} \) as \( n \rightarrow \infty \) :
+\[
+\gamma_{2 n}=\frac{\int_{-\infty}^{\infty} d x x^{2 n} e^{-x^{4} / 4}}{\int_{-\infty}^{\infty} d x e^{-x^{4} / 4}} \sim 2^{n} \frac{\Gamma(n / 2+1 / 4)}{\Gamma(1 / 4)} .
+\]

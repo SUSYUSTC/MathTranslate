@@ -141,6 +141,7 @@ text_original = open(input_path).read()
 text_original = connect_paragraphs(text_original)
 text_converted, eqs = convert_equations(text_original)
 text_converted = text_converted.replace('\\pm', '$\\pm$')
+text_converted = text_converted.replace('Eq.', 'equation')
 text_converted = split_titles(text_converted)
 text_translated = mtranslate.translate(text_converted, language_to, language_from)
 text_final = text_translated
