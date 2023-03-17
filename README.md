@@ -1,6 +1,19 @@
 # MathTranslate
 
-<p align="center"> English | <a href="README.zh.md"> 简体中文 </a></p>
+<p align="center">
+  <!-- tests (GitHub actions) -->
+  <a href="https://github.com/SUSYUSTC/MathTranslate/actions/workflows/ci.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/SUSYUSTC/MathTranslate/ci.yml?branch=master" />
+  </a>
+  <!-- PyPI -->
+  <a href="https://pypi.org/project/mathtranslate/">
+    <img src="https://img.shields.io/pypi/v/mathtranslate.svg?logo=pypi"/>
+  </a>
+  <!-- License -->
+  <a href="./LICENSE">
+    <img src="https://img.shields.io/badge/license-Apache%202.0-yellow.svg?logo=apache"/>
+  </a>
+</p>
 
 
 <p align="center">
@@ -9,6 +22,7 @@
   </a>
 </p>
 
+<p align="center"> English | <a href="README.zh.md"> 简体中文 </a></p>
 
 This is a project to provide translation of scientific papers with heavy math symbols from any language to any language while keeping the math symbols unchanged. In most translation softwares you wouldn't be able to keep equations and it would annoy you.
 This project is based on the following two tools:
@@ -52,4 +66,4 @@ In the example directory, you can see `main.txt` which is the mathpix output of 
 2. Reduce the number of mathpix requests by open-source techniques.
 3. A more user-friendly interface.
 
-If you are interested in making contributions, please contact me by susyustc@gmail.com or Wechat account sunjiace2262.
+If you are interested in making contributions, please contact me by susyustc@gmail.com.
