@@ -2,10 +2,18 @@
 import os
 import sys
 import mtranslate
-language_from = 'en'
-language_to = 'zh-CN'
-# Here's the full list of symbols for languages (provided by google translate command line software)
+
+tex_begin = r'''
+\documentclass[UTF8]{article}
+\usepackage{xeCJK}
+\usepackage{amsmath,amssymb}
+\begin{document}
 '''
+tex_end = r'''
+\end{document}
+'''
+
+language_list = '''
 ┌───────────────────────┬───────────────────────┬───────────────────────┐
 │ Afrikaans      -   af │ Hebrew         -   he │ Portuguese     -   pt │
 │ Albanian       -   sq │ Hill Mari      -  mrj │ Punjabi        -   pa │
@@ -123,35 +131,42 @@ def convert_equations(text):
     return text, eqs
 
 
-tex_begin = r'''
-\documentclass[UTF8]{article}
-\usepackage{xeCJK}
-\usepackage{amsmath,amssymb}
-\begin{document}
-'''
-tex_end = r'''
-\end{document}
-'''
+def translate_tex(input_path, output_path, language_to, language_from):
+    text_original = open(input_path).read()
+    text_original = connect_paragraphs(text_original)
+    text_converted, eqs = convert_equations(text_original)
+    text_converted = text_converted.replace('\\pm', '$\\pm$')
+    text_converted = text_converted.replace('Eq.', 'equation')
+    text_converted = split_titles(text_converted)
+    text_translated = mtranslate.translate(text_converted, language_to, language_from)
+    text_final = text_translated
 
-input_path = sys.argv[1]
-input_path_base, input_path_ext = os.path.splitext(input_path)
-assert input_path_ext != '.tex', "The input file should not end with .tex! Please change to .txt or something else"
-output_path = input_path_base + '.tex'
-text_original = open(input_path).read()
-text_original = connect_paragraphs(text_original)
-text_converted, eqs = convert_equations(text_original)
-text_converted = text_converted.replace('\\pm', '$\\pm$')
-text_converted = text_converted.replace('Eq.', 'equation')
-text_converted = split_titles(text_converted)
-text_translated = mtranslate.translate(text_converted, language_to, language_from)
-text_final = text_translated
+    for count, eq in enumerate(eqs):
+        text_final = text_final.replace(f'XXXXX{count}XX', eq)
 
-for count, eq in enumerate(eqs):
-    text_final = text_final.replace(f'XXXXX{count}XX', eq)
+    with open(output_path, "w") as file:
+        print(tex_begin, file=file)
+        print(text_final, file=file)
+        print(tex_end, file=file)
 
-with open(output_path, "w") as file:
-    print(tex_begin, file=file)
-    print(text_final, file=file)
-    print(tex_end, file=file)
+    os.system(f'xelatex {output_path}')
 
-os.system(f'xelatex {output_path}')
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("file", nargs=1, type=str, description='input file')
+    parser.add_argument("-from", default='en', dest='l_from', description='language from')
+    parser.add_argument("-to", default='zh-CN', dest='l_to', description='language to')
+    parser.add_argument("--list", action='store_true', description='list all languages')
+    options = parser.parse_args()
+    if options.l:
+        print(language_list)
+        sys.exit()
+
+    input_path = options.file
+    input_path_base, input_path_ext = os.path.splitext(input_path)
+    assert input_path_ext != '.tex', "The input file should not end with .tex! Please change to .txt or something else"
+    output_path = input_path_base + '.tex'
+
+    translate_tex(input_path, output_path, options.l_to, options.l_from)
