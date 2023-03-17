@@ -171,8 +171,6 @@ def translate_tex(input_path, output_path, language_to, language_from):
         print(text_final, file=file)
         print(tex_end, file=file)
 
-    os.system(f'xelatex {output_path}')
-
 
 if __name__ == '__main__':
     import argparse
@@ -196,3 +194,6 @@ if __name__ == '__main__':
     output_path = input_path_base + '.tex'
 
     translate_tex(input_path, output_path, options.l_to, options.l_from)
+    print(output_path, 'is generated')
+
+    os.system(f'xelatex {output_path}')
