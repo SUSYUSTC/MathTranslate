@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import os
 import sys
-import mtranslate
 
 tex_begin = r'''
 \documentclass[UTF8]{article}
@@ -154,6 +153,7 @@ def convert_equations(text):
 
 
 def translate_tex(input_path, output_path, language_to, language_from):
+    import mtranslate
     text_original = open(input_path).read()
     text_original = connect_paragraphs(text_original)
     text_converted, eqs = convert_equations(text_original)
