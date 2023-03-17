@@ -18,8 +18,8 @@
 
 这里是示例：
 <p float="left">
-<img src="https://user-images.githubusercontent.com/30529122/225237425-9341b03e-25b5-4617-b606-5e3813de3ec2.png" width="260">
-<img src="https://user-images.githubusercontent.com/30529122/225234174-78af1e5f-aeff-4dd8-9f4c-d948edc35318.png" width="400">
+<img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/screenshot.png" width="500">
+<img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/translated.png" width="450">
 </p>
 
 虽然它目前是一个小项目，但我们知道这个项目受到的关注比我们预期的要多得多。 我们正在计划更多的开发，以获得更好的用户体验。
@@ -44,7 +44,7 @@
 6. 默认代码是将英文翻译成中文。如果你更改任意一端的语言，你只需要在 `MathTranslate/scripts/translate_tex.py` 中更改 `language_from` 和 `language_to`即可。
 
 ## 例子
-在示例目录中，您可以看到 `main.txt`，它是最近一篇论文的一部分的 mathpix 输出。 运行 `translate_tex.py main.txt`，您会获得 `main.tex` 和 `main.pdf` 。
+在示例目录中，您可以看到 `main.txt`，它是 `paper.pdf` 的一部分的 mathpix 输出。 运行 `translate_tex.py main.txt`，您会获得 `main.tex` 和 `main.pdf` 。`translated.png` 是你在 `main.pdf` 里预期会看到的内容。
 
 ## 进一步开发
 1. 自动从pdf中提取图片，批量处理图片，一键输出整个翻译好的pdf！
