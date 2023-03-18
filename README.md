@@ -1,6 +1,19 @@
 # MathTranslate
 
-<p align="center"> English | <a href="README.zh.md"> 简体中文 </a></p>
+<p align="center">
+  <!-- tests (GitHub actions) -->
+  <a href="https://github.com/SUSYUSTC/MathTranslate/actions/workflows/ci.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/SUSYUSTC/MathTranslate/ci.yml?branch=master" />
+  </a>
+  <!-- PyPI -->
+  <a href="https://pypi.org/project/mathtranslate/">
+    <img src="https://img.shields.io/pypi/v/mathtranslate.svg?logo=pypi"/>
+  </a>
+  <!-- License -->
+  <a href="./LICENSE">
+    <img src="https://img.shields.io/badge/license-Apache%202.0-yellow.svg?logo=apache"/>
+  </a>
+</p>
 
 
 <p align="center">
@@ -9,10 +22,11 @@
   </a>
 </p>
 
+<p align="center"> English | <a href="README.zh.md"> 简体中文 </a></p>
 
 This is a project to provide translation of scientific papers with heavy math symbols from any language to any language while keeping the math symbols unchanged. In most translation softwares you wouldn't be able to keep equations and it would annoy you.
 This project is based on the following two tools:
-1. [mathpix](https://mathpix.com/): it provides an interface to convert text+equation images to latex code. Unfortunately it is not totally free. The price can be seen at  https://mathpix.com/pricing. In further developments we will try our best to reduce the number of requests to save your money. (This project itself is 100% free and open-source!)
+1. [mathpix](https://mathpix.com/): it provides an interface to convert text+equation images to latex code. Unfortunately, it is not totally free. The price can be seen at  https://mathpix.com/pricing. In further developments, we will try our best to reduce the number of requests to save your money. (This project itself is 100% free and open-source!)
 2. google translate
 
 The main work of this project is to translate LaTex files based on Google Translate of plain text, with mathpix combined we can finally translate pdf (or other formats) to pdf.
@@ -30,8 +44,8 @@ Although it is currently a small project, we are aware that this project has rec
 We are now supporting all operating systems! Now you can install simply by `pip install mathtranslate`.
 
 ## Requirements
-1. A [mathpix](https://mathpix.com/) account. Unfortunatedly it is not totally free. The current price is free for 100 screenshots (requires an educational email in registeration) and $5 per month for 5000 screenshots.
-2. Python3 and pip.
+1. A [mathpix](https://mathpix.com/) account. Unfortunately, it is not totally free. The current price is free for 100 screenshots (requires an educational email in registeration) and $5 per month for 5000 screenshots.
+2. Python3 and library `mtranslate`: `pip install mtranslate`
 3. texlive (or any other tool to generate pdf from tex). For Chinese you would need CJK package.
 
 ## Installation
@@ -54,4 +68,4 @@ In the example directory, you can see `main.txt` which is the mathpix output of 
 2. Reduce the number of mathpix requests by open-source techniques.
 3. A more user-friendly interface.
 
-If you are interested in making contributions, please contact me by susyustc@gmail.com or Wechat account sunjiace2262.
+If you are interested in making contributions, please contact me by susyustc@gmail.com.
