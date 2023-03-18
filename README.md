@@ -45,7 +45,7 @@ We are now supporting all operating systems! Now you can install simply by `pip 
 
 ## Requirements
 1. A [mathpix](https://mathpix.com/) account. Unfortunately, it is not totally free. The current price is free for 100 screenshots (requires an educational email in registeration) and $5 per month for 5000 screenshots.
-2. Python3 and library `mtranslate`: `pip install mtranslate`
+2. Python3 and pip.
 3. texlive (or any other tool to generate pdf from tex). For Chinese you would need CJK package.
 
 ## Installation
