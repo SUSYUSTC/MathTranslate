@@ -24,6 +24,8 @@
 
 <p align="center"> English | <a href="README.zh.md"> 简体中文 </a></p>
 
+**Since google translate cannot be used in China mainland, we will add support of other translation engines as soon as possible.**
+
 This is a project to provide translation of scientific papers with heavy math symbols from any language to any language while keeping the math symbols unchanged. In most translation softwares you wouldn't be able to keep equations and it would annoy you.
 This project is based on the following two tools:
 1. [mathpix](https://mathpix.com/): it provides an interface to convert text+equation images to latex code. Unfortunately, it is not totally free. The price can be seen at  https://mathpix.com/pricing. In further developments, we will try our best to reduce the number of requests to save your money. (This project itself is 100% free and open-source!)
