@@ -183,7 +183,6 @@ def translate_tex(input_path, output_path, engine, language_to, language_from):
     text_converted = text_converted.replace('\\pm', '$\\pm$')
     text_converted = text_converted.replace('Eq.', 'equation')
     text_converted = split_titles(text_converted)
-    print(text_converted)
     text_translated = translate_by_part(Translator, text_converted, language_to, language_from, 5000)
     text_final = text_translated
 
