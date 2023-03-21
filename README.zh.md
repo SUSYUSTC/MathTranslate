@@ -51,7 +51,7 @@
 3. texlive (或者任何可以从tex生成pdf的工具)，中文输出需要 CJK 包。
 
 ## 安装
-`pip install mathtranslate`
+`pip install --upgrade mathtranslate`
 
 ## 使用
 1. 下载 mathpix。 在 Settings-Formatting 中，将“Inline math delimiters”和“Block mode delimiters”分别改为“\\( ... \\)”和“\\[ ... \\]”。
