@@ -156,6 +156,22 @@ def convert_equations(text):
     return text, eqs
 
 
+def translate_by_part(Translator, text, language_to, language_from, limit):
+    lines = text.split('\n')
+    parts = []
+    part = ''
+    for line in lines:
+        if len(part) + len(line) < limit - 10:
+            part = part + '\n' + line
+        else:
+            parts.append(part)
+            part = line
+    parts.append(part)
+    parts_translated = [Translator.translate(part, language_to, language_from) for part in parts]
+    text_translated = '\n'.join(parts_translated)
+    return text_translated
+
+
 def translate_tex(input_path, output_path, engine, language_to, language_from):
     if engine == 'google':
         import mtranslate as Translator
@@ -167,7 +183,8 @@ def translate_tex(input_path, output_path, engine, language_to, language_from):
     text_converted = text_converted.replace('\\pm', '$\\pm$')
     text_converted = text_converted.replace('Eq.', 'equation')
     text_converted = split_titles(text_converted)
-    text_translated = Translator.translate(text_converted, language_to, language_from)
+    print(text_converted)
+    text_translated = translate_by_part(Translator, text_converted, language_to, language_from, 5000)
     text_final = text_translated
 
     for count, eq in enumerate(eqs):
