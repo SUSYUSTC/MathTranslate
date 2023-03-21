@@ -81,6 +81,10 @@ Yiddish              yi
 '''
 
 
+def variable_code(count):
+    return f'XXXXX_{count}_XXXXX'
+
+
 def is_connected(line_above, line_below):
     if len(line_above) > 0 and len(line_below) > 0:
         if line_above[-1] != '.' and line_below[0].islower():
@@ -131,7 +135,7 @@ def convert_next(text, pattern_begin, pattern_end, count):
     after_slic = slice(position_end + l, None)
     if position_begin != -1:
         eq = text[eq_slic]
-        text = text[before_slic] + f'XXXXX{count}XX' + text[after_slic]
+        text = text[before_slic] + variable_code(count) + text[after_slic]
         return text, eq
     else:
         return None
@@ -152,19 +156,22 @@ def convert_equations(text):
     return text, eqs
 
 
-def translate_tex(input_path, output_path, language_to, language_from):
-    import mtranslate
+def translate_tex(input_path, output_path, engine, language_to, language_from):
+    if engine == 'google':
+        import mtranslate as Translator
+    else:
+        assert False, 'engine must be google'
     text_original = open(input_path).read()
     text_original = connect_paragraphs(text_original)
     text_converted, eqs = convert_equations(text_original)
     text_converted = text_converted.replace('\\pm', '$\\pm$')
     text_converted = text_converted.replace('Eq.', 'equation')
     text_converted = split_titles(text_converted)
-    text_translated = mtranslate.translate(text_converted, language_to, language_from)
+    text_translated = Translator.translate(text_converted, language_to, language_from)
     text_final = text_translated
 
     for count, eq in enumerate(eqs):
-        text_final = text_final.replace(f'XXXXX{count}XX', eq)
+        text_final = text_final.replace(variable_code(count), eq)
 
     with open(output_path, "w") as file:
         print(tex_begin, file=file)
@@ -173,11 +180,13 @@ def translate_tex(input_path, output_path, language_to, language_from):
 
 
 if __name__ == '__main__':
+    from mathtranslate.config import default_engine, default_language_from, default_language_to
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("file", nargs='?', type=str, help='input file')
-    parser.add_argument("-from", default='en', dest='l_from', help='language from, default is en (english)')
-    parser.add_argument("-to", default='zh-CN', dest='l_to', help='language to, default is zh-CN (chinese)')
+    parser.add_argument("-engine", default=default_engine, help=f'translation engine, avaiable options include google. default is {default_engine}')
+    parser.add_argument("-from", default=default_language_from, dest='l_from', help=f'language from, default is {default_language_from}')
+    parser.add_argument("-to", default=default_language_to, dest='l_to', help=f'language to, default is {default_language_to}')
     parser.add_argument("--list", action='store_true', help='list codes for languages')
     options = parser.parse_args()
     if options.list:
@@ -193,7 +202,7 @@ if __name__ == '__main__':
     assert input_path_ext != '.tex', "The input file should not end with .tex! Please change to .txt or something else"
     output_path = input_path_base + '.tex'
 
-    translate_tex(input_path, output_path, options.l_to, options.l_from)
+    translate_tex(input_path, output_path, options.engine, options.l_to, options.l_from)
     print(output_path, 'is generated')
 
     os.system(f'xelatex {output_path}')
