@@ -1,6 +1,19 @@
 # MathTranslate
 
-<p align="center"> <a href="README.md">English</a> |  简体中文 </p>
+<p align="center">
+  <!-- tests (GitHub actions) -->
+  <a href="https://github.com/SUSYUSTC/MathTranslate/actions/workflows/ci.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/SUSYUSTC/MathTranslate/ci.yml?branch=master" />
+  </a>
+  <!-- PyPI -->
+  <a href="https://pypi.org/project/mathtranslate/">
+    <img src="https://img.shields.io/pypi/v/mathtranslate.svg?logo=pypi"/>
+  </a>
+  <!-- License -->
+  <a href="./LICENSE">
+    <img src="https://img.shields.io/badge/license-Apache%202.0-yellow.svg?logo=apache"/>
+  </a>
+</p>
 
 
 <p align="center">
@@ -9,6 +22,9 @@
   </a>
 </p>
 
+<p align="center"> <a href="README.md">English</a> |  简体中文 </p>
+
+**由于谷歌翻译在中国大陆无法使用，我们会尽快添加其他翻译引擎的支持。**
 
 大多数翻译软件无法很好地处理论文中的数学公式，许多科研工作者为此饱受困扰。本项目可以将含有大量数学公式的科研论文在任何语言之间翻译。
 该项目基于以下两个工具：
@@ -38,7 +54,7 @@
 `pip install mathtranslate`
 
 ## 使用
-1. 下载 mathpix 。 在 Settings-Formatting 中，将“Inline math delimiters”和“Block mode delimiters”分别改为“\\( ... \\)”和“\\[ ... \\]”。
+1. 下载 mathpix。 在 Settings-Formatting 中，将“Inline math delimiters”和“Block mode delimiters”分别改为“\\( ... \\)”和“\\[ ... \\]”。
  <img src="https://user-images.githubusercontent.com/30529122/225747242-07b89c34-4f16-40f9-bebc-d0c0b1c4c8e8.png" width="600">
  
 2. 用 mathpix 把你要翻译的内容截图，复制输出的 latex 代码，保存到 txt 文件中。mathpix 目前可以识别连贯的文字（可以是一段或多段）。您也可以连续截图-复制多段分隔开的文字放在同一个 txt 文件中，我们在下一步的翻译中会自动识别与合并被图片或者分页隔开的段落。
@@ -54,4 +70,4 @@
 2. 通过开源软件减少 mathpix 的请求次数。
 3. 简化用户界面。
 
-如果您有兴趣做出贡献，请通过 susyustc@gmail.com 与我联系或加我微信号 sunjiace2262。
+如果您有兴趣做出贡献，请通过 susyustc@gmail.com 与我联系。
