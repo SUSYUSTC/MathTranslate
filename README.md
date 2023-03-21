@@ -51,7 +51,7 @@ We are now supporting all operating systems! Now you can install simply by `pip 
 3. texlive (or any other tool to generate pdf from tex). For Chinese you would need CJK package.
 
 ## Installation
-`pip install mathtranslate`
+`pip install --upgrade mathtranslate`
 
 ## Usage
 1. Download mathpix. In the Settings-Formatting, change "Inline math delimiters" and "Block mode delimiters" to "\\( ... \\)" and "\\[ ... \\]", respectively.
