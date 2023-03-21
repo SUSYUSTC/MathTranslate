@@ -17,7 +17,7 @@ setuptools.setup(
     url="https://github.com/SUSYUSTC/MathTranslate",
     packages=setuptools.find_packages(),
     include_package_data=True,
-    install_requires=["mtranslate==1.8.0"],
+    install_requires=["mtranslate", "baidu_trans"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
