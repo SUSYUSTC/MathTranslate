@@ -17,6 +17,15 @@ def set_variable(path, default):
         return default
 
 
+def reread():
+    global default_engine, default_language_from, default_language_to, tencent_secret_id, tencent_secret_key
+    default_engine = read_variable(default_engine_path, default_engine_default)
+    default_language_from = read_variable(default_language_from_path, default_language_from_default)
+    default_language_to = read_variable(default_language_to_path, default_language_to_default)
+    tencent_secret_id = read_variable(tencent_secret_id_path, tencent_secret_id_default)
+    tencent_secret_key = read_variable(tencent_secret_key_path, tencent_secret_key_default)
+
+
 default_engine_path = 'DEFAULT_ENGINE'
 default_language_from_path = 'DEFAULT_LANGUAGE_FROM'
 default_language_to_path = 'DEFAULT_LANGUAGE_TO'
