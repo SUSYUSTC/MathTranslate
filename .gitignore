@@ -3,3 +3,6 @@ example_old
 **egg**
 build
 **pycache**
+**TENCENT**
+**DEFAULT**
+dist/*
