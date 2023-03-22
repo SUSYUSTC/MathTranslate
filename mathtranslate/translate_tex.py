@@ -172,18 +172,14 @@ def translate_by_part(Translator, text, language_to, language_from, limit):
     return text_translated
 
 
-def translate_tex(input_path, output_path, engine, language_to, language_from):
-    if engine == 'google':
-        import mtranslate as Translator
-    else:
-        assert False, 'engine must be google'
+def translate_tex(Translator, input_path, output_path, engine, language_to, language_from):
     text_original = open(input_path).read()
     text_original = connect_paragraphs(text_original)
     text_converted, eqs = convert_equations(text_original)
     text_converted = text_converted.replace('\\pm', '$\\pm$')
     text_converted = text_converted.replace('Eq.', 'equation')
     text_converted = split_titles(text_converted)
-    text_translated = translate_by_part(Translator, text_converted, language_to, language_from, 5000)
+    text_translated = translate_by_part(Translator, text_converted, language_to, language_from, 2000)
     text_final = text_translated
 
     for count, eq in enumerate(eqs):
@@ -213,12 +209,18 @@ if __name__ == '__main__':
         parser.print_help()
         sys.exit()
 
+    if options.engine == 'google':
+        import mtranslate as Translator
+    elif options.engine == 'tencent':
+        import mathtranslate.txtranslate as Translator
+    else:
+        assert False, 'engine must be google or tencent'
     input_path = options.file
     input_path_base, input_path_ext = os.path.splitext(input_path)
     assert input_path_ext != '.tex', "The input file should not end with .tex! Please change to .txt or something else"
     output_path = input_path_base + '.tex'
 
-    translate_tex(input_path, output_path, options.engine, options.l_to, options.l_from)
+    translate_tex(Translator, input_path, output_path, options.engine, options.l_to, options.l_from)
     print(output_path, 'is generated')
 
     os.system(f'xelatex {output_path}')
