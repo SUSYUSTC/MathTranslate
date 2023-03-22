@@ -1,25 +1,38 @@
-default_engine = 'google'  # google or tencent
-default_language_from = 'en'
-default_language_to = 'zh-CN'
-
-# Do not change the following unless you know what you are doing
-# 请不要更改下面的代码，除非您理解自己在做什么
-
 import os
 from . import ROOT
 
-if os.environ.get("TENCENTCLOUD_SECRET_ID") is not None:
-    tencent_secret_id = os.environ.get("TENCENTCLOUD_SECRET_ID")
-elif os.path.exists(f'{ROOT}/TENCENT_ID'):
-    tencent_secret_id = open(f'{ROOT}/TENCENT_ID').read().replace(' ', '').replace('\n', '')
-else:
-    tencent_secret_id = None
 
-if os.environ.get("TENCENTCLOUD_SECRET_KEY") is not None:
-    tencent_secret_key = os.environ.get("TENCENTCLOUD_SECRET_KEY")
-elif os.path.exists(f'{ROOT}/TENCENT_KEY'):
-    tencent_secret_key = open(f'{ROOT}/TENCENT_KEY').read().replace(' ', '').replace('\n', '')
-else:
-    tencent_secret_key = None
+def read_variable(path, default):
+    if os.path.exists(f'{ROOT}/{path}'):
+        return open(f'{ROOT}/{path}').read().replace(' ', '').replace('\n', '')
+    else:
+        return default
+
+
+def set_variable(path, default):
+    var = input().replace(' ', '').replace('\n', '')
+    if var != '':
+        return print(var, open(f'{ROOT}/{path}', 'w'))
+    else:
+        return default
+
+
+default_engine_path = 'DEFAULT_ENGINE'
+default_language_from_path = 'DEFAULT_LANGUAGE_FROM'
+default_language_to_path = 'DEFAULT_LANGUAGE_TO'
+tencent_secret_id_path = 'TENCENT_ID'
+tencent_secret_key_path = 'TENCENT_KEY'
+
+default_engine_default = 'google'
+default_language_from_default = 'en'
+default_language_to_default = 'zh-CN'
+tencent_secret_id_default = None
+tencent_secret_key_default = None
+
+default_engine = read_variable(default_engine_path, default_engine_default)
+default_language_from = read_variable(default_language_from_path, default_language_from_default)
+default_language_to = read_variable(default_language_to_path, default_language_to_default)
+tencent_secret_id = read_variable(tencent_secret_id_path, tencent_secret_id_default)
+tencent_secret_key = read_variable(tencent_secret_key_path, tencent_secret_key_default)
 
 math_code = 'XMATHX'

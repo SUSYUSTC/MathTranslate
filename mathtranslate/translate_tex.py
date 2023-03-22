@@ -69,6 +69,7 @@ Yiddish              yi
 '''
 
 import mathtranslate
+from mathtranslate import config
 from mathtranslate.config import default_engine, default_language_from, default_language_to
 import argparse
 parser = argparse.ArgumentParser()
@@ -78,17 +79,31 @@ parser.add_argument("-from", default=default_language_from, dest='l_from', help=
 parser.add_argument("-to", default=default_language_to, dest='l_to', help=f'language to, default is {default_language_to}')
 parser.add_argument("--list", action='store_true', help='list codes for languages')
 parser.add_argument("--setkey", action='store_true', help='set id and key of tencent translator')
+parser.add_argument("--setdefault", action='store_true', help='set default translation engine and languages')
 parser.add_argument("--debug", action='store_true')
 options = parser.parse_args()
 
 if options.setkey:
-    print('Your ID')
-    id = input()
-    print('Your Key')
-    key = input()
-    print(id, file=open(f'{mathtranslate.ROOT}/TENCENT_ID', 'w'))
-    print(key, file=open(f'{mathtranslate.ROOT}/TENCENT_KEY', 'w'))
+    print('Tencent API ID')
+    config.set_variable(config.tencent_secret_id_path, config.tencent_secret_id_default)
+    print('Tencent API Key')
+    config.set_variable(config.tencent_secret_key_path, config.tencent_secret_key_default)
     print('saved!')
+    print('ID:', config.tencent_secret_id)
+    print('Key:', config.tencent_secret_key)
+    sys.exit()
+
+if options.setdefault:
+    print('Translation engine (default google)')
+    config.set_variable(config.default_engine_path, config.default_engine_default)
+    print('Translation language from (default en)')
+    config.set_variable(config.default_language_from_path, config.default_language_from_default)
+    print('Translation language to (default zh-CN)')
+    config.set_variable(config.default_language_to_path, config.default_language_to_default)
+    print('saved!')
+    print('engine:', config.default_engine)
+    print('language from:', config.default_language_from)
+    print('language to:', config.default_language_to)
     sys.exit()
 
 if options.list:
@@ -116,6 +131,11 @@ elif options.engine == 'tencent':
         options.l_to = 'zh'
 else:
     assert False, 'engine must be google or tencent'
+
+print("Start")
+print('engine', options.engine)
+print('language from', options.l_from)
+print('language to', options.l_to)
 input_path = options.file
 input_path_base, input_path_ext = os.path.splitext(input_path)
 assert input_path_ext != '.tex', "The input file should not end with .tex! Please change to .txt or something else"

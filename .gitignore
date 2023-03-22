@@ -4,4 +4,5 @@ example_old
 build
 **pycache**
 **TENCENT**
+**DEFAULT**
 dist/*
