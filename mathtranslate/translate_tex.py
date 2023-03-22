@@ -68,7 +68,7 @@ Indonesian           id
 Yiddish              yi
 '''
 
-from mathtranslate import translate
+import mathtranslate
 from mathtranslate.config import default_engine, default_language_from, default_language_to
 import argparse
 parser = argparse.ArgumentParser()
@@ -77,8 +77,20 @@ parser.add_argument("-engine", default=default_engine, help=f'translation engine
 parser.add_argument("-from", default=default_language_from, dest='l_from', help=f'language from, default is {default_language_from}')
 parser.add_argument("-to", default=default_language_to, dest='l_to', help=f'language to, default is {default_language_to}')
 parser.add_argument("--list", action='store_true', help='list codes for languages')
+parser.add_argument("--setkey", action='store_true', help='set id and key of tencent translator')
 parser.add_argument("--debug", action='store_true')
 options = parser.parse_args()
+
+if options.setkey:
+    print('Your ID')
+    id = input()
+    print('Your Key')
+    key = input()
+    print(id, file=open(f'{mathtranslate.ROOT}/TENCENT_ID', 'w'))
+    print(key, file=open(f'{mathtranslate.ROOT}/TENCENT_KEY', 'w'))
+    print('saved!')
+    sys.exit()
+
 if options.list:
     print(language_list)
     print('tencent translator does not support some of them')
@@ -91,6 +103,11 @@ if options.file is None:
 if options.engine == 'google':
     import mtranslate as translator
 elif options.engine == 'tencent':
+    haskey = (mathtranslate.config.tencent_secret_id is not None) and (mathtranslate.config.tencent_secret_key is not None)
+    if not haskey:
+        print('Please save ID and key for tencent translation api first by')
+        print('translate_tex.py --setkey')
+        sys.exit()
     from mathtranslate.tencent import Translator
     translator = Translator()
     if options.l_from == 'zh-CN':
@@ -104,7 +121,7 @@ input_path_base, input_path_ext = os.path.splitext(input_path)
 assert input_path_ext != '.tex', "The input file should not end with .tex! Please change to .txt or something else"
 output_path = input_path_base + '.tex'
 
-translate(translator, input_path, output_path, options.engine, options.l_to, options.l_from, options.debug)
+mathtranslate.translate(translator, input_path, output_path, options.engine, options.l_to, options.l_from, options.debug)
 print(output_path, 'is generated')
 
 os.system(f'xelatex {output_path}')

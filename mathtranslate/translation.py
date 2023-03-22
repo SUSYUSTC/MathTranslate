@@ -14,7 +14,7 @@ char_limit = 2000
 
 
 def variable_code(count):
-    return math_code + f'({count})' + math_code
+    return math_code + '_' + '_'.join(list(str(count)))
 
 
 def is_connected(line_above, line_below):
@@ -152,7 +152,7 @@ def translate(translator, input_path, output_path, engine, language_to, language
         print(text_translated, file=open("text_new", "w"))
     text_final = text_translated
 
-    for count, eq in enumerate(eqs):
+    for count, eq in list(enumerate(eqs))[::-1]:
         text_final = text_final.replace(variable_code(count), eq)
 
     with open(output_path, "w") as file:
