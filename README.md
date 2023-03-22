@@ -72,4 +72,4 @@ In the example directory, you can see `main.txt` which is the mathpix output of 
 2. Reduce the number of mathpix requests by open-source techniques.
 3. A more user-friendly interface.
 
-If you are interested in making contributions, please contact me by susyustc@gmail.com.
+If you have any questions or have interests in making contributions, please contact me by susyustc@gmail.com or joining QQ group 288646946.
