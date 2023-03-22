@@ -49,7 +49,7 @@
 1. 一个 [mathpix](https://mathpix.com/) 帐户。 不幸的是，它不是完全免费的。目前 mathpix 免费提供 100 个截图（注册时需要一封edu电子邮件）或者以每月 5 美元的价格提供 5000 个截图。
 2. Python3 和 pip。
 3. texlive (或者任何可以从tex生成pdf的工具)，中文输出需要 CJK 包。
-4. （中国大陆IP用户）：一个 [腾讯翻译 API](https://cloud.tencent.com/product/tmt) 帐户。 注册后可以在 [腾讯控制台](https://console.cloud.tencent.com/cam/capi) 获取 secret ID 和 secret key 。 在 `mathtranslate/config.py` 中，将 `tencent_secret_id` 和 `tencent_secret_key` 替换为您的 ID 和密钥。腾讯翻译是除谷歌翻译之外我们认知范围内免费额度最高的翻译 API，每月有500万字符免费额度，且不手动充值情况下不会扣费（即不用担心误操作）。
+4. （中国大陆IP用户）：一个 [腾讯翻译 API](https://cloud.tencent.com/product/tmt) 帐户。 注册后可以在 [腾讯控制台](https://console.cloud.tencent.com/cam/capi) 获取 secret ID 和 secret key 。 腾讯翻译是除谷歌翻译之外我们认知范围内免费额度最高的翻译 API，每月有500万字符免费额度，且不手动充值情况下不会扣费（即不用担心误操作）。
 
 ## 安装
 `pip install --upgrade mathtranslate`
@@ -58,10 +58,11 @@
 1. 下载 mathpix。 在 Settings-Formatting 中，将“Inline math delimiters”和“Block mode delimiters”分别改为“\\( ... \\)”和“\\[ ... \\]”。
  <img src="https://user-images.githubusercontent.com/30529122/225747242-07b89c34-4f16-40f9-bebc-d0c0b1c4c8e8.png" width="600">
  
-2. 用 mathpix 把你要翻译的内容截图，复制输出的 latex 代码，保存到 txt 文件中。mathpix 目前可以识别连贯的文字（可以是一段或多段）。您也可以连续截图-复制多段分隔开的文字放在同一个 txt 文件中，我们在下一步的翻译中会自动识别与合并被图片或者分页隔开的段落。
-3. 假设您上一步保存的文件名为 `main.txt`。在此文件夹中运行 `translate_tex.py main.txt`。 您将获得一个翻译后的 tex 文件 `main.tex`，如果您的机器上安装了`xelatex`的话也会同时生成 pdf 文件。
-4. 由于本项目较小，有时需要对最终的 tex 文件稍作改动进行编译。
-5. 您可以在 `mathtranslate/config.py` 中更改翻译语言和引擎的默认设置。 您还可以通过命令行参数临时更改语言和引擎。 通过 `translate_tex.py --help` 查看详细信息。 要获取可用语言的列表，请运行“translate_tex.py --list”。
+2. （腾讯翻译API用户）运行`translate_tex.py --setkey`来存储API ID和key。
+3. 用 mathpix 把你要翻译的内容截图，复制输出的 latex 代码，保存到 txt 文件中。mathpix 目前可以识别连贯的文字（可以是一段或多段）。您也可以连续截图-复制多段分隔开的文字放在同一个 txt 文件中，我们在下一步的翻译中会自动识别与合并被图片或者分页隔开的段落。
+4. 假设您上一步保存的文件名为 `main.txt`。在此文件夹中运行 `translate_tex.py main.txt`。 您将获得一个翻译后的 tex 文件 `main.tex`，如果您的机器上安装了`xelatex`的话也会同时生成 pdf 文件。
+5. 由于本项目较小，有时需要对最终的 tex 文件稍作改动进行编译。
+6. 您可以通过命令行参数“-engine”、“-from”、“-to”更改翻译语言和引擎的默认设置。 例如 `translate_tex.py -engine tencent main.txt`。 您还可以通过 `translate_tex.py --setdefault` 永久更改设置。 您可以通过 `translate_tex.py --help` 查看更多细节。
 
 ## 例子
 在示例目录中，您可以看到 `main.txt`，它是 `paper.pdf` 的一部分的 mathpix 输出。 运行 `translate_tex.py main.txt`，您会获得 `main.tex` 和 `main.pdf` 。`translated.png` 是你在 `main.pdf` 里预期会看到的内容。
