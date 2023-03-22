@@ -12,7 +12,7 @@ def read_variable(path, default):
 def set_variable(path, default):
     var = input().replace(' ', '').replace('\n', '')
     if var != '':
-        return print(var, open(f'{ROOT}/{path}', 'w'))
+        return print(var, file=open(f'{ROOT}/{path}', 'w'))
     else:
         return default
 
