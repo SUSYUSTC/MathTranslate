@@ -13,6 +13,10 @@ tex_end = r'''
 char_limit = 2000
 
 
+def variable_code(count):
+    return math_code + f'({count})' + math_code
+
+
 def is_connected(line_above, line_below):
     if len(line_above) > 0 and len(line_below) > 0:
         if line_above[-1] != '.' and line_below[0].islower():
@@ -92,7 +96,7 @@ def convert_next(text, pattern_begin, pattern_end, count):
     after_slic = slice(position_end + l, None)
     if position_begin != -1:
         eq = text[eq_slic]
-        text = text[before_slic] + math_code + text[after_slic]
+        text = text[before_slic] + variable_code(count) + text[after_slic]
         return text, eq
     else:
         return None
@@ -149,7 +153,7 @@ def translate(translator, input_path, output_path, engine, language_to, language
     text_final = text_translated
 
     for count, eq in enumerate(eqs):
-        text_final = text_final.replace(math_code, eq, 1)
+        text_final = text_final.replace(variable_code(count), eq)
 
     with open(output_path, "w") as file:
         print(tex_begin, file=file)
