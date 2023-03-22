@@ -42,13 +42,16 @@
 虽然它目前是一个小项目，但我们知道这个项目受到的关注比我们预期的要多得多。 我们正在计划更多的开发，以获得更好的用户体验。
 
 ## 发布
+### 2023年3月21日
+对IP地址在中国大陆的用户，我们增加了腾讯翻译的选项。
 ### 2023年3月16日
-我们已经完成了对各操作系统的兼容。现在只需要 `pip install mathtranslate` 就可以完成安装。
+我们已经完成了对各操作系统的兼容。现在只需要 `pip install --upgrade mathtranslate` 就可以完成安装。
 
 ## 安装需求
 1. 一个 [mathpix](https://mathpix.com/) 帐户。 不幸的是，它不是完全免费的。目前 mathpix 免费提供 100 个截图（注册时需要一封edu电子邮件）或者以每月 5 美元的价格提供 5000 个截图。
 2. Python3 和 pip。
 3. texlive (或者任何可以从tex生成pdf的工具)，中文输出需要 CJK 包。
+4. （中国大陆IP用户）：一个 [腾讯翻译 API](https://cloud.tencent.com/product/tmt) 帐户。 注册后可以在 [腾讯控制台](https://console.cloud.tencent.com/cam/capi) 获取 secret ID 和 secret key 。 在 `mathtranslate/config.py` 中，将 `tencent_secret_id` 和 `tencent_secret_key` 替换为您的 ID 和密钥。腾讯翻译是除谷歌翻译之外我们认知范围内免费额度最高的翻译 API，每月有500万字符免费额度，且不手动充值情况下不会扣费（即不用担心误操作）。
 
 ## 安装
 `pip install --upgrade mathtranslate`
@@ -60,7 +63,7 @@
 2. 用 mathpix 把你要翻译的内容截图，复制输出的 latex 代码，保存到 txt 文件中。mathpix 目前可以识别连贯的文字（可以是一段或多段）。您也可以连续截图-复制多段分隔开的文字放在同一个 txt 文件中，我们在下一步的翻译中会自动识别与合并被图片或者分页隔开的段落。
 3. 假设您上一步保存的文件名为 `main.txt`。在此文件夹中运行 `translate_tex.py main.txt`。 您将获得一个翻译后的 tex 文件 `main.tex`，如果您的机器上安装了`xelatex`的话也会同时生成 pdf 文件。
 4. 由于本项目较小，有时需要对最终的 tex 文件稍作改动进行编译。
-5. 默认方式是将英文翻译成中文。 如果您需要想使用其他语言，可以使用 `translate_tex.py --list` 找到您感兴趣的语言的代码，然后运行 `translate_tex.py main.txt -from <code_from> -to <code_to>`。
+5. 您可以在 `mathtranslate/config.py` 中更改翻译语言和引擎的默认设置。 您还可以通过命令行参数临时更改语言和引擎。 通过 `translate_tex.py --help` 查看详细信息。 要获取可用语言的列表，请运行“translate_tex.py --list”。
 
 ## 例子
 在示例目录中，您可以看到 `main.txt`，它是 `paper.pdf` 的一部分的 mathpix 输出。 运行 `translate_tex.py main.txt`，您会获得 `main.tex` 和 `main.pdf` 。`translated.png` 是你在 `main.pdf` 里预期会看到的内容。
