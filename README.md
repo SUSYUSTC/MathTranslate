@@ -40,10 +40,8 @@ Here's an example of what you get finally.
 Although it is currently a small project, we are aware that this project has received much more attention that we expected. We are planning more developments for better user experience.
 
 ## Releases
-
 ### Mar 21, 2023
 We add tencent translation option for users with IP in China mainland.
-
 ### Mar 16, 2023
 We are now supporting all operating systems! Now you can install simply by `pip install --upgrade mathtranslate`.
 
@@ -51,7 +49,7 @@ We are now supporting all operating systems! Now you can install simply by `pip 
 1. A [mathpix](https://mathpix.com/) account. Unfortunately, it is not totally free. The current price is free for 100 screenshots (requires an educational email in registeration) and $5 per month for 5000 screenshots.
 2. Python3 and pip.
 3. texlive (or any other tool to generate pdf from tex). For Chinese you would need CJK package.
-4. (For users with IP address in China mainland): A [tencent translation api account](https://cloud.tencent.com/product/tmt). After registering you can get secret ID and secret key at [tencent console](https://console.cloud.tencent.com/cam/capi). In `mathtranslate/config.py`, replace `tencent_secret_id` and `tencent_secret_key` with your ID and key.
+4. (For users with IP address in China mainland): A [tencent translation api account](https://cloud.tencent.com/product/tmt). After registering you can get secret ID and secret key at [tencent console](https://console.cloud.tencent.com/cam/capi). In `mathtranslate/config.py`, replace `tencent_secret_id` and `tencent_secret_key` with your ID and key. Tencent Translate is the translation API with the highest free quota in our knowledge besides Google Translate, with a free quota of 5 million characters per month, and no fee will be deducted if there is no manual recharge (that is, there is no need to worry about misuse).
 
 ## Installation
 `pip install --upgrade mathtranslate`
