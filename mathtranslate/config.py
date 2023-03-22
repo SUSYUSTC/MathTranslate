@@ -13,3 +13,5 @@ if os.environ.get("TENCENTCLOUD_SECRET_ID") is not None:
     tencent_secret_id = os.environ.get("TENCENTCLOUD_SECRET_ID")
 if os.environ.get("TENCENTCLOUD_SECRET_KEY") is not None:
     tencent_secret_key = os.environ.get("TENCENTCLOUD_SECRET_KEY")
+
+math_code = 'XXMMAATTHHXX'
