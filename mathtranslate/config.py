@@ -1,23 +1,15 @@
 default_engine = 'google'  # google or tencent
+default_language_from = 'en'
+default_language_to = 'zh-CN'
 
-google_language_from = 'en'
-google_language_to = 'zh-CN'
-
-tencent_language_from = 'en'
-tencent_language_to = 'zh'
 tencent_secret_id = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 tencent_secret_key = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 
-default_languages = {
-    'google': {
-        'from': google_language_from,
-        'to': google_language_to,
-    },
-    'tencent': {
-        'from': tencent_language_from,
-        'to': tencent_language_to,
-    },
-}
+# Do not change the following unless you know what you are doing
+# 请不要更改下面的代码，除非您理解自己在做什么
 
-default_language_from = tencent_language_from
-default_language_to = tencent_language_to
+import os
+if os.environ.get("TENCENTCLOUD_SECRET_ID") is not None:
+    tencent_secret_id = os.environ.get("TENCENTCLOUD_SECRET_ID")
+if os.environ.get("TENCENTCLOUD_SECRET_KEY") is not None:
+    tencent_secret_key = os.environ.get("TENCENTCLOUD_SECRET_KEY")

@@ -3,7 +3,7 @@ from tencentcloud.tmt.v20180321 import tmt_client
 from .config import tencent_secret_id, tencent_secret_key
 
 
-def translate(text, language_from, language_to):
+def translate(text, language_to, language_from):
     cred = credential.Credential(tencent_secret_id, tencent_secret_key)
     client = tmt_client.TmtClient(cred, 'ap-shanghai')
     request = tmt_client.models.TextTranslateRequest()
@@ -11,5 +11,6 @@ def translate(text, language_from, language_to):
     request.Target = language_to
     request.SourceText = text
     request.ProjectId = 0
+    request.UntranslatedText = 'XXXXX'
     result = client.TextTranslate(request)
     return result.TargetText

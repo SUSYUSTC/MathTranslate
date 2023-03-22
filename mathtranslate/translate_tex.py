@@ -196,13 +196,14 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("file", nargs='?', type=str, help='input file')
-    parser.add_argument("-engine", default=default_engine, help=f'translation engine, avaiable options include google. default is {default_engine}')
+    parser.add_argument("-engine", default=default_engine, help=f'translation engine, avaiable options include google and tencent. default is {default_engine}')
     parser.add_argument("-from", default=default_language_from, dest='l_from', help=f'language from, default is {default_language_from}')
     parser.add_argument("-to", default=default_language_to, dest='l_to', help=f'language to, default is {default_language_to}')
     parser.add_argument("--list", action='store_true', help='list codes for languages')
     options = parser.parse_args()
     if options.list:
         print(language_list)
+        print('tencent translator does not support some of them')
         sys.exit()
 
     if options.file is None:
@@ -213,6 +214,10 @@ if __name__ == '__main__':
         import mtranslate as Translator
     elif options.engine == 'tencent':
         import mathtranslate.txtranslate as Translator
+        if options.l_from == 'zh-CN':
+            options.l_from = 'zh'
+        if options.l_to == 'zh-CN':
+            options.l_to = 'zh'
     else:
         assert False, 'engine must be google or tencent'
     input_path = options.file
