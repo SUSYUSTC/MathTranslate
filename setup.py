@@ -17,10 +17,14 @@ setuptools.setup(
     url="https://github.com/SUSYUSTC/MathTranslate",
     packages=setuptools.find_packages(),
     include_package_data=True,
-    install_requires=["mtranslate", "tencentcloud-sdk-python"],
+    install_requires=["mtranslate", "tencentcloud-sdk-python", "chardet"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
-    scripts=['mathtranslate/translate_tex.py'],
+    entry_points={
+        'console_scripts': [
+            'translate_tex=mathtranslate.translate_tex:main',
+        ]
+    },
 )
