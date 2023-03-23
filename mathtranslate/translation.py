@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from .config import math_code
+from . import process_latex
 
 tex_begin = r'''
 \documentclass[UTF8]{article}
@@ -11,10 +11,6 @@ tex_end = r'''
 \end{document}
 '''
 char_limit = 2000
-
-
-def variable_code(count):
-    return math_code + '_' + '_'.join(list(str(count)))
 
 
 def is_connected(line_above, line_below):
@@ -86,37 +82,6 @@ def split_titles(text):
     return '\n'.join(text_split)
 
 
-def convert_next(text, pattern_begin, pattern_end, count):
-    position_begin = text.find(pattern_begin)
-    position_end = text.find(pattern_end)
-    l = len(pattern_end)
-    assert not ((position_begin == -1) ^ (position_end == -1))
-    before_slic = slice(0, position_begin)
-    eq_slic = slice(position_begin, position_end + l)
-    after_slic = slice(position_end + l, None)
-    if position_begin != -1:
-        eq = text[eq_slic]
-        text = text[before_slic] + variable_code(count) + text[after_slic]
-        return text, eq
-    else:
-        return None
-
-
-def convert_equations(text):
-    eqs = []
-    count = 0
-    for pattern_begin, pattern_end in [('\\(', '\\)'), ('\\[', '\\]')]:
-        while True:
-            result = convert_next(text, pattern_begin, pattern_end, count)
-            if result is None:
-                break
-            else:
-                text, eq = result
-                eqs.append(eq)
-                count += 1
-    return text, eqs
-
-
 def translate_by_part(translator, text, language_to, language_from, limit):
     lines = text.split('\n')
     parts = []
@@ -141,9 +106,7 @@ def translate_by_part(translator, text, language_to, language_from, limit):
 def translate(translator, input_path, output_path, engine, language_to, language_from, debug):
     text_original = open(input_path).read()
     text_original = connect_paragraphs(text_original)
-    text_converted, eqs = convert_equations(text_original)
-    text_converted = text_converted.replace('\\pm', '$\\pm$')
-    text_converted = text_converted.replace('Eq.', 'equation')
+    text_converted, envs = process_latex.replace_latex_envs(text_original)
     text_converted = split_paragraphs(text_converted)
     text_converted = split_titles(text_converted)
     text_translated = translate_by_part(translator, text_converted, language_to, language_from, char_limit)
@@ -152,8 +115,7 @@ def translate(translator, input_path, output_path, engine, language_to, language
         print(text_translated, file=open("text_new", "w"))
     text_final = text_translated
 
-    for count, eq in list(enumerate(eqs))[::-1]:
-        text_final = text_final.replace(variable_code(count), eq)
+    text_final = process_latex.recover_latex_envs(text_final, envs)
 
     with open(output_path, "w") as file:
         print(tex_begin, file=file)

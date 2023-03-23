@@ -40,6 +40,8 @@
 虽然它目前是一个小项目，但我们知道这个项目受到的关注比我们预期的要多得多。 我们正在计划更多的开发，以获得更好的用户体验。
 
 ## 发布
+### 2023年3月22日
+修复了一些主要的bug。
 ### 2023年3月21日
 对IP地址在中国大陆的用户，我们增加了腾讯翻译的选项。
 ### 2023年3月16日
@@ -55,17 +57,15 @@
 `pip install --upgrade mathtranslate`
 
 ## 使用
-1. 下载 mathpix。 在 Settings-Formatting 中，将“Inline math delimiters”和“Block mode delimiters”分别改为“\\( ... \\)”和“\\[ ... \\]”。
- <img src="https://user-images.githubusercontent.com/30529122/225747242-07b89c34-4f16-40f9-bebc-d0c0b1c4c8e8.png" width="600">
- 
-2. （腾讯翻译API用户）运行`translate_tex.py --setkey`来存储API ID和key。
+1. 下载 mathpix。
+2. （腾讯翻译API用户）运行`translate_tex --setkey`来存储API ID和key。
 3. 用 mathpix 把你要翻译的内容截图，复制输出的 latex 代码，保存到 txt 文件中。mathpix 目前可以识别连贯的文字（可以是一段或多段）。您也可以连续截图-复制多段分隔开的文字放在同一个 txt 文件中，我们在下一步的翻译中会自动识别与合并被图片或者分页隔开的段落。
-4. 假设您上一步保存的文件名为 `main.txt`。在此文件夹中运行 `translate_tex.py main.txt`。 您将获得一个翻译后的 tex 文件 `main.tex`，如果您的机器上安装了`xelatex`的话也会同时生成 pdf 文件。
+4. 假设您上一步保存的文件名为 `main.txt`。在此文件夹中运行 `translate_tex main.txt`。 您将获得一个翻译后的 tex 文件 `main.tex`，如果您的机器上安装了`xelatex`的话也会同时生成 pdf 文件。
 5. 由于本项目较小，有时需要对最终的 tex 文件稍作改动进行编译。
-6. 您可以通过命令行参数“-engine”、“-from”、“-to”更改翻译语言和引擎的默认设置。 例如 `translate_tex.py -engine tencent main.txt`。 您还可以通过 `translate_tex.py --setdefault` 永久更改设置。 您可以通过 `translate_tex.py --help` 查看更多细节。
+6. 您可以通过命令行参数“-engine”、“-from”、“-to”更改翻译语言和引擎的默认设置。 例如 `translate_tex -engine tencent main.txt`。 您还可以通过 `translate_tex.py --setdefault` 永久更改设置。 您可以通过 `translate_tex --help` 查看更多细节。
 
 ## 例子
-在示例目录中，您可以看到 `main.txt`，它是 `paper.pdf` 的一部分的 mathpix 输出。 运行 `translate_tex.py main.txt`，您会获得 `main.tex` 和 `main.pdf` 。`translated.png` 是你在 `main.pdf` 里预期会看到的内容。
+在示例目录中，您可以看到 `main.txt`，它是 `paper.pdf` 的一部分的 mathpix 输出。 运行 `translate_tex main.txt`，您会获得 `main.tex` 和 `main.pdf` 。`translated.png` 是你在 `main.pdf` 里预期会看到的内容。
 
 ## 进一步开发
 1. 自动从pdf中提取图片，批量处理图片，一键输出整个翻译好的pdf！
