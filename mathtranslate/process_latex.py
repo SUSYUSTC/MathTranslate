@@ -41,18 +41,6 @@ def replace_latex_envs(text):
     Returns the processed text and a list of replaced LaTeX environments.
     """
     # define regular expressions for each LaTeX environment
-    r"""
-    latex_env_regex = [
-        r"\\\[(.*?)\\\]",  # \[ xxx \]
-        r"\\begin\{(.*?)\}(.*?)\\end\{\1\}",  # \begin{xxx} \end{xxx}
-        r"\$\$(.*?)\$\$",  # $$ $$
-        r"\$(.*?)\$",  # $ $
-        r"\\\((.*?)\\\)",  # \( xxx \)
-        r"\\([a-zA-Z]+)\[(.*?)\]\{(.*?)\}",  # \xxx[xxx]{xxx}
-        r"\\([a-zA-Z]+)\{(.*?)\}",  # \xxx{xxx}
-        r"\\([a-zA-Z]+)",  # \xxx
-    ]
-    """
     latex_env_regex = [
         r"(?<!\\)\\\[(.*?)(?<!\\)\\\]",  # \[ xxx \]
         r"(?<!\\)\\begin\{(.*?)\}(.*?)(?<!\\)\\end\{\1\}",  # \begin{xxx} \end{xxx}
