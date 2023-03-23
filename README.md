@@ -55,14 +55,12 @@ We are now supporting all operating systems! Now you can install simply by `pip 
 `pip install --upgrade mathtranslate`
 
 ## Usage
-1. Download mathpix. In the Settings-Formatting, change "Inline math delimiters" and "Block mode delimiters" to "\\( ... \\)" and "\\[ ... \\]", respectively.
-<img src="https://user-images.githubusercontent.com/30529122/225747242-07b89c34-4f16-40f9-bebc-d0c0b1c4c8e8.png" width="600">
-
-2. (For tencent translation API users) Run `translate_tex.py --setkey` to store API ID and key.
+1. Download mathpix.
+2. (For tencent translation API users) Run `translate_tex --setkey` to store API ID and key.
 3. Use mathpix to screenshot what you want to translate, copy the output latex code and save in a txt file. Mathpix currently recognizes continuous text (which can be one or more paragraphs). You can also screenshot and copy multiple separated texts and put them in the same txt file, we will automatically identify and merge the paragraphs separated by pictures or pages in the next step.
-4. Assume the filename you saved in the previous step is `main.txt`. Run `translate_tex.py main.txt`. You will get a translated tex file `main.tex` and a corresponding pdf file `main.pdf` in case `xelatex` is installed on your machine.
+4. Assume the filename you saved in the previous step is `main.txt`. Run `translate_tex main.txt`. You will get a translated tex file `main.tex` and a corresponding pdf file `main.pdf` in case `xelatex` is installed on your machine.
 5. Since this project is small, sometimes you need to slightly change the final tex file for compilation.
-6. You can change default settings of translation languages and engine by command line argument '-engine', '-from', '-to'. For exmample `translate_tex.py -engine tencent main.txt`. You can also change setting permanently by `translate_tex.py --setdefault`. See more details by `translate_tex.py --help`.
+6. You can change default settings of translation languages and engine by command line argument '-engine', '-from', '-to'. For exmample `translate_tex -engine tencent main.txt`. You can also change setting permanently by `translate_tex --setdefault`. See more details by `translate_tex --help`.
 
 ## Examples
 In the example directory, you can see `main.txt` which is the mathpix output of a part of `paper.pdf`. Run `translate_tex.py main.txt` and you will get the `main.tex` and `main.pdf`. `translated.png` is what you should expect to see in the `main.pdf`.
