@@ -40,6 +40,8 @@ Here's an example of what you get finally.
 Although it is currently a small project, we are aware that this project has received much more attention that we expected. We are planning more developments for better user experience.
 
 ## Releases
+### Mar 22, 2023
+Fixed several main bugs.
 ### Mar 21, 2023
 We add tencent translation option for users with IP in China mainland.
 ### Mar 16, 2023
@@ -63,7 +65,7 @@ We are now supporting all operating systems! Now you can install simply by `pip 
 6. You can change default settings of translation languages and engine by command line argument '-engine', '-from', '-to'. For exmample `translate_tex -engine tencent main.txt`. You can also change setting permanently by `translate_tex --setdefault`. See more details by `translate_tex --help`.
 
 ## Examples
-In the example directory, you can see `main.txt` which is the mathpix output of a part of `paper.pdf`. Run `translate_tex.py main.txt` and you will get the `main.tex` and `main.pdf`. `translated.png` is what you should expect to see in the `main.pdf`.
+In the example directory, you can see `main.txt` which is the mathpix output of a part of `paper.pdf`. Run `translate_tex main.txt` and you will get the `main.tex` and `main.pdf`. `translated.png` is what you should expect to see in the `main.pdf`.
 
 ## Further developments
 1. Automatically extract images from pdf, process images in a batch and output a single translated pdf by one click!
