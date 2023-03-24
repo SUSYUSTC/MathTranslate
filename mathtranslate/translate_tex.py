@@ -144,7 +144,11 @@ def main():
     print('language to', options.l_to)
     input_path = options.file
     input_path_base, input_path_ext = os.path.splitext(input_path)
-    assert input_path_ext != '.tex', "The input file should not end with .tex! Please change to .txt or something else"
+    if input_path_ext == '.tex':
+        print("The input file ends with .tex, it will be overwritten.")
+        print("If you confirm this action, please press enter")
+        input()
+        print('OK I will continue')
     output_path = input_path_base + '.tex'
 
     mathtranslate.translate(translator, input_path, output_path, options.engine, options.l_to, options.l_from, options.debug)

@@ -61,7 +61,7 @@ def replace_latex_envs(text):
         pattern = re.compile(regex, re.DOTALL)
         while pattern.search(text):
             latex_env = pattern.search(text).group()
-            replaced_envs.append(latex_env)
+            replaced_envs.append(f' {latex_env} ')
             text = pattern.sub(variable_code(count), text, 1)
             count += 1
 
@@ -88,3 +88,86 @@ def recover_latex_envs(text, replaced_envs):
     #for count, env in list(enumerate(replaced_envs))[::-1]:
     #    text = text.replace(variable_code(count), env)
     return text
+
+
+def remove_tex_comments(text):
+    """
+    Removes all TeX comments in a given string with the format "% comment text".
+    Does not match "\%".
+    Returns the processed string.
+    """
+    # define regular expression for TeX comments
+    comment_regex = r"(?<!\\)%.*?(?=$|\n)"
+
+    # remove comments from text
+    text = re.sub(comment_regex, "", text)
+
+    return text
+
+
+def split_latex_document(text):
+    """
+    Splits a LaTeX document into three parts: the preamble, the body, and the postamble.
+    Returns a tuple of the three parts.
+    """
+    begin_document = r"\begin{document}"
+    end_document = r"\end{document}"
+    begin_doc_index = text.find(begin_document)
+    end_doc_index = text.rfind(end_document)
+    if begin_doc_index == -1 or end_doc_index == -1 or end_doc_index <= begin_doc_index:
+        assert False, "latex is not complete"
+    pre = text[:begin_doc_index+len(begin_document)]
+    body = text[begin_doc_index+len(begin_document):end_doc_index]
+    post = text[end_doc_index:]
+    return body, pre, post
+
+
+def remove_blank_line_in_documentclass(text):
+    pattern = re.compile(r"\\documentclass(\[.*?\])?\{(.*?)\}", re.DOTALL)
+    match = pattern.search(text)
+    if match:
+        start, end = match.span()
+        new_text = text[:end].replace('\n\n', '\n') + text[end:]
+        return new_text
+    else:
+        return text
+
+
+def insert_package(text, package):
+    pattern = re.compile(r"\\documentclass(\[.*?\])?\{(.*?)\}", re.DOTALL)
+    match = pattern.search(text)
+    if match:
+        start, end = match.span()
+        new_text = text[:end] + f"\n\\usepackage{{{package}}}\n" + text[end:]
+        return new_text
+    else:
+        return text
+
+
+def is_complete(latex_code):
+    # Define regular expressions for \documentclass, \begin{document}, and \end{document}
+    documentclass_pattern = re.compile(r"\\documentclass(\[.*?\])?\{.*?\}", re.DOTALL)
+    begin_pattern = re.compile(r"\\begin\{document\}")
+    end_pattern = re.compile(r"\\end\{document\}")
+
+    # Check if \documentclass is present
+    if not documentclass_pattern.search(latex_code):
+        return False
+
+    # Check if \begin{document} is present
+    begin_match = begin_pattern.search(latex_code)
+    if not begin_match:
+        return False
+    begin_index = begin_match.start()
+
+    # Check if \end{document} is present
+    end_match = end_pattern.search(latex_code)
+    if not end_match:
+        return False
+    end_index = end_match.end()
+
+    # Check if the order is correct
+    if begin_index < documentclass_pattern.search(latex_code).end() or end_index < begin_index:
+        return False
+
+    return True

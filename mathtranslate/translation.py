@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 from . import process_latex
 
-tex_begin = r'''
+default_begin = r'''
 \documentclass[UTF8]{article}
 \usepackage{xeCJK}
 \usepackage{amsmath,amssymb}
 \begin{document}
 '''
-tex_end = r'''
+default_end = r'''
 \end{document}
 '''
 char_limit = 2000
@@ -105,23 +105,40 @@ def translate_by_part(translator, text, language_to, language_from, limit):
 
 def translate(translator, input_path, output_path, engine, language_to, language_from, debug):
     text_original = open(input_path).read()
-    text_original = connect_paragraphs(text_original)
+    text_original = process_latex.remove_tex_comments(text_original)
+    text_original = process_latex.remove_blank_line_in_documentclass(text_original)
+    complete = process_latex.is_complete(text_original)
+    if complete:
+        text_original, tex_begin, tex_end = process_latex.split_latex_document(text_original)
+        tex_begin = process_latex.insert_package(tex_begin, 'xeCJK')
+    else:
+        text_original = connect_paragraphs(text_original)
+        tex_begin = default_begin
+        tex_end = default_end
+
+    if debug:
+        f_old = open("text_old", "w", encoding='utf-8')
+        f_new = open("text_new", "w", encoding='utf-8')
+        f_env = open("envs", "w", encoding='utf-8')
+
     text_converted, envs = process_latex.replace_latex_envs(text_original)
     text_converted = split_paragraphs(text_converted)
-    text_converted = split_titles(text_converted)
+    if not complete:
+        text_converted = split_titles(text_converted)
     text_translated = translate_by_part(translator, text_converted, language_to, language_from, char_limit)
     if debug:
-        print(text_converted, file=open("text_old", "w", encoding='utf-8'))
-        print(text_translated, file=open("text_new", "w", encoding='utf-8'))
-        f = open("envs", "w", encoding='utf-8')
+        print(text_converted, file=f_old)
+        print(text_translated, file=f_new)
         for i, env in enumerate(envs):
-            print(f'env {i}', file=f)
-            print(env, file=f)
-        f.close()
+            print(f'env {i}', file=f_env)
+            print(env, file=f_env)
     text_final = text_translated
     text_final = process_latex.recover_latex_envs(text_final, envs)
 
+    if debug:
+        f_old.close()
+        f_new.close()
+        f_env.close()
+
     with open(output_path, "w", encoding='utf-8') as file:
-        print(tex_begin, file=file)
-        print(text_final, file=file)
-        print(tex_end, file=file)
+        print(tex_begin + '\n' + text_final + '\n' + tex_end, file=file)
