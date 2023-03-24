@@ -49,7 +49,7 @@ We are now supporting all operating systems! Now you can install simply by `pip 
 
 ## Requirements
 1. A [mathpix](https://mathpix.com/) account. Unfortunately, it is not totally free. The current price is free for 100 screenshots (requires an educational email in registeration) and $5 per month for 5000 screenshots.
-2. Python3 and pip.
+2. Python3 and pip. [Anaconda](https://www.anaconda.com) is recommended.
 3. texlive (or any other tool to generate pdf from tex). For Chinese you would need CJK package.
 4. (For users with IP address in China mainland): A [tencent translation api account](https://cloud.tencent.com/product/tmt). After registering you can get secret ID and secret key at [tencent console](https://console.cloud.tencent.com/cam/capi). Tencent Translate is the translation API with the highest free quota in our knowledge besides Google Translate, with a free quota of 5 million characters per month, and no fee will be deducted if there is no manual recharge (that is, there is no need to worry about misuse).
 
