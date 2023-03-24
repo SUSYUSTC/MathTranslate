@@ -24,8 +24,8 @@ THIS IS A PARAGRAPH WITH SOME L\_A\_T\_E\_X ENVIRONMENTS:
 \item First item
 \item Second item
 \end{enumerate}
-AND SOME MATH: ??? AND $$\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}$$
-$ H \psi = E \psi$
+AND SOME MATH: $E=mc^2$ AND $$\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}$$
+???
 $ H \psi = E \psi$
 $ H \psi = E \psi$
 $ H \psi = E \psi$
