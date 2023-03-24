@@ -84,6 +84,7 @@ def main():
     parser.add_argument("--setkey", action='store_true', help='set id and key of tencent translator')
     parser.add_argument("--setdefault", action='store_true', help='set default translation engine and languages')
     parser.add_argument("--debug", action='store_true')
+    parser.add_argument("--nocompile", action='store_true')
     options = parser.parse_args()
 
     if options.setkey:
@@ -150,7 +151,8 @@ def main():
     print(output_path, 'is generated')
     fix_file_encoding(output_path)
 
-    os.system(f'xelatex {output_path}')
+    if not options.nocompile:
+        os.system(f'xelatex {output_path}')
 
 
 if __name__ == '__main__':

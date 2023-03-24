@@ -2,6 +2,7 @@ import re
 from .config import math_code
 
 match_code = r"(" + math_code + r"_\d+(?:_\d+)*)"
+match_code_replace = math_code + r"_(\d+(?:_\d+)*)*"
 
 
 def variable_code(count):
@@ -41,24 +42,13 @@ def replace_latex_envs(text):
     Returns the processed text and a list of replaced LaTeX environments.
     """
     # define regular expressions for each LaTeX environment
-    r"""
+    #get_specific_env = lambda env_name: r"(?<!\\)\\begin\{env_name\}(.*?)(?<!\\)\\end\{env_name\}",  # \begin{env_name} \end{env_name}
     latex_env_regex = [
-        r"\\\[(.*?)\\\]",  # \[ xxx \]
-        r"\\begin\{(.*?)\}(.*?)\\end\{\1\}",  # \begin{xxx} \end{xxx}
-        r"\$\$(.*?)\$\$",  # $$ $$
-        r"\$(.*?)\$",  # $ $
-        r"\\\((.*?)\\\)",  # \( xxx \)
-        r"\\([a-zA-Z]+)\[(.*?)\]\{(.*?)\}",  # \xxx[xxx]{xxx}
-        r"\\([a-zA-Z]+)\{(.*?)\}",  # \xxx{xxx}
-        r"\\([a-zA-Z]+)",  # \xxx
-    ]
-    """
-    latex_env_regex = [
-        r"(?<!\\)\\\[(.*?)(?<!\\)\\\]",  # \[ xxx \]
-        r"(?<!\\)\\begin\{(.*?)\}(.*?)(?<!\\)\\end\{\1\}",  # \begin{xxx} \end{xxx}
         r"(?<!\\)\$\$(.*?)(?<!\\)\$\$",  # $$ $$
         r"(?<!\\)\$(.*?)(?<!\\)\$",  # $ $
+        r"(?<!\\)\\\[(.*?)(?<!\\)\\\]",  # \[ xxx \]
         r"(?<!\\)\\\((.*?)(?<!\\)\\\)",  # \( xxx \)
+        r"(?<!\\)\\begin\{(.*?)\}(.*?)(?<!\\)\\end\{\1\}",  # \begin{xxx} \end{xxx}
         r"(?<!\\)\\([a-zA-Z]+)\[(.*?)\]\{(.*?)\}",  # \xxx[xxx]{xxx}
         r"(?<!\\)\\([a-zA-Z]+)\{(.*?)\}",  # \xxx{xxx}
         r"(?<!\\)\\([a-zA-Z]+)",  # \xxx
@@ -80,7 +70,21 @@ def replace_latex_envs(text):
 
 
 def recover_latex_envs(text, replaced_envs):
+    def get_env(digit_str):
+        index = int(''.join(digit_str.split('_')))
+        if index < len(replaced_envs):
+            return replaced_envs[index]
+        else:
+            return '???'
     text = modify_text(text, modify_after)
-    for count, env in list(enumerate(replaced_envs))[::-1]:
-        text = text.replace(variable_code(count), env)
+    pattern = re.compile(match_code_replace)
+    total_num = 0
+    while True:
+        text, num_modify = pattern.subn(lambda match: get_env(match.group(1)), text)
+        total_num += num_modify
+        if num_modify == 0:
+            break
+    print(total_num, 'latex environments replaced in', len(replaced_envs))
+    #for count, env in list(enumerate(replaced_envs))[::-1]:
+    #    text = text.replace(variable_code(count), env)
     return text
