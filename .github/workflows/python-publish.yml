@@ -34,6 +34,7 @@ jobs:
         pip install tencentcloud-sdk-python
         pip install chardet
         pip install requests
+        pip install wheel
     - name: Build package
       run: python -m build -n
     - name: Publish package
