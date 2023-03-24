@@ -2,7 +2,7 @@
 
 <p align="center">
   <!-- tests (GitHub actions) -->
-  <a href="https://github.com/SUSYUSTC/MathTranslate/actions/workflows/ci.yml">
+  <a href="https://github.com/SUSYUSTC/MathTranslate/actions/workflows/python-publish.yml">
     <img src="https://img.shields.io/github/actions/workflow/status/SUSYUSTC/MathTranslate/python-publish.yml?branch=master" />
   </a>
   <!-- PyPI -->
