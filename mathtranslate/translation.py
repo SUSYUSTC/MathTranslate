@@ -113,8 +113,12 @@ def translate(translator, input_path, output_path, engine, language_to, language
     if debug:
         print(text_converted, file=open("text_old", "w", encoding='utf-8'))
         print(text_translated, file=open("text_new", "w", encoding='utf-8'))
+        f = open("envs", "w", encoding='utf-8')
+        for i, env in enumerate(envs):
+            print(f'env {i}', file=f)
+            print(env, file=f)
+        f.close()
     text_final = text_translated
-
     text_final = process_latex.recover_latex_envs(text_final, envs)
 
     with open(output_path, "w", encoding='utf-8') as file:
