@@ -64,6 +64,10 @@
 ## 例子
 在示例目录中，您可以看到 `main.txt`，它是 `paper.pdf` 的一部分的 mathpix 输出。 运行 `translate_tex main.txt`，您会获得 `main.tex` 和 `main.pdf` 。`translated.png` 是你在 `main.pdf` 里预期会看到的内容。
 
+## 已知的问题
+1. 如果 latex 中用 `\newcommand` 重新设置了 `\begin{env} \end{env}` 会无法正确翻译。
+2. 翻译时会有一个很小的概率产生类似 "XMATHX_1_2" 的代码或公式错误。腾讯翻译正确率会比谷歌翻译略低一些。
+
 ## 进一步开发
 1. 自动从pdf中提取图片，批量处理图片，一键输出整个翻译好的pdf！
 2. 通过开源软件减少 mathpix 的请求次数。
