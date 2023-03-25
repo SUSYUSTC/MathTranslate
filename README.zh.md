@@ -24,9 +24,10 @@
 
 该项目的主要工作是基于纯文字的谷歌翻译实现 LaTex 文件的翻译，从而最终实现 pdf 的翻译。
 
-这里是示例：
+这里是示例:
+
 <p float="left">
-<img src="https://user-images.githubusercontent.com/30529122/227698232-2e9f63ef-0727-4f92-ac65-38651fb64774.png" width="700">
+<img src="https://user-images.githubusercontent.com/30529122/227698548-1cc19f7c-00e7-4312-9d58-2a7237656b51.png" width="700">
 </p>
 
 <p float="left">
