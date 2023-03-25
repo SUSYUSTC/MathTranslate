@@ -1,4 +1,4 @@
-__version__ = "1.3.2"
+__version__ = "2.0.0"
 __author__ = "Jiace Sun"
 
 import os
