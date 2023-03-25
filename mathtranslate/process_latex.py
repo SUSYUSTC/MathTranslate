@@ -89,8 +89,6 @@ def recover_latex_envs(text, replaced_envs):
             break
     if sorted(matched_indices) != list(range(len(replaced_envs))):
         print(total_num, 'latex environments replaced in', len(replaced_envs))
-    #for count, env in list(enumerate(replaced_envs))[::-1]:
-    #    text = text.replace(variable_code(count), env)
     return text
 
 
@@ -122,6 +120,35 @@ def split_latex_document(text, begin_code, end_code):
     body = text[begin_doc_index + len(begin_code):end_doc_index]
     post = text[end_doc_index:]
     return body, pre, post
+
+
+def count_braces(text):
+    text = text.replace(r'\{', '')
+    text = text.replace(r'\}', '')
+    return text.count('{'), text.count('}')
+
+
+def process_specific_env(text, pattern_begin, pattern_end, function):
+    position = 0
+    while True:
+        position = text.find(pattern_begin, position)
+        if position == -1:
+            break
+        position += len(pattern_begin)
+        start = position
+        while True:
+            position = text.find(pattern_end, position)
+            if position > 0 and text[position - 1] != '\\':
+                n_left, n_right = count_braces(text[start:position])
+                if n_left == n_right:
+                    break
+            position += 1
+        text_before = text[0:start]
+        text_middle = function(text[start:position])
+        text_after = text[position:]
+        position = len(text_before) + len(text_middle) + len(pattern_end)
+        text = text_before + text_middle + text_after
+    return text
 
 
 def remove_blank_lines(text):

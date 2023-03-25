@@ -74,7 +74,7 @@ def main():
     from mathtranslate import config
     from mathtranslate.config import default_engine, default_language_from, default_language_to
     from mathtranslate.fix_encoding import fix_file_encoding
-    from mathtranslate.translation import TextTranslator, DocumentTranslator
+    from mathtranslate.translate import TextTranslator, DocumentTranslator
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("file", nargs='?', type=str, help='input file')
@@ -85,7 +85,7 @@ def main():
     parser.add_argument("--setkey", action='store_true', help='set id and key of tencent translator')
     parser.add_argument("--setdefault", action='store_true', help='set default translation engine and languages')
     parser.add_argument("--debug", action='store_true')
-    parser.add_argument("--nocompile", action='store_true')
+    parser.add_argument("--compile", action='store_true')
     options = parser.parse_args()
 
     if options.setkey:
@@ -150,14 +150,17 @@ def main():
     doc_translator = DocumentTranslator(translator, options.debug)
 
     text_original = open(input_path).read()
-    text_final = doc_translator.translate_full(text_original)
+    text_final = doc_translator.translate_full_latex(text_original)
     with open(output_path, "w", encoding='utf-8') as file:
         print(text_final, file=file)
     print(output_path, 'is generated')
     fix_file_encoding(output_path)
 
-    if not options.nocompile:
+    if options.compile:
         os.system(f'xelatex {output_path}')
+    else:
+        print(f"You can then manually compile it by running 'xelatex {output_path}'")
+        print("or compile it online on overleaf")
 
 
 if __name__ == '__main__':
