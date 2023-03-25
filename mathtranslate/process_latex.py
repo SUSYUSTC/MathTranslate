@@ -70,12 +70,13 @@ def replace_latex_envs(text):
 
 
 def recover_latex_envs(text, replaced_envs):
+    nenvs = len(replaced_envs)
     matched_indices = []
 
     def get_env(digit_str):
         index = int(''.join(digit_str.split('_')))
         matched_indices.append(index)
-        if index < len(replaced_envs):
+        if index < nenvs:
             return replaced_envs[index]
         else:
             return '???'
@@ -87,8 +88,12 @@ def recover_latex_envs(text, replaced_envs):
         total_num += num_modify
         if num_modify == 0:
             break
-    if sorted(matched_indices) != list(range(len(replaced_envs))):
-        print(total_num, 'latex environments replaced in', len(replaced_envs))
+    n_good = len(set(matched_indices).intersection(set(range(nenvs))))
+    n_bad1 = len(matched_indices) - n_good
+    n_bad2 = nenvs - n_good
+    n_bad = max(n_bad1, n_bad2)
+    if n_bad > 0:
+        print(n_bad, 'latex environments are wrong in total', nenvs)
     return text
 
 

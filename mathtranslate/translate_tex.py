@@ -74,10 +74,11 @@ def main():
     from mathtranslate import config
     from mathtranslate.config import default_engine, default_language_from, default_language_to
     from mathtranslate.fix_encoding import fix_file_encoding
-    from mathtranslate.translate import TextTranslator, DocumentTranslator
+    from mathtranslate.translate import TextTranslator, LatexTranslator
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("file", nargs='?', type=str, help='input file')
+    parser.add_argument("-o", type=str, help='output path')
     parser.add_argument("-engine", default=default_engine, help=f'translation engine, avaiable options include google and tencent. default is {default_engine}')
     parser.add_argument("-from", default=default_language_from, dest='l_from', help=f'language from, default is {default_language_from}')
     parser.add_argument("-to", default=default_language_to, dest='l_to', help=f'language to, default is {default_language_to}')
@@ -138,19 +139,22 @@ def main():
     print('language from', options.l_from)
     print('language to', options.l_to)
     input_path = options.file
-    input_path_base, input_path_ext = os.path.splitext(input_path)
-    if input_path_ext == '.tex':
-        print("The input file ends with .tex, it will be overwritten.")
-        print("If you confirm this action, please press enter")
-        input()
-        print('OK I will continue')
-    output_path = input_path_base + '.tex'
+    if options.o is None:
+        input_path_base, input_path_ext = os.path.splitext(input_path)
+        if input_path_ext == '.tex':
+            print("The input file ends with .tex, it will be overwritten.")
+            print("If you confirm this action, please press enter, otherwise ctrl+C to cancel")
+            input()
+            print('OK I will continue')
+        output_path = input_path_base + '.tex'
+    else:
+        output_path = options.o
 
-    translator = TextTranslator(options.engine, options.l_to, options.l_from)
-    doc_translator = DocumentTranslator(translator, options.debug)
+    text_translator = TextTranslator(options.engine, options.l_to, options.l_from)
+    latex_translator = LatexTranslator(text_translator, options.debug)
 
     text_original = open(input_path).read()
-    text_final = doc_translator.translate_full_latex(text_original)
+    text_final = latex_translator.translate_full_latex(text_original)
     with open(output_path, "w", encoding='utf-8') as file:
         print(text_final, file=file)
     print(output_path, 'is generated')
