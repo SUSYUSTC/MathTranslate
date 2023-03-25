@@ -1,15 +1,3 @@
-#!/usr/bin/env python
-from . import process_latex
-
-tex_begin = r'''
-\documentclass[UTF8]{article}
-\usepackage{xeCJK}
-\usepackage{amsmath,amssymb}
-\begin{document}
-'''
-tex_end = r'''
-\end{document}
-'''
 char_limit = 2000
 
 
@@ -80,48 +68,3 @@ def split_titles(text):
             text_split[i] = '\n\n' + text_split[i] + '\n\n'
         i += 1
     return '\n'.join(text_split)
-
-
-def translate_by_part(translator, text, language_to, language_from, limit):
-    lines = text.split('\n')
-    parts = []
-    part = ''
-    for line in lines:
-        if len(line) >= limit:
-            assert False, "one line is too long"
-        if len(part) + len(line) < limit - 10:
-            part = part + '\n' + line
-        else:
-            parts.append(part)
-            part = line
-    parts.append(part)
-    parts_translated = []
-    for i, part in enumerate(parts):
-        parts_translated.append(translator.translate(part, language_to, language_from))
-        print(i, '/', len(parts))
-    text_translated = '\n'.join(parts_translated)
-    return text_translated
-
-
-def translate(translator, input_path, output_path, engine, language_to, language_from, debug):
-    text_original = open(input_path).read()
-    text_original = connect_paragraphs(text_original)
-    text_converted, envs = process_latex.replace_latex_envs(text_original)
-    text_converted = split_paragraphs(text_converted)
-    text_converted = split_titles(text_converted)
-    text_translated = translate_by_part(translator, text_converted, language_to, language_from, char_limit)
-    if debug:
-        print(text_converted, file=open("text_old", "w", encoding='utf-8'))
-        print(text_translated, file=open("text_new", "w", encoding='utf-8'))
-        f = open("envs", "w", encoding='utf-8')
-        for i, env in enumerate(envs):
-            print(f'env {i}', file=f)
-            print(env, file=f)
-        f.close()
-    text_final = text_translated
-    text_final = process_latex.recover_latex_envs(text_final, envs)
-
-    with open(output_path, "w", encoding='utf-8') as file:
-        print(tex_begin, file=file)
-        print(text_final, file=file)
-        print(tex_end, file=file)

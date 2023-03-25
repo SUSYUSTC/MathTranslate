@@ -74,9 +74,11 @@ def main():
     from mathtranslate import config
     from mathtranslate.config import default_engine, default_language_from, default_language_to
     from mathtranslate.fix_encoding import fix_file_encoding
+    from mathtranslate.translate import TextTranslator, LatexTranslator
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("file", nargs='?', type=str, help='input file')
+    parser.add_argument("-o", type=str, help='output path')
     parser.add_argument("-engine", default=default_engine, help=f'translation engine, avaiable options include google and tencent. default is {default_engine}')
     parser.add_argument("-from", default=default_language_from, dest='l_from', help=f'language from, default is {default_language_from}')
     parser.add_argument("-to", default=default_language_to, dest='l_to', help=f'language to, default is {default_language_to}')
@@ -84,7 +86,7 @@ def main():
     parser.add_argument("--setkey", action='store_true', help='set id and key of tencent translator')
     parser.add_argument("--setdefault", action='store_true', help='set default translation engine and languages')
     parser.add_argument("--debug", action='store_true')
-    parser.add_argument("--nocompile", action='store_true')
+    parser.add_argument("--compile", action='store_true')
     options = parser.parse_args()
 
     if options.setkey:
@@ -121,38 +123,48 @@ def main():
         parser.print_help()
         sys.exit()
 
-    if options.engine == 'google':
-        import mtranslate as translator
-    elif options.engine == 'tencent':
+    if options.engine == 'tencent':
         haskey = (mathtranslate.config.tencent_secret_id is not None) and (mathtranslate.config.tencent_secret_key is not None)
         if not haskey:
             print('Please save ID and key for tencent translation api first by')
-            print('translate_tex.py --setkey')
+            print('translate_tex --setkey')
             sys.exit()
-        from mathtranslate.tencent import Translator
-        translator = Translator()
         if options.l_from == 'zh-CN':
             options.l_from = 'zh'
         if options.l_to == 'zh-CN':
             options.l_to = 'zh'
-    else:
-        assert False, 'engine must be google or tencent'
 
     print("Start")
     print('engine', options.engine)
     print('language from', options.l_from)
     print('language to', options.l_to)
     input_path = options.file
-    input_path_base, input_path_ext = os.path.splitext(input_path)
-    assert input_path_ext != '.tex', "The input file should not end with .tex! Please change to .txt or something else"
-    output_path = input_path_base + '.tex'
+    if options.o is None:
+        input_path_base, input_path_ext = os.path.splitext(input_path)
+        if input_path_ext == '.tex':
+            print("The input file ends with .tex, it will be overwritten.")
+            print("If you confirm this action, please press enter, otherwise ctrl+C to cancel")
+            input()
+            print('OK I will continue')
+        output_path = input_path_base + '.tex'
+    else:
+        output_path = options.o
 
-    mathtranslate.translate(translator, input_path, output_path, options.engine, options.l_to, options.l_from, options.debug)
+    text_translator = TextTranslator(options.engine, options.l_to, options.l_from)
+    latex_translator = LatexTranslator(text_translator, options.debug)
+
+    text_original = open(input_path).read()
+    text_final = latex_translator.translate_full_latex(text_original)
+    with open(output_path, "w", encoding='utf-8') as file:
+        print(text_final, file=file)
     print(output_path, 'is generated')
     fix_file_encoding(output_path)
 
-    if not options.nocompile:
+    if options.compile:
         os.system(f'xelatex {output_path}')
+    else:
+        print(f"You can then manually compile it by running 'xelatex {output_path}'")
+        print("or compile it online on overleaf")
 
 
 if __name__ == '__main__':
