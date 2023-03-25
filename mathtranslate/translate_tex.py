@@ -74,6 +74,7 @@ def main():
     from mathtranslate import config
     from mathtranslate.config import default_engine, default_language_from, default_language_to
     from mathtranslate.fix_encoding import fix_file_encoding
+    from mathtranslate.translation import TextTranslator, DocumentTranslator
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("file", nargs='?', type=str, help='input file')
@@ -121,22 +122,16 @@ def main():
         parser.print_help()
         sys.exit()
 
-    if options.engine == 'google':
-        import mtranslate as translator
-    elif options.engine == 'tencent':
+    if options.engine == 'tencent':
         haskey = (mathtranslate.config.tencent_secret_id is not None) and (mathtranslate.config.tencent_secret_key is not None)
         if not haskey:
             print('Please save ID and key for tencent translation api first by')
-            print('translate_tex.py --setkey')
+            print('translate_tex --setkey')
             sys.exit()
-        from mathtranslate.tencent import Translator
-        translator = Translator()
         if options.l_from == 'zh-CN':
             options.l_from = 'zh'
         if options.l_to == 'zh-CN':
             options.l_to = 'zh'
-    else:
-        assert False, 'engine must be google or tencent'
 
     print("Start")
     print('engine', options.engine)
@@ -151,7 +146,13 @@ def main():
         print('OK I will continue')
     output_path = input_path_base + '.tex'
 
-    mathtranslate.translate(translator, input_path, output_path, options.engine, options.l_to, options.l_from, options.debug)
+    translator = TextTranslator(options.engine, options.l_to, options.l_from)
+    doc_translator = DocumentTranslator(translator, options.debug)
+
+    text_original = open(input_path).read()
+    text_final = doc_translator.translate_full(text_original)
+    with open(output_path, "w", encoding='utf-8') as file:
+        print(text_final, file=file)
     print(output_path, 'is generated')
     fix_file_encoding(output_path)
 

@@ -8,5 +8,5 @@ from . import translation
 from . import tencent
 from . import fix_encoding
 from . import process_latex
-from .translation import translate
+from . import process_text
 from . import translate_tex

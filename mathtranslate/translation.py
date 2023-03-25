@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 from . import process_latex
+from . import process_text
+from .process_text import char_limit
 
 default_begin = r'''
 \documentclass[UTF8]{article}
@@ -10,135 +12,97 @@ default_begin = r'''
 default_end = r'''
 \end{document}
 '''
-char_limit = 2000
 
 
-def is_connected(line_above, line_below):
-    if len(line_above) > 0 and len(line_below) > 0:
-        if line_above[-1] != '.' and line_below[0].islower():
-            return True
-    return False
-
-
-def connect_paragraphs(text):
-    text_split = text.split('\n')
-    i = 0
-    while i < len(text_split) - 1:
-        line_above = text_split[i]
-        line_below = text_split[i + 1]
-        if is_connected(line_above, line_below):
-            text_split[i] = text_split[i] + text_split[i + 1]
-            del text_split[i + 1]
+class TextTranslator:
+    def __init__(self, engine, language_to, language_from):
+        if engine == 'google':
+            import mtranslate as translator
+        elif engine == 'tencent':
+            from mathtranslate.tencent import Translator
+            translator = Translator()
         else:
-            i += 1
-    return '\n'.join(text_split)
+            assert False, "engine must be google or tencent"
+        self.translator = translator
+        self.language_to = language_to
+        self.language_from = language_from
+
+    def translate(self, text):
+        return self.translator.translate(text, self.language_to, self.language_from)
 
 
-def get_first_word(line):
-    words = line.split(' ')
-    for word in words:
-        if len(word) > 0:
-            return word
-    return ''
+class DocumentTranslator:
+    def __init__(self, translator: TextTranslator, debug=False):
+        self.translator = translator
+        self.debug = debug
+        if self.debug:
+            self.f_old = open("text_old", "w", encoding='utf-8')
+            self.f_new = open("text_new", "w", encoding='utf-8')
+            self.f_env = open("envs", "w", encoding='utf-8')
 
+    def close(self):
+        if self.debug:
+            self.f_old.close()
+            self.f_new.close()
+            self.f_env.close()
 
-def argmax(array):
-    return array.index(max(array))
+    def translate_paragraph(self, text):
+        lines = text.split('\n')
+        parts = []
+        part = ''
+        for line in lines:
+            if len(line) >= char_limit:
+                assert False, "one line is too long"
+            if len(part) + len(line) < char_limit - 10:
+                part = part + '\n' + line
+            else:
+                parts.append(part)
+                part = line
+        parts.append(part)
+        parts_translated = []
+        for part in parts:
+            parts_translated.append(self.translator.translate(part))
+        text_translated = '\n'.join(parts_translated)
+        return text_translated.replace("\u200b", "")
 
+    def translate_body(self, text_original_paragraph, num, complete):
+        text_converted_paragraph, envs = process_latex.replace_latex_envs(text_original_paragraph)
+        text_converted_paragraph = process_text.split_paragraphs(text_converted_paragraph)
+        if not complete:
+            text_converted_paragraph = process_text.split_titles(text_converted_paragraph)
+        text_translated_paragraph = self.translate_paragraph(text_converted_paragraph)
+        if self.debug:
+            print(f'\n\nParagraph {num}\n\n', file=self.f_old)
+            print(f'\n\nParagraph {num}\n\n', file=self.f_new)
+            print(f'\n\nParagraph {num}\n\n', file=self.f_env)
+            print(text_converted_paragraph, file=self.f_old)
+            print(text_translated_paragraph, file=self.f_new)
+            for i, env in enumerate(envs):
+                print(f'env {i}', file=self.f_env)
+                print(env, file=self.f_env)
+        text_final_paragraph = text_translated_paragraph
+        text_final_paragraph = process_latex.recover_latex_envs(text_final_paragraph, envs)
+        return text_final_paragraph
 
-def split_paragraphs(text):
-    text_split = []
-    for paragraph in text.split('\n'):
-        if len(paragraph) > char_limit:
-            lines = paragraph.split('.')
-            first_words = [get_first_word(line) for line in lines]
-            first_length = [len(word) if (len(word) > 0 and word[0].isupper()) else 0 for word in first_words]
-            first_length[0] = 0
-            position = argmax(first_length)
-            par1 = split_paragraphs('.'.join(lines[0:position]) + '.')
-            par2 = split_paragraphs('.'.join(lines[position:]))
-            text_split.extend([par1, par2])
+    def translate_full(self, text_original):
+        text_original = process_latex.remove_tex_comments(text_original)
+        complete = process_latex.is_complete(text_original)
+        if complete:
+            text_original, tex_begin, tex_end = process_latex.split_latex_document(text_original, r'\begin{document}', r'\end{document}')
+            tex_begin = process_latex.remove_blank_lines(tex_begin)
+            tex_begin = process_latex.insert_package(tex_begin, 'xeCJK')
         else:
-            text_split.append(paragraph)
-    return '\n'.join(text_split)
+            text_original = process_text.connect_paragraphs(text_original)
+            tex_begin = default_begin
+            tex_end = default_end
 
+        text_original_paragraphs = text_original.split('\n\n')
+        text_final_paragraphs = []
 
-def is_title(line_above, line_below):
-    if len(line_above) > 0 and len(line_below) > 0:
-        if line_above[-1] != '.' and (not line_above[0].islower()) and line_below[0].isupper():
-            return True
-    return False
+        for num, text_original_paragraph in enumerate(text_original_paragraphs):
+            text_final_paragraph = self.translate_body(text_original_paragraph, num, complete)
+            text_final_paragraphs.append(text_final_paragraph)
+            print(num, '/', len(text_original_paragraphs))
 
-
-def split_titles(text):
-    text_split = text.split('\n')
-    i = 0
-    while i < len(text_split) - 1:
-        line_above = text_split[i]
-        line_below = text_split[i + 1]
-        if is_title(line_above, line_below):
-            text_split[i] = '\n\n' + text_split[i] + '\n\n'
-        i += 1
-    return '\n'.join(text_split)
-
-
-def translate_by_part(translator, text, language_to, language_from, limit):
-    lines = text.split('\n')
-    parts = []
-    part = ''
-    for line in lines:
-        if len(line) >= limit:
-            assert False, "one line is too long"
-        if len(part) + len(line) < limit - 10:
-            part = part + '\n' + line
-        else:
-            parts.append(part)
-            part = line
-    parts.append(part)
-    parts_translated = []
-    for i, part in enumerate(parts):
-        parts_translated.append(translator.translate(part, language_to, language_from))
-        print(i, '/', len(parts))
-    text_translated = '\n'.join(parts_translated)
-    return text_translated
-
-
-def translate(translator, input_path, output_path, engine, language_to, language_from, debug):
-    text_original = open(input_path).read()
-    text_original = process_latex.remove_tex_comments(text_original)
-    text_original = process_latex.remove_blank_line_in_documentclass(text_original)
-    complete = process_latex.is_complete(text_original)
-    if complete:
-        text_original, tex_begin, tex_end = process_latex.split_latex_document(text_original)
-        tex_begin = process_latex.insert_package(tex_begin, 'xeCJK')
-    else:
-        text_original = connect_paragraphs(text_original)
-        tex_begin = default_begin
-        tex_end = default_end
-
-    if debug:
-        f_old = open("text_old", "w", encoding='utf-8')
-        f_new = open("text_new", "w", encoding='utf-8')
-        f_env = open("envs", "w", encoding='utf-8')
-
-    text_converted, envs = process_latex.replace_latex_envs(text_original)
-    text_converted = split_paragraphs(text_converted)
-    if not complete:
-        text_converted = split_titles(text_converted)
-    text_translated = translate_by_part(translator, text_converted, language_to, language_from, char_limit)
-    if debug:
-        print(text_converted, file=f_old)
-        print(text_translated, file=f_new)
-        for i, env in enumerate(envs):
-            print(f'env {i}', file=f_env)
-            print(env, file=f_env)
-    text_final = text_translated
-    text_final = process_latex.recover_latex_envs(text_final, envs)
-
-    if debug:
-        f_old.close()
-        f_new.close()
-        f_env.close()
-
-    with open(output_path, "w", encoding='utf-8') as file:
-        print(tex_begin + '\n' + text_final + '\n' + tex_end, file=file)
+        text_final = '\n\n'.join(text_final_paragraphs)
+        return tex_begin + '\n' + text_final + '\n' + tex_end

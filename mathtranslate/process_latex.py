@@ -49,8 +49,8 @@ def replace_latex_envs(text):
         r"(?<!\\)\\\[(.*?)(?<!\\)\\\]",  # \[ xxx \]
         r"(?<!\\)\\\((.*?)(?<!\\)\\\)",  # \( xxx \)
         r"(?<!\\)\\begin\{(.*?)\}(.*?)(?<!\\)\\end\{\1\}",  # \begin{xxx} \end{xxx}
-        r"(?<!\\)\\([a-zA-Z]+)\[(.*?)\]\{(.*?)\}",  # \xxx[xxx]{xxx}
-        r"(?<!\\)\\([a-zA-Z]+)\{(.*?)\}",  # \xxx{xxx}
+        r"(?<!\\)\\([a-zA-Z]+)\*?\[(.*?)\]\{(.*?)\}",  # \xxx[xxx]{xxx}
+        r"(?<!\\)\\([a-zA-Z]+)\*?\{(.*?)\}",  # \xxx{xxx}
         r"(?<!\\)\\([a-zA-Z]+)",  # \xxx
     ]
 
@@ -70,8 +70,11 @@ def replace_latex_envs(text):
 
 
 def recover_latex_envs(text, replaced_envs):
+    matched_indices = []
+
     def get_env(digit_str):
         index = int(''.join(digit_str.split('_')))
+        matched_indices.append(index)
         if index < len(replaced_envs):
             return replaced_envs[index]
         else:
@@ -84,7 +87,8 @@ def recover_latex_envs(text, replaced_envs):
         total_num += num_modify
         if num_modify == 0:
             break
-    print(total_num, 'latex environments replaced in', len(replaced_envs))
+    if sorted(matched_indices) != list(range(len(replaced_envs))):
+        print(total_num, 'latex environments replaced in', len(replaced_envs))
     #for count, env in list(enumerate(replaced_envs))[::-1]:
     #    text = text.replace(variable_code(count), env)
     return text
@@ -105,32 +109,25 @@ def remove_tex_comments(text):
     return text
 
 
-def split_latex_document(text):
+def split_latex_document(text, begin_code, end_code):
     """
-    Splits a LaTeX document into three parts: the preamble, the body, and the postamble.
+    Splits a document into three parts: the preamble, the body, and the postamble.
     Returns a tuple of the three parts.
     """
-    begin_document = r"\begin{document}"
-    end_document = r"\end{document}"
-    begin_doc_index = text.find(begin_document)
-    end_doc_index = text.rfind(end_document)
+    begin_doc_index = text.find(begin_code)
+    end_doc_index = text.rfind(end_code)
     if begin_doc_index == -1 or end_doc_index == -1 or end_doc_index <= begin_doc_index:
         assert False, "latex is not complete"
-    pre = text[:begin_doc_index+len(begin_document)]
-    body = text[begin_doc_index+len(begin_document):end_doc_index]
+    pre = text[:begin_doc_index + len(begin_code)]
+    body = text[begin_doc_index + len(begin_code):end_doc_index]
     post = text[end_doc_index:]
     return body, pre, post
 
 
-def remove_blank_line_in_documentclass(text):
-    pattern = re.compile(r"\\documentclass(\[.*?\])?\{(.*?)\}", re.DOTALL)
-    match = pattern.search(text)
-    if match:
-        start, end = match.span()
-        new_text = text[:end].replace('\n\n', '\n') + text[end:]
-        return new_text
-    else:
-        return text
+def remove_blank_lines(text):
+    pattern = re.compile(r'\n\n+')
+    text = pattern.sub('\n', text)
+    return text
 
 
 def insert_package(text, package):
