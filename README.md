@@ -25,8 +25,9 @@ This is a project to provide translation of scientific papers with heavy math sy
 The main work of this project is to translate LaTex files based on Google Translate in plain text, and finally realize the translation of pdf.
 
 Here's an example of what you get finally.
+
 <p float="left">
-<img src="https://user-images.githubusercontent.com/30529122/227698232-2e9f63ef-0727-4f92-ac65-38651fb64774.png" width="700">
+<img src="https://user-images.githubusercontent.com/30529122/227698548-1cc19f7c-00e7-4312-9d58-2a7237656b51.png" width="700">
 </p>
 
 <p float="left">
