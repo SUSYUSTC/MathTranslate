@@ -21,11 +21,8 @@
 <p align="center"> <a href="README.md">English</a> |  简体中文 </p>
 
 大多数翻译软件无法很好地处理论文中的数学公式，许多科研工作者为此饱受困扰。本项目可以将含有大量数学公式的科研论文在任何语言之间翻译。
-该项目基于以下两个工具：
-1. [mathpix](https://mathpix.com/): 提供了一个将 text+equation 图片转换成 latex 代码的接口。不幸的是它不是完全免费的，价格可以在 https://mathpix.com/pricing 查看。在后续开发中我们会尽量减少需要的使用次数以节省您的开支。（我们的软件本身是完全免费开源的！）
-2. 谷歌翻译。
 
-该项目的主要工作是基于纯文字的谷歌翻译实现 LaTex 文件的翻译，并结合 mathpix 最终实现 pdf（或其他格式） 到 pdf 的翻译。
+该项目的主要工作是基于纯文字的谷歌翻译实现 LaTex 文件的翻译，从而最终实现 pdf 的翻译。
 
 这里是示例：
 <p float="left">
@@ -36,29 +33,28 @@
 虽然它目前是一个小项目，但我们知道这个项目受到的关注比我们预期的要多得多。 我们正在计划更多的开发，以获得更好的用户体验。
 
 ## 发布
-### 2023年3月22日
-修复了一些主要的bug。
+### 2023年3月24日
+增加了直接翻译 arxiv 论文的功能。
 ### 2023年3月21日
 对IP地址在中国大陆的用户，我们增加了腾讯翻译的选项。
 ### 2023年3月16日
 我们已经完成了对各操作系统的兼容。现在只需要 `pip install --upgrade mathtranslate` 就可以完成安装。
 
 ## 安装需求
-1. 一个 [mathpix](https://mathpix.com/) 帐户。 不幸的是，它不是完全免费的。目前 mathpix 免费提供 100 个截图（注册时需要一封edu电子邮件）或者以每月 5 美元的价格提供 5000 个截图。
-2. Python3 和 pip。建议使用 [Anaconda](https://www.anaconda.com)。
-3. texlive (或者任何可以从tex生成pdf的工具)，中文输出需要 CJK 包。
-4. （中国大陆IP用户）：一个 [腾讯翻译 API](https://cloud.tencent.com/product/tmt) 帐户。 注册后可以在 [腾讯控制台](https://console.cloud.tencent.com/cam/capi) 获取 secret ID 和 secret key 。 腾讯翻译是除谷歌翻译之外我们认知范围内免费额度最高的翻译 API，每月有500万字符免费额度，且不手动充值情况下不会扣费（即不用担心误操作）。
+1. Python3 和 pip。建议使用 [Anaconda](https://www.anaconda.com)。
+2. （中国大陆IP用户）： [腾讯翻译 API](https://cloud.tencent.com/product/tmt) 帐户。 注册后可以在 [腾讯控制台](https://console.cloud.tencent.com/cam/capi) 获取 secret ID 和 secret key 。 腾讯翻译是除谷歌翻译之外我们认知范围内免费额度最高的翻译 API，每月有500万字符免费额度，且不手动充值情况下不会扣费（即不用担心误操作）。
 
 ## 安装
 `pip install --upgrade mathtranslate`
 
 ## 使用
-1. 下载 mathpix。
-2. （腾讯翻译API用户）运行`translate_tex --setkey`来存储API ID和key。
-3. 用 mathpix 把你要翻译的内容截图，复制输出的 latex 代码，保存到 txt 文件中。mathpix 目前可以识别连贯的文字（可以是一段或多段）。您也可以连续截图-复制多段分隔开的文字放在同一个 txt 文件中，我们在下一步的翻译中会自动识别与合并被图片或者分页隔开的段落。
-4. 假设您上一步保存的文件名为 `main.txt`。在此文件夹中运行 `translate_tex main.txt`。 您将获得一个翻译后的 tex 文件 `main.tex`，如果您的机器上安装了`xelatex`的话也会同时生成 pdf 文件。
-5. 由于本项目较小，有时需要对最终的 tex 文件稍作改动进行编译。
-6. 您可以通过命令行参数“-engine”、“-from”、“-to”更改翻译语言和引擎的默认设置。 例如 `translate_tex -engine tencent main.txt`。 您还可以通过 `translate_tex --setdefault` 永久更改设置。 您可以通过 `translate_tex --help` 查看更多细节。
+1. 准备或生成一个 tex 文件。你可以用如下方式得到 tex 文件：
+    - 对于大多数 [arxiv](https://arxiv.org/) 论文，你可以下载到 latex 源代码 (Download - Other formats - Source)。如果你下载得到的文件没有后缀，大部分情况下是 .tar 格式，您可能需要手动加上后缀。解压后你可以得到一个 latex 项目，然后你可以翻译其中的 .tex 文件。
+    - 使用 [mathpix](https://mathpix.com/) 对你想翻译的部分截图。你可以一次性截图连着的很多段，也可以多次截图合成一个文件。不幸的是，它不是完全免费的。目前 mathpix 免费提供 100 个截图（注册时需要一封edu电子邮件）或者以每月 5 美元的价格提供 5000 个截图。
+2. （腾讯翻译API用户）运行`translate_tex --setkey`来存储 API ID 和 key。
+3. 通过 `translate_tex input.tex -o output.tex` 翻译 tex 文件。
+4. 编译您的 tex 文件。您可以用 texlive 的命令 `xelatex output.tex` 编译。如果是下载的 arxiv 项目我们建议把所有文件压缩成 zip 文件后上传到 overleaf 在线编译。**注意，您需要在 `Menu - Compiler` 中设置成 XeLatex 编译器，否则无法处理其他语言。**
+5. 您可以通过命令行参数 `-engine`、`-from`、`-to` 更改翻译语言和引擎的默认设置。 例如 `translate_tex -engine tencent input.tex -o output.tex`。 您还可以通过 `translate_tex --setdefault` 永久更改设置。 您可以通过 `translate_tex --help` 查看更多细节。
 
 ## 例子
 在示例目录中，您可以看到 `main.txt`，它是 `paper.pdf` 的一部分的 mathpix 输出。 运行 `translate_tex main.txt`，您会获得 `main.tex` 和 `main.pdf` 。`translated.png` 是你在 `main.pdf` 里预期会看到的内容。
