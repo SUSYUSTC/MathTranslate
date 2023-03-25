@@ -21,11 +21,8 @@
 <p align="center"> English | <a href="README.zh.md"> 简体中文 </a></p>
 
 This is a project to provide translation of scientific papers with heavy math symbols from any language to any language while keeping the math symbols unchanged. In most translation softwares you wouldn't be able to keep equations and it would annoy you.
-This project is based on the following two tools:
-1. [mathpix](https://mathpix.com/): it provides an interface to convert text+equation images to latex code. Unfortunately, it is not totally free. The price can be seen at  https://mathpix.com/pricing. In further developments, we will try our best to reduce the number of requests to save your money. (This project itself is 100% free and open-source!)
-2. google translate
 
-The main work of this project is to translate LaTex files based on Google Translate of plain text, with mathpix combined we can finally translate pdf (or other formats) to pdf.
+The main work of this project is to translate LaTex files based on Google Translate in plain text, and finally realize the translation of pdf.
 
 Here's an example of what you get finally.
 <p float="left">
@@ -36,29 +33,28 @@ Here's an example of what you get finally.
 Although it is currently a small project, we are aware that this project has received much more attention that we expected. We are planning more developments for better user experience.
 
 ## Releases
-### Mar 22, 2023
-Fixed several main bugs.
+### Mar 24, 2023
+We add the ability to directly translate arxiv papers.
 ### Mar 21, 2023
 We add tencent translation option for users with IP in China mainland.
 ### Mar 16, 2023
 We are now supporting all operating systems! Now you can install simply by `pip install --upgrade mathtranslate`.
 
 ## Requirements
-1. A [mathpix](https://mathpix.com/) account. Unfortunately, it is not totally free. The current price is free for 100 screenshots (requires an educational email in registeration) and $5 per month for 5000 screenshots.
-2. Python3 and pip. [Anaconda](https://www.anaconda.com) is recommended.
-3. texlive (or any other tool to generate pdf from tex). For Chinese you would need CJK package.
-4. (For users with IP address in China mainland): A [tencent translation api account](https://cloud.tencent.com/product/tmt). After registering you can get secret ID and secret key at [tencent console](https://console.cloud.tencent.com/cam/capi). Tencent Translate is the translation API with the highest free quota in our knowledge besides Google Translate, with a free quota of 5 million characters per month, and no fee will be deducted if there is no manual recharge (that is, there is no need to worry about misuse).
+1. Python3 and pip. [Anaconda](https://www.anaconda.com) is recommended.
+2. (IP users in Mainland China): [Tencent Translation API](https://cloud.tencent.com/product/tmt) account. After registration, you can get the secret ID and secret key in [Tencent Console](https://console.cloud.tencent.com/cam/capi). Tencent Translate is the translation API with the highest free quota in our knowledge besides Google Translate, with a free quota of 5 million characters per month, and no fee will be deducted if there is no manual recharge (that is, there is no need to worry about misuse).
 
-## Installation
+## Install
 `pip install --upgrade mathtranslate`
 
-## Usage
-1. Download mathpix.
-2. (For tencent translation API users) Run `translate_tex --setkey` to store API ID and key.
-3. Use mathpix to screenshot what you want to translate, copy the output latex code and save in a txt file. Mathpix currently recognizes continuous text (which can be one or more paragraphs). You can also screenshot and copy multiple separated texts and put them in the same txt file, we will automatically identify and merge the paragraphs separated by pictures or pages in the next step.
-4. Assume the filename you saved in the previous step is `main.txt`. Run `translate_tex main.txt`. You will get a translated tex file `main.tex` and a corresponding pdf file `main.pdf` in case `xelatex` is installed on your machine.
-5. Since this project is small, sometimes you need to slightly change the final tex file for compilation.
-6. You can change default settings of translation languages and engine by command line argument `-engine`, `-from`, `-to`. For exmample `translate_tex -engine tencent main.txt`. You can also change setting permanently by `translate_tex --setdefault`. See more details by `translate_tex --help`.
+## use
+1. Prepare or generate a tex file. You can get the tex file by the following two ways:
+     - For most [arxiv](https://arxiv.org/) papers, you can download the latex source code (Download - Other formats - Source). If the file you downloaded has no suffix, in most cases it is in .tar format, you may need to add the suffix manually. After decompression you can get a latex project, and then you can translate the .tex files in it.
+     - Use [mathpix](https://mathpix.com/) to take a screenshot of the part you want to translate. You can capture many connected segments at one time, or combine multiple screenshots into one file. Unfortunately, it's not completely free. Currently mathpix offers 100 screenshots for free (an edu email is required for registration) or 5000 screenshots for $5 per month.
+2. (Tencent Translate API users) run `translate_tex --setkey` to store the API ID and key.
+3. Translate the tex file by `translate_tex input.tex -o output.tex`.
+4. Compile your tex file. You can compile it with the texlive command `xelatex output.tex`. For Chinese you need the xeCJK package. If it is a downloaded arxiv project, we recommend compressing all files into a zip file and uploading it to overleaf for online compilation. **Note, you need to set the XeLatex compiler in `Menu - Compiler`, otherwise it cannot handle other languages. **
+5. You can change the default settings of the translation language and engine through the command line parameters `-engine`, `-from`, `-to`. For example `translate_tex -engine tencent input.tex -o output.tex`. You can also permanently change the setting via `translate_tex --setdefault`. You can see more details with `translate_tex --help`.
 
 ## Examples
 In the example directory, you can see `main.txt` which is the mathpix output of a part of `paper.pdf`. Run `translate_tex main.txt` and you will get the `main.tex` and `main.pdf`. `translated.png` is what you should expect to see in the `main.pdf`.
