@@ -1,10 +1,6 @@
 # MathTranslate
 
 <p align="center">
-  <!-- tests (GitHub actions) -->
-  <a href="https://github.com/SUSYUSTC/MathTranslate/actions/workflows/ci.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/SUSYUSTC/MathTranslate/ci.yml?branch=master" />
-  </a>
   <!-- PyPI -->
   <a href="https://pypi.org/project/mathtranslate/">
     <img src="https://img.shields.io/pypi/v/mathtranslate.svg?logo=pypi"/>
@@ -49,7 +45,7 @@
 
 ## 安装需求
 1. 一个 [mathpix](https://mathpix.com/) 帐户。 不幸的是，它不是完全免费的。目前 mathpix 免费提供 100 个截图（注册时需要一封edu电子邮件）或者以每月 5 美元的价格提供 5000 个截图。
-2. Python3 和 pip。
+2. Python3 和 pip。建议使用 [Anaconda](https://www.anaconda.com)。
 3. texlive (或者任何可以从tex生成pdf的工具)，中文输出需要 CJK 包。
 4. （中国大陆IP用户）：一个 [腾讯翻译 API](https://cloud.tencent.com/product/tmt) 帐户。 注册后可以在 [腾讯控制台](https://console.cloud.tencent.com/cam/capi) 获取 secret ID 和 secret key 。 腾讯翻译是除谷歌翻译之外我们认知范围内免费额度最高的翻译 API，每月有500万字符免费额度，且不手动充值情况下不会扣费（即不用担心误操作）。
 
