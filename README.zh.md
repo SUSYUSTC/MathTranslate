@@ -26,6 +26,10 @@
 
 这里是示例：
 <p float="left">
+<img src="https://user-images.githubusercontent.com/30529122/227698232-2e9f63ef-0727-4f92-ac65-38651fb64774.png" width="700">
+</p>
+
+<p float="left">
 <img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/screenshot.png" width="300">
 <img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/translated.png" width="400">
 </p>
