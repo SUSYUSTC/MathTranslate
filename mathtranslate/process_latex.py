@@ -49,8 +49,8 @@ def replace_latex_envs(text):
         r"(?<!\\)\\\[(.*?)(?<!\\)\\\]",  # \[ xxx \]
         r"(?<!\\)\\\((.*?)(?<!\\)\\\)",  # \( xxx \)
         r"(?<!\\)\\begin\{(.*?)\}(.*?)(?<!\\)\\end\{\1\}",  # \begin{xxx} \end{xxx}
-        r"(?<!\\)\\([a-zA-Z]+)\[(.*?)\]\{(.*?)\}",  # \xxx[xxx]{xxx}
-        r"(?<!\\)\\([a-zA-Z]+)\{(.*?)\}",  # \xxx{xxx}
+        r"(?<!\\)\\([a-zA-Z]+)\*?\[(.*?)\]\{(.*?)\}",  # \xxx[xxx]{xxx}
+        r"(?<!\\)\\([a-zA-Z]+)\*?\{(.*?)\}",  # \xxx{xxx}
         r"(?<!\\)\\([a-zA-Z]+)",  # \xxx
     ]
 
@@ -61,7 +61,7 @@ def replace_latex_envs(text):
         pattern = re.compile(regex, re.DOTALL)
         while pattern.search(text):
             latex_env = pattern.search(text).group()
-            replaced_envs.append(latex_env)
+            replaced_envs.append(f' {latex_env} ')
             text = pattern.sub(variable_code(count), text, 1)
             count += 1
 
@@ -70,9 +70,13 @@ def replace_latex_envs(text):
 
 
 def recover_latex_envs(text, replaced_envs):
+    nenvs = len(replaced_envs)
+    matched_indices = []
+
     def get_env(digit_str):
         index = int(''.join(digit_str.split('_')))
-        if index < len(replaced_envs):
+        matched_indices.append(index)
+        if index < nenvs:
             return replaced_envs[index]
         else:
             return '???'
@@ -84,7 +88,115 @@ def recover_latex_envs(text, replaced_envs):
         total_num += num_modify
         if num_modify == 0:
             break
-    print(total_num, 'latex environments replaced in', len(replaced_envs))
-    #for count, env in list(enumerate(replaced_envs))[::-1]:
-    #    text = text.replace(variable_code(count), env)
+    n_good = len(set(matched_indices).intersection(set(range(nenvs))))
+    n_bad1 = len(matched_indices) - n_good
+    n_bad2 = nenvs - n_good
+    n_bad = max(n_bad1, n_bad2)
+    if n_bad > 0:
+        print(n_bad, 'latex environments are wrong in total', nenvs)
     return text
+
+
+def remove_tex_comments(text):
+    """
+    Removes all TeX comments in a given string with the format "% comment text".
+    Does not match "\%".
+    Returns the processed string.
+    """
+    # define regular expression for TeX comments
+    comment_regex = r"(?<!\\)%.*?(?=$|\n)"
+
+    # remove comments from text
+    text = re.sub(comment_regex, "", text)
+
+    return text
+
+
+def split_latex_document(text, begin_code, end_code):
+    """
+    Splits a document into three parts: the preamble, the body, and the postamble.
+    Returns a tuple of the three parts.
+    """
+    begin_doc_index = text.find(begin_code)
+    end_doc_index = text.rfind(end_code)
+    if begin_doc_index == -1 or end_doc_index == -1 or end_doc_index <= begin_doc_index:
+        assert False, "latex is not complete"
+    pre = text[:begin_doc_index + len(begin_code)]
+    body = text[begin_doc_index + len(begin_code):end_doc_index]
+    post = text[end_doc_index:]
+    return body, pre, post
+
+
+def count_braces(text):
+    text = text.replace(r'\{', '')
+    text = text.replace(r'\}', '')
+    return text.count('{'), text.count('}')
+
+
+def process_specific_env(text, pattern_begin, pattern_end, function):
+    position = 0
+    while True:
+        position = text.find(pattern_begin, position)
+        if position == -1:
+            break
+        position += len(pattern_begin)
+        start = position
+        while True:
+            position = text.find(pattern_end, position)
+            if position > 0 and text[position - 1] != '\\':
+                n_left, n_right = count_braces(text[start:position])
+                if n_left == n_right:
+                    break
+            position += 1
+        text_before = text[0:start]
+        text_middle = function(text[start:position])
+        text_after = text[position:]
+        position = len(text_before) + len(text_middle) + len(pattern_end)
+        text = text_before + text_middle + text_after
+    return text
+
+
+def remove_blank_lines(text):
+    pattern = re.compile(r'\n\n+')
+    text = pattern.sub('\n', text)
+    return text
+
+
+def insert_package(text, package):
+    pattern = re.compile(r"\\documentclass(\[.*?\])?\{(.*?)\}", re.DOTALL)
+    match = pattern.search(text)
+    if match:
+        start, end = match.span()
+        new_text = text[:end] + f"\n\\usepackage{{{package}}}\n" + text[end:]
+        return new_text
+    else:
+        return text
+
+
+def is_complete(latex_code):
+    # Define regular expressions for \documentclass, \begin{document}, and \end{document}
+    documentclass_pattern = re.compile(r"\\documentclass(\[.*?\])?\{.*?\}", re.DOTALL)
+    begin_pattern = re.compile(r"\\begin\{document\}")
+    end_pattern = re.compile(r"\\end\{document\}")
+
+    # Check if \documentclass is present
+    if not documentclass_pattern.search(latex_code):
+        return False
+
+    # Check if \begin{document} is present
+    begin_match = begin_pattern.search(latex_code)
+    if not begin_match:
+        return False
+    begin_index = begin_match.start()
+
+    # Check if \end{document} is present
+    end_match = end_pattern.search(latex_code)
+    if not end_match:
+        return False
+    end_index = end_match.end()
+
+    # Check if the order is correct
+    if begin_index < documentclass_pattern.search(latex_code).end() or end_index < begin_index:
+        return False
+
+    return True
