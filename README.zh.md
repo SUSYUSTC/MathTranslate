@@ -58,7 +58,7 @@
     - 使用 [mathpix](https://mathpix.com/) 对你想翻译的部分截图。你可以一次性截图连着的很多段，也可以多次截图合成一个文件。不幸的是，它不是完全免费的。目前 mathpix 免费提供 100 个截图（注册时需要一封edu电子邮件）或者以每月 5 美元的价格提供 5000 个截图。
 2. （腾讯翻译API用户）运行`translate_tex --setkey`来存储 API ID 和 key。
 3. 通过 `translate_tex input.tex -o output.tex` 翻译 tex 文件。
-4. 编译您的 tex 文件。您可以用 [texlive] (https://www.tug.org/texlive/) 的命令 `xelatex output.tex` 编译。中文翻译需要 xeCJK 包。如果是下载的 arxiv 项目我们建议把所有文件压缩成 zip 文件后上传到 [overleaf](https://www.overleaf.com/project) 在线编译。**注意，您需要在 `Menu - Compiler` 中设置成 XeLatex 编译器，否则无法处理其他语言。**
+4. 编译您的 tex 文件。您可以用 [texlive](https://www.tug.org/texlive/) 的命令 `xelatex output.tex` 编译。中文翻译需要 xeCJK 包。如果是下载的 arxiv 项目我们建议把所有文件压缩成 zip 文件后上传到 [overleaf](https://www.overleaf.com/project) 在线编译。**注意，您需要在 `Menu - Compiler` 中设置成 XeLatex 编译器，否则无法处理其他语言。**
 5. 您可以通过命令行参数 `-engine`、`-from`、`-to` 更改翻译语言和引擎的默认设置。 例如 `translate_tex -engine tencent input.tex -o output.tex`。 您还可以通过 `translate_tex --setdefault` 永久更改设置。 您可以通过 `translate_tex --help` 查看更多细节。
 
 ## 例子
