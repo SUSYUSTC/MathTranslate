@@ -44,10 +44,10 @@ We are now supporting all operating systems! Now you can install simply by `pip 
 1. Python3 and pip. [Anaconda](https://www.anaconda.com) is recommended.
 2. (IP users in Mainland China): [Tencent Translation API](https://cloud.tencent.com/product/tmt) account. After registration, you can get the secret ID and secret key in [Tencent Console](https://console.cloud.tencent.com/cam/capi). Tencent Translate is the translation API with the highest free quota in our knowledge besides Google Translate, with a free quota of 5 million characters per month, and no fee will be deducted if there is no manual recharge (that is, there is no need to worry about misuse).
 
-## Install
+## Installation
 `pip install --upgrade mathtranslate`
 
-## use
+## Usage
 1. Prepare or generate a tex file. You can get the tex file by the following two ways:
      - For most [arxiv](https://arxiv.org/) papers, you can download the latex source code (Download - Other formats - Source). If the file you downloaded has no suffix, in most cases it is in .tar format, you may need to add the suffix manually. After decompression you can get a latex project, and then you can translate the .tex files in it.
      - Use [mathpix](https://mathpix.com/) to take a screenshot of the part you want to translate. You can capture many connected segments at one time, or combine multiple screenshots into one file. Unfortunately, it's not completely free. Currently mathpix offers 100 screenshots for free (an edu email is required for registration) or 5000 screenshots for $5 per month.
