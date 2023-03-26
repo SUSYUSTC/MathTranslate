@@ -2,6 +2,7 @@
 from . import process_latex
 from . import process_text
 from .process_text import char_limit
+import time
 
 default_begin = r'''
 \documentclass[UTF8]{article}
@@ -18,16 +19,26 @@ class TextTranslator:
     def __init__(self, engine, language_to, language_from):
         if engine == 'google':
             import mtranslate as translator
+            self.rate_limit = 0
         elif engine == 'tencent':
             from mathtranslate.tencent import Translator
             translator = Translator()
+            self.rate_limit = 0.2
         else:
             assert False, "engine must be google or tencent"
         self.translator = translator
         self.language_to = language_to
         self.language_from = language_from
+        self.last_request_time = -float('inf')
 
     def translate(self, text):
+        while True:
+            t = time.time()
+            t_diff = t - self.last_request_time
+            if t_diff >= self.rate_limit:
+                break
+            time.sleep(0.01)
+        self.last_request_time = t
         return self.translator.translate(text, self.language_to, self.language_from)
 
 
