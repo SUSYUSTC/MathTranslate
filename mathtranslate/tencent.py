@@ -8,7 +8,7 @@ class Translator:
         self.cred = credential.Credential(tencent_secret_id, tencent_secret_key)
         self.client = tmt_client.TmtClient(self.cred, 'ap-shanghai')
 
-    def is_error_request_frequency(e: exception.TencentCloudSDKException):
+    def is_error_request_frequency(self, e: exception.TencentCloudSDKException):
         code = e.get_code()
         if code == 'RequestLimitExceeded':
             return True
