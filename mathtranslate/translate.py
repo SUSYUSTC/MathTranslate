@@ -19,27 +19,30 @@ class TextTranslator:
     def __init__(self, engine, language_to, language_from):
         if engine == 'google':
             import mtranslate as translator
-            self.rate_limit = 0
         elif engine == 'tencent':
             from mathtranslate.tencent import Translator
             translator = Translator()
-            self.rate_limit = 0.2
         else:
             assert False, "engine must be google or tencent"
         self.translator = translator
         self.language_to = language_to
         self.language_from = language_from
-        self.last_request_time = -float('inf')
+
+    def try_translate(self, text):
+        print('try')
+        return self.translator.translate(text, self.language_to, self.language_from)
 
     def translate(self, text):
         while True:
-            t = time.time()
-            t_diff = t - self.last_request_time
-            if t_diff >= self.rate_limit:
-                break
-            time.sleep(0.01)
-        self.last_request_time = t
-        return self.translator.translate(text, self.language_to, self.language_from)
+            try:
+                result = self.try_translate(text)
+            except BaseException as e:
+                if hasattr(self.translator, "is_error_request_frequency") and self.translator.is_error_request_frequency(e):
+                    print("sleep 1 second to wait")
+                    time.sleep(1)
+                else:
+                    raise e
+        return result
 
 
 class LatexTranslator:
@@ -118,12 +121,14 @@ class LatexTranslator:
         return latex_translated
 
     def translate_full_latex(self, latex_original):
+        # TODO: should also remove blank line if it start with "#"
         latex_original = process_latex.remove_tex_comments(latex_original)
         complete = process_latex.is_complete(latex_original)
         if complete:
             print('It is a full latex document')
             latex_original, tex_begin, tex_end = process_latex.split_latex_document(latex_original, r'\begin{document}', r'\end{document}')
             tex_begin = process_latex.remove_blank_lines(tex_begin)
+            # TODO: change xeCJK to be compatible with other compiler & languages
             tex_begin = process_latex.insert_package(tex_begin, 'xeCJK')
         else:
             print('It is not a full latex document')
@@ -131,6 +136,9 @@ class LatexTranslator:
             tex_begin = default_begin
             tex_end = default_end
 
+        # TODO: it also split one environment to several parts, so need to somehow put after processing latex environments
+        # However, we need to somehow combine these two steps, otherwise it ends up with things like XMATH_1_2_3_4.
+        # The longer the expression, the easier for translation errors to appear.
         latex_original_paragraphs = latex_original.split('\n\n')
         latex_translated_paragraphs = []
 
@@ -143,8 +151,9 @@ class LatexTranslator:
             num += 1
         latex_translated = '\n\n'.join(latex_translated_paragraphs)
 
+        # TODO: add more environments here
         print('processing latex environments')
-        latex_translated = self.translate_latex_env(latex_translated, ['abstract', 'acknowledgments'], complete, True)
+        latex_translated = self.translate_latex_env(latex_translated, ['abstract', 'acknowledgments', 'itermize', 'enumrate', 'description', 'list'], complete, True)
         print('processing latex commands')
         latex_translated = self.translate_latex_env(latex_translated, ['section', 'subsection', 'subsubsection', 'subsubsubsection', 'caption', 'subcaption'], complete, False)
 

@@ -41,8 +41,11 @@ def replace_latex_envs(text):
     $ $, \( xxx \), \xxx[xxx]{xxx}, \xxx{xxx}, and \xxx.
     Returns the processed text and a list of replaced LaTeX environments.
     """
+    # TODO: for \xxx[xxx]{xxx} and \xxx{xxx} the regex here cannot process \xxx{xxx{xxx}} correctly.
+    # We need to either change the regex or use the function "process_specific_env" in the following.
+    # Here is a regex that works better but cannot process \xxx{xxx \{xxx\}}: r'(?<!\\)\\[a-zA-Z]+?(\{(?:[^{}]++|(?1))++\})'
+
     # define regular expressions for each LaTeX environment
-    #get_specific_env = lambda env_name: r"(?<!\\)\\begin\{env_name\}(.*?)(?<!\\)\\end\{env_name\}",  # \begin{env_name} \end{env_name}
     latex_env_regex = [
         r"(?<!\\)\$\$(.*?)(?<!\\)\$\$",  # $$ $$
         r"(?<!\\)\$(.*?)(?<!\\)\$",  # $ $
