@@ -6,6 +6,7 @@ def fix_file_encoding(filename, target_encoding="UTF-8"):
     """
     Fixes the encoding of a file with Chinese characters.
     """
+    # TODO: I guess this function is not needed now?
     # detect the current encoding of the file
     with open(filename, "rb") as f:
         data = f.read()

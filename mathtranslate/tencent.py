@@ -1,4 +1,4 @@
-from tencentcloud.common import credential
+from tencentcloud.common import credential, exception
 from tencentcloud.tmt.v20180321 import tmt_client
 from .config import tencent_secret_id, tencent_secret_key, math_code
 
@@ -7,6 +7,13 @@ class Translator:
     def __init__(self):
         self.cred = credential.Credential(tencent_secret_id, tencent_secret_key)
         self.client = tmt_client.TmtClient(self.cred, 'ap-shanghai')
+
+    def is_error_request_frequency(e: exception.TencentCloudSDKException):
+        code = e.get_code()
+        if code == 'RequestLimitExceeded':
+            return True
+        else:
+            return False
 
     def translate(self, text, language_to, language_from):
         request = tmt_client.models.TextTranslateRequest()
