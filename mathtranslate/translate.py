@@ -29,13 +29,13 @@ class TextTranslator:
         self.language_from = language_from
 
     def try_translate(self, text):
-        print('try')
         return self.translator.translate(text, self.language_to, self.language_from)
 
     def translate(self, text):
         while True:
             try:
                 result = self.try_translate(text)
+                break
             except BaseException as e:
                 if hasattr(self.translator, "is_error_request_frequency") and self.translator.is_error_request_frequency(e):
                     print("sleep 1 second to wait")
