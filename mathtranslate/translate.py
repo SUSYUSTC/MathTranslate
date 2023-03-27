@@ -112,10 +112,10 @@ class LatexTranslator:
         for env_name in env_names:
             for env_name in [env_name, env_name + '*']:
                 if full:
-                    begin_code = r'\begin{env_name}'.replace('env_name', env_name)
-                    end_code = r'\end{env_name}'.replace('env_name', env_name)
+                    begin_code = rf'\begin{{{env_name}}}'
+                    end_code = rf'\end{{{env_name}}}'
                 else:
-                    begin_code = r'\env_name{'.replace('env_name', env_name)
+                    begin_code = rf'\{env_name}{{'
                     end_code = r'}'
                 latex_translated = process_latex.process_specific_env(latex_translated, begin_code, end_code, process_function)
         return latex_translated
