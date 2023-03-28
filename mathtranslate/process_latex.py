@@ -116,7 +116,7 @@ def remove_tex_comments(text):
     If "%" is at the beginning of a line then delete this line.
     Returns the processed string.
     """
-    text = re.sub(r"\n(?<!\\)%.*?(?=\n)", "", text)
+    text = re.sub(r"\n\s*(?<!\\)%.*?(?=\n)", "", text)
     text = re.sub(r"(?<!\\)%.*?(?=\n)", "", text)
 
     return text
