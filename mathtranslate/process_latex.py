@@ -10,12 +10,14 @@ pattern_command_simple = r"\\([a-zA-Z]+)"  # \xxx, group 1: name
 
 
 def variable_code(count):
+    # If count is 123, the code is {math_code}_1_2_3
     digits = list(str(count))
     count_str = "_".join(digits)
     return f'{math_code}_{count_str}'
 
 
 def modify_text(text, modify_func):
+    # modify text without touching the variable codes
     split_text = [s for s in re.split(match_code, text) if s is not None]
     for i in range(len(split_text)):
         if not re.match(match_code, split_text[i]):
@@ -25,12 +27,15 @@ def modify_text(text, modify_func):
 
 
 def modify_before(text):
+    # mathpix is stupid so sometimes does not add $ $ for \pm
     text = text.replace('\\pm', '$\\pm$')
+    # the "." may be treated as end of sentence
     text = text.replace('Eq.', 'equation')
     return text
 
 
 def modify_after(text):
+    # the "_" in the text should be replaced to "\_"
     pattern = r"(?<!\\)_"
     text = re.sub(pattern, r"\\_", text)
     return text
@@ -45,9 +50,6 @@ def replace_latex_envs(text):
     $ $, \( xxx \), \xxx[xxx]{xxx}, \xxx{xxx}, and \xxx.
     Returns the processed text and a list of replaced LaTeX environments.
     """
-    # TODO: for \xxx[xxx]{xxx} and \xxx{xxx} the regex here cannot process \xxx{xxx{xxx}} correctly.
-    # We need to either change the regex or use the function "process_specific_env" in the following.
-    # Here is a regex that works better but cannot process \xxx{xxx \{xxx\}}: r'(?<!\\)\\[a-zA-Z]+?(\{(?:[^{}]++|(?1))++\})'
 
     # define regular expressions for each LaTeX environment
     latex_env_regex = [
@@ -100,7 +102,7 @@ def recover_latex_envs(text, replaced_envs, verbose=False):
     n_bad2 = nenvs - n_good
     n_bad = max(n_bad1, n_bad2)
     if verbose and n_bad > 0:
-        print(n_bad, 'latex environments are wrong in total', nenvs)
+        print(n_bad, 'latex environments are probably wrong in total', nenvs)
     return text
 
 
@@ -108,6 +110,7 @@ def remove_tex_comments(text):
     """
     Removes all TeX comments in a given string with the format "% comment text".
     Does not match "\%".
+    If "%" is at the beginning of a line then delete this line.
     Returns the processed string.
     """
     text = re.sub(r"\n(?<!\\)%.*?(?=\n)", "", text)
@@ -141,6 +144,7 @@ def process_specific_env(latex, function, env_names):
     pattern = regex.compile(pattern_env, regex.DOTALL)
 
     def process_function(match):
+        # \begin{env_name} content \end{env_name}
         env_name = match.group(1)
         content = match.group(2)
         if env_name in env_names:
@@ -155,6 +159,7 @@ def process_specific_commands(latex, function, command_names):
     pattern = regex.compile(pattern_command_full, regex.DOTALL)
 
     def process_function(match):
+        # \{command_name}[options]{content}
         command_name = match.group(1)
         options = match.group(2)
         if options is None:
@@ -166,29 +171,6 @@ def process_specific_commands(latex, function, command_names):
         else:
             return match.group(0)
     return pattern.sub(process_function, latex)
-
-
-def old_process_specific_env(text, pattern_begin, pattern_end, function):
-    position = 0
-    while True:
-        position = text.find(pattern_begin, position)
-        if position == -1:
-            break
-        position += len(pattern_begin)
-        start = position
-        while True:
-            position = text.find(pattern_end, position)
-            if position > 0 and text[position - 1] != '\\':
-                n_left, n_right = count_braces(text[start:position])
-                if n_left == n_right:
-                    break
-            position += 1
-        text_before = text[0:start]
-        text_middle = function(text[start:position])
-        text_after = text[position:]
-        position = len(text_before) + len(text_middle) + len(pattern_end)
-        text = text_before + text_middle + text_after
-    return text
 
 
 def remove_blank_lines(text):

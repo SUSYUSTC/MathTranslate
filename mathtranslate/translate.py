@@ -61,6 +61,10 @@ class LatexTranslator:
             self.f_env.close()
 
     def translate_paragraph_text(self, text):
+        '''
+        Translators would have a word limit for each translation
+        So here we split translation by '\n' if it's going to exceed limit
+        '''
         lines = text.split('\n')
         parts = []
         part = ''
@@ -80,7 +84,12 @@ class LatexTranslator:
         return text_translated.replace("\u200b", "")
 
     def translate_paragraph_latex(self, latex_original_paragraph, num, complete):
+        '''
+        Translate a latex paragraph, which means that it could contain latex environments
+        '''
         text_original_paragraph, envs = process_latex.replace_latex_envs(latex_original_paragraph)
+        # Since \n is equivalent to space in latex, we change \n back to space
+        # otherwise the translators view them as separate sentences
         text_original_paragraph = text_original_paragraph.replace('\n', '')
         text_original_paragraph = process_text.split_too_long_paragraphs(text_original_paragraph)
         if not complete:
@@ -99,17 +108,29 @@ class LatexTranslator:
         return latex_translated_paragraph
 
     def split_latex_to_paragraphs(self, latex):
+        '''
+        1. convert latex to text and environments
+        2. split text
+        3. convert text back to environments
+        '''
         text, envs = process_latex.replace_latex_envs(latex)
         paragraphs_text = text.split('\n\n')
         paragraphs_latex = [process_latex.recover_latex_envs(paragraph_text, envs) for paragraph_text in paragraphs_text]
         return paragraphs_latex
 
     def _translate_latex_objects(self, match_function, latex_original, names, complete):
+        '''
+        Terminology:
+        env: '\\begin{xxx} \\end{xxx}'
+        command: '\\command[options]{text}
+        object: env or command
+        '''
         latex_translated = latex_original
 
         num = 0
 
         def translate_function(latex):
+            # Translate anything inside an environment or command
             nonlocal num
             result = self.translate_paragraph_latex(latex, num, complete)
             num += 1
