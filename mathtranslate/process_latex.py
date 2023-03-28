@@ -71,15 +71,15 @@ def replace_latex_envs(text):
         pattern = regex.compile(regex_symbol, regex.DOTALL)
         while pattern.search(text):
             latex_env = pattern.search(text).group()
-            replaced_envs.append(f' {latex_env} ')
-            text = pattern.sub(variable_code(count), text, 1)
+            replaced_envs.append(f'{latex_env}')
+            text = pattern.sub(' ' + variable_code(count) + ' ', text, 1)
             count += 1
 
     text = modify_text(text, modify_before)
     return text, replaced_envs
 
 
-def recover_latex_envs(text, replaced_envs, verbose=False):
+def recover_latex_envs(text, replaced_envs, final=False):
     nenvs = len(replaced_envs)
     matched_indices = []
 
@@ -89,6 +89,7 @@ def recover_latex_envs(text, replaced_envs, verbose=False):
         if index < nenvs:
             return replaced_envs[index]
         else:
+            #assert final
             return '???'
 
     text = modify_text(text, modify_after)
@@ -103,7 +104,7 @@ def recover_latex_envs(text, replaced_envs, verbose=False):
     n_bad1 = len(matched_indices) - n_good
     n_bad2 = nenvs - n_good
     n_bad = max(n_bad1, n_bad2)
-    if verbose and n_bad > 0:
+    if final and n_bad > 0:
         print(n_bad, 'latex environments are probably wrong in total', nenvs)
     return text
 

@@ -105,7 +105,7 @@ class LatexTranslator:
             for i, env in enumerate(envs):
                 print(f'env {i}', file=self.f_env)
                 print(env, file=self.f_env)
-        latex_translated_paragraph = process_latex.recover_latex_envs(text_translated_paragraph, envs, verbose=True)
+        latex_translated_paragraph = process_latex.recover_latex_envs(text_translated_paragraph, envs, final=True)
         return latex_translated_paragraph
 
     def split_latex_to_paragraphs(self, latex):
