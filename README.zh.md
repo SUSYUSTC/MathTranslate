@@ -74,3 +74,15 @@
 3. 简化用户界面。
 
 如果您有任何问题或有兴趣做出贡献，请通过 susyustc@gmail.com 与我联系或加入 QQ 群 288646946 。
+
+## 引用我们
+```
+@software{Sun_MathTranslate_2023,
+  author = {Sun, Jiace and Cheng, Lixue and Zhang, Shubo},
+  title = {{MathTranslate}},
+  url = {https://github.com/SUSYUSTC/MathTranslate},
+  version = {2.1.2},
+  month = {3},
+  year = {2023}
+}
+```

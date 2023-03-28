@@ -74,3 +74,15 @@ In the example directory, you can see `main.txt` which is the mathpix output of 
 3. A more user-friendly interface.
 
 If you have any questions or have interests in making contributions, please contact me by susyustc@gmail.com or joining QQ group 288646946.
+
+## Citing us
+```
+@software{Sun_MathTranslate_2023,
+  author = {Sun, Jiace and Cheng, Lixue and Zhang, Shubo},
+  title = {{MathTranslate}},
+  url = {https://github.com/SUSYUSTC/MathTranslate},
+  version = {2.1.2},
+  month = {3},
+  year = {2023}
+}
+```
