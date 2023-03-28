@@ -7,6 +7,7 @@ match_code_replace = math_code + r"_(\d+(?:_\d+)*)*"
 pattern_env = r"\\begin\{(.*?)\}(.*?)\\end\{\1\}"  # \begin{xxx} \end{xxx}, group 1: name, group 2: content
 pattern_command_full = r"\\([a-zA-Z]+\*?)(\[[a-zA-Z\s,]*?\])?(\{((?:[^{}]++|(?3))++)\})"   # \xxx[xxx]{xxx} and \xxx{xxx}, group 1: name, group 2: option, group 4: content
 pattern_command_simple = r"\\([a-zA-Z]+)"  # \xxx, group 1: name
+pattern_brace = r"\{((?:[^{}]++|(?0))++)\}"  # {xxx}, group 1: content
 
 
 def variable_code(count):
@@ -60,6 +61,7 @@ def replace_latex_envs(text):
         pattern_env,  # \begin{xxx} \end{xxx}
         pattern_command_full,  # \xxx[xxx]{xxx}
         pattern_command_simple,  # \xxx
+        pattern_brace,  # {xxx}
     ]
 
     # iterate through each LaTeX environment and replace with "XMATH_{digit1}_{digit2}_..._{digit_last}"
@@ -69,15 +71,15 @@ def replace_latex_envs(text):
         pattern = regex.compile(regex_symbol, regex.DOTALL)
         while pattern.search(text):
             latex_env = pattern.search(text).group()
-            replaced_envs.append(f' {latex_env} ')
-            text = pattern.sub(variable_code(count), text, 1)
+            replaced_envs.append(f'{latex_env}')
+            text = pattern.sub(' ' + variable_code(count) + ' ', text, 1)
             count += 1
 
     text = modify_text(text, modify_before)
     return text, replaced_envs
 
 
-def recover_latex_envs(text, replaced_envs, verbose=False):
+def recover_latex_envs(text, replaced_envs, final=False):
     nenvs = len(replaced_envs)
     matched_indices = []
 
@@ -87,6 +89,7 @@ def recover_latex_envs(text, replaced_envs, verbose=False):
         if index < nenvs:
             return replaced_envs[index]
         else:
+            #assert final
             return '???'
 
     text = modify_text(text, modify_after)
@@ -101,7 +104,7 @@ def recover_latex_envs(text, replaced_envs, verbose=False):
     n_bad1 = len(matched_indices) - n_good
     n_bad2 = nenvs - n_good
     n_bad = max(n_bad1, n_bad2)
-    if verbose and n_bad > 0:
+    if final and n_bad > 0:
         print(n_bad, 'latex environments are probably wrong in total', nenvs)
     return text
 
