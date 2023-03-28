@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from . import process_latex
 from . import process_text
+from .config import math_code
 from .process_text import char_limit
 import time
 
@@ -163,8 +164,8 @@ class LatexTranslator:
             tex_end = default_end
 
         # It is difficult for regex to exclude \{ during match so I replace it to something else and then replace back
-        latex_original = latex_original.replace(r'\{', 'XMATH_LB')
-        latex_original = latex_original.replace(r'\}', 'XMATH_RB')
+        latex_original = latex_original.replace(r'\{', f'{math_code}LB')
+        latex_original = latex_original.replace(r'\}', f'{math_code}RB')
 
         latex_original_paragraphs = self.split_latex_to_paragraphs(latex_original)
         latex_translated_paragraphs = []
@@ -190,8 +191,8 @@ class LatexTranslator:
         print('processing title')
         latex_translated = self.translate_latex_commands(latex_translated, ['title'], complete)
 
-        latex_translated = latex_translated.replace('XMATH_LB', r'\{')
-        latex_translated = latex_translated.replace('XMATH_RB', r'\}')
+        latex_translated = latex_translated.replace(f'{math_code}LB', r'\{')
+        latex_translated = latex_translated.replace(f'{math_code}RB', r'\}')
 
         latex_translated = tex_begin + '\n' + latex_translated + '\n' + tex_end
 
