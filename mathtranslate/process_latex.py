@@ -7,6 +7,7 @@ match_code_replace = math_code + r"_(\d+(?:_\d+)*)*"
 pattern_env = r"\\begin\{(.*?)\}(.*?)\\end\{\1\}"  # \begin{xxx} \end{xxx}, group 1: name, group 2: content
 pattern_command_full = r"\\([a-zA-Z]+\*?)(\[[a-zA-Z\s,]*?\])?(\{((?:[^{}]++|(?3))++)\})"   # \xxx[xxx]{xxx} and \xxx{xxx}, group 1: name, group 2: option, group 4: content
 pattern_command_simple = r"\\([a-zA-Z]+)"  # \xxx, group 1: name
+pattern_brace = r"\{((?:[^{}]++|(?0))++)\}"  # {xxx}, group 1: content
 
 
 def variable_code(count):
@@ -60,6 +61,7 @@ def replace_latex_envs(text):
         pattern_env,  # \begin{xxx} \end{xxx}
         pattern_command_full,  # \xxx[xxx]{xxx}
         pattern_command_simple,  # \xxx
+        pattern_brace,  # {xxx}
     ]
 
     # iterate through each LaTeX environment and replace with "XMATH_{digit1}_{digit2}_..._{digit_last}"
