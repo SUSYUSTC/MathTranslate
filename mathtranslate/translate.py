@@ -81,7 +81,8 @@ class LatexTranslator:
 
     def translate_paragraph_latex(self, latex_original_paragraph, num, complete):
         text_original_paragraph, envs = process_latex.replace_latex_envs(latex_original_paragraph)
-        text_original_paragraph = process_text.split_paragraphs(text_original_paragraph)
+        text_original_paragraph = text_original_paragraph.replace('\n', '')
+        text_original_paragraph = process_text.split_too_long_paragraphs(text_original_paragraph)
         if not complete:
             text_original_paragraph = process_text.split_titles(text_original_paragraph)
         text_translated_paragraph = self.translate_paragraph_text(text_original_paragraph)
@@ -94,34 +95,38 @@ class LatexTranslator:
             for i, env in enumerate(envs):
                 print(f'env {i}', file=self.f_env)
                 print(env, file=self.f_env)
-        latex_translated_paragraph = process_latex.recover_latex_envs(text_translated_paragraph, envs)
+        latex_translated_paragraph = process_latex.recover_latex_envs(text_translated_paragraph, envs, verbose=True)
         return latex_translated_paragraph
 
-    def translate_latex_env(self, latex_original, env_names, complete, full):
+    def split_latex_to_paragraphs(self, latex):
+        text, envs = process_latex.replace_latex_envs(latex)
+        paragraphs_text = text.split('\n\n')
+        paragraphs_latex = [process_latex.recover_latex_envs(paragraph_text, envs) for paragraph_text in paragraphs_text]
+        return paragraphs_latex
+
+    def _translate_latex_objects(self, match_function, latex_original, names, complete):
         latex_translated = latex_original
 
         num = 0
 
-        def process_function(text):
+        def translate_function(latex):
             nonlocal num
-            result = self.translate_paragraph_latex(text, num, complete)
+            result = self.translate_paragraph_latex(latex, num, complete)
             num += 1
             print(num)
             return result
 
-        for env_name in env_names:
-            for env_name in [env_name, env_name + '*']:
-                if full:
-                    begin_code = rf'\begin{{{env_name}}}'
-                    end_code = rf'\end{{{env_name}}}'
-                else:
-                    begin_code = rf'\{env_name}{{'
-                    end_code = r'}'
-                latex_translated = process_latex.process_specific_env(latex_translated, begin_code, end_code, process_function)
+        names = names + [item + '*' for item in names]
+        latex_translated = match_function(latex_translated, translate_function, names)
         return latex_translated
 
+    def translate_latex_env(self, latex_original, names, complete):
+        return self._translate_latex_objects(process_latex.process_specific_env, latex_original, names, complete)
+
+    def translate_latex_commands(self, latex_original, names, complete):
+        return self._translate_latex_objects(process_latex.process_specific_commands, latex_original, names, complete)
+
     def translate_full_latex(self, latex_original):
-        # TODO: should also remove blank line if it start with "#"
         latex_original = process_latex.remove_tex_comments(latex_original)
         complete = process_latex.is_complete(latex_original)
         if complete:
@@ -136,10 +141,11 @@ class LatexTranslator:
             tex_begin = default_begin
             tex_end = default_end
 
-        # TODO: it also split one environment to several parts, so need to somehow put after processing latex environments
-        # However, we need to somehow combine these two steps, otherwise it ends up with things like XMATH_1_2_3_4.
-        # The longer the expression, the easier for translation errors to appear.
-        latex_original_paragraphs = latex_original.split('\n\n')
+        # It is difficult for regex to exclude \{ during match so I replace it to something else and then replace back
+        latex_original = latex_original.replace(r'\{', 'XMATH_LB')
+        latex_original = latex_original.replace(r'\}', 'XMATH_RB')
+
+        latex_original_paragraphs = self.split_latex_to_paragraphs(latex_original)
         latex_translated_paragraphs = []
 
         num = 0
@@ -151,14 +157,22 @@ class LatexTranslator:
             num += 1
         latex_translated = '\n\n'.join(latex_translated_paragraphs)
 
+        if self.debug:
+            print(latex_translated, file=open('text_after_main.txt', 'w'))
+
         # TODO: add more environments here
         print('processing latex environments')
-        latex_translated = self.translate_latex_env(latex_translated, ['abstract', 'acknowledgments', 'itermize', 'enumrate', 'description', 'list'], complete, True)
+        latex_translated = self.translate_latex_env(latex_translated, ['abstract', 'acknowledgments', 'itermize', 'enumrate', 'description', 'list'], complete)
         print('processing latex commands')
-        latex_translated = self.translate_latex_env(latex_translated, ['section', 'subsection', 'subsubsection', 'subsubsubsection', 'caption', 'subcaption'], complete, False)
+        latex_translated = self.translate_latex_commands(latex_translated, ['section', 'subsection', 'subsubsection', 'caption', 'subcaption', 'footnote'], complete)
+
+        print('processing title')
+        latex_translated = self.translate_latex_commands(latex_translated, ['title'], complete)
+
+        latex_translated = latex_translated.replace('XMATH_LB', r'\{')
+        latex_translated = latex_translated.replace('XMATH_RB', r'\}')
 
         latex_translated = tex_begin + '\n' + latex_translated + '\n' + tex_end
 
-        print('processing title')
-        latex_translated = self.translate_latex_env(latex_translated, ['title'], complete, False)
+        self.close()
         return latex_translated

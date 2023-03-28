@@ -34,7 +34,7 @@ def argmax(array):
     return array.index(max(array))
 
 
-def split_paragraphs(text):
+def split_too_long_paragraphs(text):
     text_split = []
     for paragraph in text.split('\n'):
         if len(paragraph) > char_limit:
@@ -43,8 +43,8 @@ def split_paragraphs(text):
             first_length = [len(word) if (len(word) > 0 and word[0].isupper()) else 0 for word in first_words]
             first_length[0] = 0
             position = argmax(first_length)
-            par1 = split_paragraphs('.'.join(lines[0:position]) + '.')
-            par2 = split_paragraphs('.'.join(lines[position:]))
+            par1 = split_too_long_paragraphs('.'.join(lines[0:position]) + '.')
+            par2 = split_too_long_paragraphs('.'.join(lines[position:]))
             text_split.extend([par1, par2])
         else:
             text_split.append(paragraph)
