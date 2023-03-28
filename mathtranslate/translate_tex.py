@@ -73,7 +73,7 @@ def main():
     import mathtranslate
     from mathtranslate import config
     from mathtranslate.config import default_engine, default_language_from, default_language_to
-    from mathtranslate.fix_encoding import fix_file_encoding
+    from mathtranslate.encoding import get_file_encoding
     from mathtranslate.translate import TextTranslator, LatexTranslator
     import argparse
     parser = argparse.ArgumentParser()
@@ -153,18 +153,17 @@ def main():
     text_translator = TextTranslator(options.engine, options.l_to, options.l_from)
     latex_translator = LatexTranslator(text_translator, options.debug)
 
-    text_original = open(input_path).read()
+    input_encoding = get_file_encoding(input_path)
+    text_original = open(input_path, encoding=input_encoding).read()
     text_final = latex_translator.translate_full_latex(text_original)
     with open(output_path, "w", encoding='utf-8') as file:
         print(text_final, file=file)
     print(output_path, 'is generated')
-    fix_file_encoding(output_path)
 
     if options.compile:
         os.system(f'xelatex {output_path}')
     else:
-        print(f"You can then manually compile it by running 'xelatex {output_path}'")
-        print("or compile it online on overleaf")
+        print(f"You can then compile it locally by running 'xelatex {output_path}' or compile it online on overleaf")
 
 
 if __name__ == '__main__':
