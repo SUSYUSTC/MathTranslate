@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Sun"
+  given-names: "Jiace"
+  orcid: "https://orcid.org/0000-0002-0566-2084"
+- family-names: "Cheng"
+  given-names: "Lixue"
+  orcid: "https://orcid.org/0000-0002-7329-0585"
+- family-names: "Zhang"
+  given-names: "Shubo"
+title: "MathTranslate"
+version: 2.1.2
+date-released: 2023-03-16
+url: "https://github.com/SUSYUSTC/MathTranslate"

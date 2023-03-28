@@ -135,7 +135,7 @@ class LatexTranslator:
             nonlocal num
             result = self.translate_paragraph_latex(latex, num, complete)
             num += 1
-            print(num)
+            print(num, end='\r')
             return result
 
         names = names + [item + '*' for item in names]
@@ -175,7 +175,7 @@ class LatexTranslator:
         for latex_original_paragraph in latex_original_paragraphs:
             latex_translated_paragraph = self.translate_paragraph_latex(latex_original_paragraph, num, complete)
             latex_translated_paragraphs.append(latex_translated_paragraph)
-            print(num, '/', len(latex_original_paragraphs))
+            print(num, '/', len(latex_original_paragraphs), end='\r')
             num += 1
         latex_translated = '\n\n'.join(latex_translated_paragraphs)
 
