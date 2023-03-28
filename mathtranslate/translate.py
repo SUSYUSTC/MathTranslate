@@ -53,13 +53,13 @@ class LatexTranslator:
         if self.debug:
             self.f_old = open("text_old", "w", encoding='utf-8')
             self.f_new = open("text_new", "w", encoding='utf-8')
-            self.f_env = open("envs", "w", encoding='utf-8')
+            self.f_obj = open("objs", "w", encoding='utf-8')
 
     def close(self):
         if self.debug:
             self.f_old.close()
             self.f_new.close()
-            self.f_env.close()
+            self.f_obj.close()
 
     def translate_paragraph_text(self, text):
         '''
@@ -86,9 +86,9 @@ class LatexTranslator:
 
     def translate_paragraph_latex(self, latex_original_paragraph, num, complete):
         '''
-        Translate a latex paragraph, which means that it could contain latex environments
+        Translate a latex paragraph, which means that it could contain latex objects
         '''
-        text_original_paragraph, envs = process_latex.replace_latex_envs(latex_original_paragraph)
+        text_original_paragraph, objs = process_latex.replace_latex_objects(latex_original_paragraph)
         # Since \n is equivalent to space in latex, we change \n back to space
         # otherwise the translators view them as separate sentences
         text_original_paragraph = text_original_paragraph.replace('\n', '')
@@ -99,24 +99,24 @@ class LatexTranslator:
         if self.debug:
             print(f'\n\nParagraph {num}\n\n', file=self.f_old)
             print(f'\n\nParagraph {num}\n\n', file=self.f_new)
-            print(f'\n\nParagraph {num}\n\n', file=self.f_env)
+            print(f'\n\nParagraph {num}\n\n', file=self.f_obj)
             print(text_original_paragraph, file=self.f_old)
             print(text_translated_paragraph, file=self.f_new)
-            for i, env in enumerate(envs):
-                print(f'env {i}', file=self.f_env)
-                print(env, file=self.f_env)
-        latex_translated_paragraph = process_latex.recover_latex_envs(text_translated_paragraph, envs, final=True)
+            for i, obj in enumerate(objs):
+                print(f'obj {i}', file=self.f_obj)
+                print(obj, file=self.f_obj)
+        latex_translated_paragraph = process_latex.recover_latex_objects(text_translated_paragraph, objs, final=True)
         return latex_translated_paragraph
 
     def split_latex_to_paragraphs(self, latex):
         '''
-        1. convert latex to text and environments
+        1. convert latex to text and objects
         2. split text
-        3. convert text back to environments
+        3. convert text back to objects
         '''
-        text, envs = process_latex.replace_latex_envs(latex)
+        text, objs = process_latex.replace_latex_objects(latex)
         paragraphs_text = text.split('\n\n')
-        paragraphs_latex = [process_latex.recover_latex_envs(paragraph_text, envs) for paragraph_text in paragraphs_text]
+        paragraphs_latex = [process_latex.recover_latex_objects(paragraph_text, objs) for paragraph_text in paragraphs_text]
         return paragraphs_latex
 
     def _translate_latex_objects(self, match_function, latex_original, names, complete):
@@ -166,6 +166,7 @@ class LatexTranslator:
         # It is difficult for regex to exclude \{ during match so I replace it to something else and then replace back
         latex_original = latex_original.replace(r'\{', f'{math_code}LB')
         latex_original = latex_original.replace(r'\}', f'{math_code}RB')
+        latex_original = latex_original.replace(r'\%', f'{math_code}PC')
 
         latex_original_paragraphs = self.split_latex_to_paragraphs(latex_original)
         latex_translated_paragraphs = []
@@ -182,19 +183,21 @@ class LatexTranslator:
         if self.debug:
             print(latex_translated, file=open('text_after_main.txt', 'w'))
 
-        # TODO: add more environments here
+        # TODO: add more here
         print('processing latex environments')
         latex_translated = self.translate_latex_env(latex_translated, ['abstract', 'acknowledgments', 'itermize', 'enumrate', 'description', 'list'], complete)
         print('processing latex commands')
         latex_translated = self.translate_latex_commands(latex_translated, ['section', 'subsection', 'subsubsection', 'caption', 'subcaption', 'footnote'], complete)
 
-        print('processing title')
-        latex_translated = self.translate_latex_commands(latex_translated, ['title'], complete)
-
         latex_translated = latex_translated.replace(f'{math_code}LB', r'\{')
         latex_translated = latex_translated.replace(f'{math_code}RB', r'\}')
+        latex_translated = latex_translated.replace(f'{math_code}PC', r'\%')
 
         latex_translated = tex_begin + '\n' + latex_translated + '\n' + tex_end
+
+        # Title is probably outside the body part
+        print('processing title')
+        latex_translated = self.translate_latex_commands(latex_translated, ['title'], complete)
 
         self.close()
         return latex_translated

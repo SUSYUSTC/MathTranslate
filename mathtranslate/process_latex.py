@@ -42,18 +42,18 @@ def modify_after(text):
     return text
 
 
-def replace_latex_envs(text):
+def replace_latex_objects(text):
     r"""
-    Replaces all LaTeX environments in a given text with the format "XMATH_{digit1}_{digit2}_..._{digit_last}",
+    Replaces all LaTeX objects in a given text with the format "XMATH_{digit1}_{digit2}_..._{digit_last}",
     applies a given function to the resulting text (excluding the "XMATH_{digit1}_{digit2}_..._{digit_last}" parts),
-    and returns both the processed text and a list of replaced LaTeX environments.
-    Supported LaTeX environments: \[ xxx \], \begin{xxx} \end{xxx}, $$ $$,
+    and returns both the processed text and a list of replaced LaTeX objects.
+    Supported LaTeX objects: \[ xxx \], \begin{xxx} \end{xxx}, $$ $$,
     $ $, \( xxx \), \xxx[xxx]{xxx}, \xxx{xxx}, and \xxx.
-    Returns the processed text and a list of replaced LaTeX environments.
+    Returns the processed text and a list of replaced LaTeX objects.
     """
 
-    # define regular expressions for each LaTeX environment
-    latex_env_regex = [
+    # define regular expressions for each LaTeX object
+    latex_obj_regex = [
         r"\$\$(.*?)\$\$",  # $$ $$
         r"\$(.*?)\$",  # $ $
         r"\\\[(.*?)\\\]",  # \[ xxx \]
@@ -64,30 +64,30 @@ def replace_latex_envs(text):
         pattern_brace,  # {xxx}
     ]
 
-    # iterate through each LaTeX environment and replace with "XMATH_{digit1}_{digit2}_..._{digit_last}"
+    # iterate through each LaTeX object and replace with "XMATH_{digit1}_{digit2}_..._{digit_last}"
     count = 0
-    replaced_envs = []
-    for regex_symbol in latex_env_regex:
+    replaced_objs = []
+    for regex_symbol in latex_obj_regex:
         pattern = regex.compile(regex_symbol, regex.DOTALL)
         while pattern.search(text):
-            latex_env = pattern.search(text).group()
-            replaced_envs.append(f'{latex_env}')
+            latex_obj = pattern.search(text).group()
+            replaced_objs.append(f'{latex_obj}')
             text = pattern.sub(' ' + variable_code(count) + ' ', text, 1)
             count += 1
 
     text = modify_text(text, modify_before)
-    return text, replaced_envs
+    return text, replaced_objs
 
 
-def recover_latex_envs(text, replaced_envs, final=False):
-    nenvs = len(replaced_envs)
+def recover_latex_objects(text, replaced_objs, final=False):
+    nobjs = len(replaced_objs)
     matched_indices = []
 
-    def get_env(digit_str):
+    def get_obj(digit_str):
         index = int(''.join(digit_str.split('_')))
         matched_indices.append(index)
-        if index < nenvs:
-            return replaced_envs[index]
+        if index < nobjs:
+            return replaced_objs[index]
         else:
             #assert final
             return '???'
@@ -96,16 +96,16 @@ def recover_latex_envs(text, replaced_envs, final=False):
     pattern = re.compile(match_code_replace)
     total_num = 0
     while True:
-        text, num_modify = pattern.subn(lambda match: get_env(match.group(1)), text)
+        text, num_modify = pattern.subn(lambda match: get_obj(match.group(1)), text)
         total_num += num_modify
         if num_modify == 0:
             break
-    n_good = len(set(matched_indices).intersection(set(range(nenvs))))
+    n_good = len(set(matched_indices).intersection(set(range(nobjs))))
     n_bad1 = len(matched_indices) - n_good
-    n_bad2 = nenvs - n_good
+    n_bad2 = nobjs - n_good
     n_bad = max(n_bad1, n_bad2)
     if final and n_bad > 0:
-        print(n_bad, 'latex environments are probably wrong in total', nenvs)
+        print(n_bad, 'latex objects are probably wrong in total', nobjs)
     return text
 
 
@@ -135,12 +135,6 @@ def split_latex_document(text, begin_code, end_code):
     body = text[begin_doc_index + len(begin_code):end_doc_index]
     post = text[end_doc_index:]
     return body, pre, post
-
-
-def count_braces(text):
-    text = text.replace(r'\{', '')
-    text = text.replace(r'\}', '')
-    return text.count('{'), text.count('}')
 
 
 def process_specific_env(latex, function, env_names):
