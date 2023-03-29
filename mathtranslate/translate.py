@@ -148,7 +148,7 @@ class LatexTranslator:
     def translate_latex_commands(self, latex_original, names, complete):
         return self._translate_latex_objects(process_latex.process_specific_commands, latex_original, names, complete)
 
-    def translate_full_latex(self, latex_original):
+    def translate_full_latex(self, latex_original, loadmain=False):
         latex_original = process_latex.remove_tex_comments(latex_original)
         complete = process_latex.is_complete(latex_original)
         if complete:
@@ -166,32 +166,42 @@ class LatexTranslator:
         # It is difficult for regex to exclude \{ during match so I replace it to something else and then replace back
         latex_original = latex_original.replace(r'\{', f'{math_code}LB')
         latex_original = latex_original.replace(r'\}', f'{math_code}RB')
+        # The following two can probably be put somewhere else
         latex_original = latex_original.replace(r'\%', f'{math_code}PC')
+        latex_original = latex_original.replace(r'\ ', f'{math_code}SP')
 
-        latex_original_paragraphs = self.split_latex_to_paragraphs(latex_original)
-        latex_translated_paragraphs = []
+        if loadmain:
+            latex_translated = open('text_after_main.txt').read()
+        else:
+            latex_original_paragraphs = self.split_latex_to_paragraphs(latex_original)
+            latex_translated_paragraphs = []
 
-        num = 0
-        print('processing main text')
-        for latex_original_paragraph in latex_original_paragraphs:
-            latex_translated_paragraph = self.translate_paragraph_latex(latex_original_paragraph, num, complete)
-            latex_translated_paragraphs.append(latex_translated_paragraph)
-            print(num, '/', len(latex_original_paragraphs))
-            num += 1
-        latex_translated = '\n\n'.join(latex_translated_paragraphs)
+            num = 0
+            print('processing main text')
+            for latex_original_paragraph in latex_original_paragraphs:
+                latex_translated_paragraph = self.translate_paragraph_latex(latex_original_paragraph, num, complete)
+                latex_translated_paragraphs.append(latex_translated_paragraph)
+                print(num, '/', len(latex_original_paragraphs))
+                num += 1
+            latex_translated = '\n\n'.join(latex_translated_paragraphs)
 
-        if self.debug:
-            print(latex_translated, file=open('text_after_main.txt', 'w'))
+            if self.debug:
+                print(latex_translated, file=open('text_after_main.txt', 'w'))
 
         # TODO: add more here
+        environment_list = ['abstract', 'acknowledgments', 'itemize', 'enumerate', 'description', 'list']
+        # addition: ['theorem', 'proposition', 'conjecture', 'lemma', 'claim', 'fact', 'corollary', 'remark', 'definition', 'example', 'proof']
         print('processing latex environments')
-        latex_translated = self.translate_latex_env(latex_translated, ['abstract', 'acknowledgments', 'itermize', 'enumrate', 'description', 'list'], complete)
+        latex_translated = self.translate_latex_env(latex_translated, environment_list, complete)
+
+        command_list = ['section', 'subsection', 'subsubsection', 'caption', 'subcaption', 'footnote', 'paragraph']
         print('processing latex commands')
-        latex_translated = self.translate_latex_commands(latex_translated, ['section', 'subsection', 'subsubsection', 'caption', 'subcaption', 'footnote'], complete)
+        latex_translated = self.translate_latex_commands(latex_translated, command_list, complete)
 
         latex_translated = latex_translated.replace(f'{math_code}LB', r'\{')
         latex_translated = latex_translated.replace(f'{math_code}RB', r'\}')
         latex_translated = latex_translated.replace(f'{math_code}PC', r'\%')
+        latex_translated = latex_translated.replace(f'{math_code}SP', r'\ ')
 
         latex_translated = tex_begin + '\n' + latex_translated + '\n' + tex_end
 
