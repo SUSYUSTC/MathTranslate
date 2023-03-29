@@ -187,7 +187,7 @@ class LatexTranslator:
         print('processing latex environments')
         latex_translated = self.translate_latex_env(latex_translated, ['abstract', 'acknowledgments', 'itermize', 'enumrate', 'description', 'list'], complete)
         print('processing latex commands')
-        latex_translated = self.translate_latex_commands(latex_translated, ['section', 'subsection', 'subsubsection', 'caption', 'subcaption', 'footnote'], complete)
+        latex_translated = self.translate_latex_commands(latex_translated, ['section', 'subsection', 'subsubsection', 'caption', 'subcaption', 'footnote', 'paragraph'], complete)
 
         latex_translated = latex_translated.replace(f'{math_code}LB', r'\{')
         latex_translated = latex_translated.replace(f'{math_code}RB', r'\}')
