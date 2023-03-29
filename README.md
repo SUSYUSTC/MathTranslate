@@ -69,8 +69,7 @@ In the example directory, you can see `main.txt` which is the mathpix output of 
 2. There is a small probability to get something like "XMATHX_1_2" or wrong formula during translation. The accuracy rate of Tencent translation is slightly lower than that of Google translation.
 
 ## Further developments
-1. Automatically extract images from pdf, process images in a batch and output a single translated pdf by one click!
-2. Reduce the number of mathpix requests by open-source techniques.
-3. A more user-friendly interface.
+1. Fix bugs in the latex translations.
+2. A more user-friendly interface.
 
 If you have any questions or have interests in making contributions, please contact me by susyustc@gmail.com or joining QQ group 288646946.
