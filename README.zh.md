@@ -52,6 +52,8 @@
 ## 安装
 `pip install --upgrade mathtranslate`
 
+**我们建议用户在使用前始终检查更新，因为我们更新地比较频繁**
+
 ## 使用
 1. 准备或生成一个 tex 文件。你可以用如下方式得到 tex 文件：
     - 对于大多数 [arxiv](https://arxiv.org/) 论文，你可以下载到 latex 源代码 (Download - Other formats - Source)。如果你下载得到的文件没有后缀，大部分情况下是 .tar 格式，您可能需要手动加上后缀。解压后你可以得到一个 latex 项目，然后你可以翻译其中的 .tex 文件。
