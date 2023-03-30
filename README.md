@@ -51,11 +51,12 @@ We are now supporting all operating systems! Now you can install simply by `pip 
 
 ## Installation
 `pip install --upgrade mathtranslate`
+**We suggest the users to always check update before using because we update frequently**
 
 ## Usage
 1. Prepare or generate a tex file. You can get the tex file by the following two ways:
      - For most [arxiv](https://arxiv.org/) papers, you can download the latex source code (Download - Other formats - Source). If the file you downloaded has no suffix, in most cases it is in .tar format, you may need to add the suffix manually. After decompression you can get a latex project, and then you can translate the .tex files in it.
-     - Use [mathpix](https://mathpix.com/) to take a screenshot of the part you want to translate and save in a file. You can screenshot many connected paragraphs at one time, or combine multiple converted latex code into one file. Unfortunately, it's not completely free. Currently mathpix offers 100 screenshots for free (an edu email is required for registration) or 5000 screenshots for $5 per month.
+     - Use [mathpix](https://mathpix.com/) to take a screenshot of the part you want to translate and save in a file. You can take screenshots of a large piece at a time (or even a whole page, if there are no images), or combine multiple converted latex code into one file. Unfortunately, it's not completely free. Currently mathpix offers 100 screenshots for free (an edu email is required for registration) or 5000 screenshots for $5 per month.
 2. (Tencent Translate API users) run `translate_tex --setkey` to store the API ID and key.
 3. Translate the tex file by `translate_tex input.tex -o output.tex`.
 4. Compile your tex file. You can compile it with the  [texlive](https://www.tug.org/texlive/) command `xelatex output.tex`. For Chinese you need the xeCJK package. If it is a downloaded arxiv project, we recommend compressing all files into a zip file and uploading it to [overleaf](https://www.overleaf.com/project) for online compilation. **Note, you need to set the XeLatex compiler in `Menu - Compiler`, otherwise it cannot handle other languages.**
