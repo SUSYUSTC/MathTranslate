@@ -50,7 +50,7 @@
 2. （中国大陆IP用户）： [腾讯翻译 API](https://cloud.tencent.com/product/tmt) 帐户。 注册后可以在 [腾讯控制台](https://console.cloud.tencent.com/cam/capi) 获取 secret ID 和 secret key 。 腾讯翻译是除谷歌翻译之外我们认知范围内免费额度最高的翻译 API，每月有500万字符免费额度，且不手动充值情况下不会扣费（即不用担心误操作）。
 
 ## 安装
-`pip install --upgrade mathtranslate`
+`pip install --upgrade mathtranslate -i https://pypi.org/simple`
 
 **我们建议用户在使用前始终检查更新，因为我们更新地比较频繁**
 
