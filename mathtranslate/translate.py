@@ -150,7 +150,12 @@ class LatexTranslator:
 
     def translate_full_latex(self, latex_original, loadmain=False):
         latex_original = process_latex.remove_tex_comments(latex_original)
+
+        latex_original = process_latex.replace_accent(latex_original)
+        latex_original = process_latex.replace_special(latex_original)
+
         complete = process_latex.is_complete(latex_original)
+        theorems = process_latex.get_theorems(latex_original)
         if complete:
             print('It is a full latex document')
             latex_original, tex_begin, tex_end = process_latex.split_latex_document(latex_original, r'\begin{document}', r'\end{document}')
@@ -162,13 +167,6 @@ class LatexTranslator:
             latex_original = process_text.connect_paragraphs(latex_original)
             tex_begin = default_begin
             tex_end = default_end
-
-        # It is difficult for regex to exclude \{ during match so I replace it to something else and then replace back
-        latex_original = latex_original.replace(r'\{', f'{math_code}LB')
-        latex_original = latex_original.replace(r'\}', f'{math_code}RB')
-        # The following two can probably be put somewhere else
-        latex_original = latex_original.replace(r'\%', f'{math_code}PC')
-        latex_original = latex_original.replace(r'\ ', f'{math_code}SP')
 
         if loadmain:
             latex_translated = open('text_after_main.txt').read()
@@ -183,31 +181,29 @@ class LatexTranslator:
                 latex_translated_paragraphs.append(latex_translated_paragraph)
                 print(num, '/', len(latex_original_paragraphs))
                 num += 1
+
             latex_translated = '\n\n'.join(latex_translated_paragraphs)
 
             if self.debug:
                 print(latex_translated, file=open('text_after_main.txt', 'w'))
 
         # TODO: add more here
-        environment_list = ['abstract', 'acknowledgments', 'itemize', 'enumerate', 'description', 'list']
-        # addition: ['theorem', 'proposition', 'conjecture', 'lemma', 'claim', 'fact', 'corollary', 'remark', 'definition', 'example', 'proof']
+        environment_list = ['abstract', 'acknowledgments', 'itemize', 'enumerate', 'description', 'list', 'proof']
         print('processing latex environments')
-        latex_translated = self.translate_latex_env(latex_translated, environment_list, complete)
+        latex_translated = self.translate_latex_env(latex_translated, environment_list + theorems, complete)
 
         command_list = ['section', 'subsection', 'subsubsection', 'caption', 'subcaption', 'footnote', 'paragraph']
         print('processing latex commands')
         latex_translated = self.translate_latex_commands(latex_translated, command_list, complete)
-
-        latex_translated = latex_translated.replace(f'{math_code}LB', r'\{')
-        latex_translated = latex_translated.replace(f'{math_code}RB', r'\}')
-        latex_translated = latex_translated.replace(f'{math_code}PC', r'\%')
-        latex_translated = latex_translated.replace(f'{math_code}SP', r'\ ')
 
         latex_translated = tex_begin + '\n' + latex_translated + '\n' + tex_end
 
         # Title is probably outside the body part
         print('processing title')
         latex_translated = self.translate_latex_commands(latex_translated, ['title'], complete)
+
+        latex_translated = process_latex.recover_special(latex_translated)
+        latex_translated = process_latex.recover_accent(latex_translated)
 
         self.close()
         return latex_translated
