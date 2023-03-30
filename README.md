@@ -51,6 +51,7 @@ We are now supporting all operating systems! Now you can install simply by `pip 
 
 ## Installation
 `pip install --upgrade mathtranslate`
+
 **We suggest the users to always check update before using because we update frequently**
 
 ## Usage
