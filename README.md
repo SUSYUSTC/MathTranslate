@@ -49,8 +49,8 @@ We are now supporting all operating systems! Now you can install simply by `pip 
 1. Python3 and pip. [Anaconda](https://www.anaconda.com) is recommended.
 2. (For users with IP in Mainland China): [Tencent Translation API](https://cloud.tencent.com/product/tmt) account. After registration, you can get the secret ID and secret key in [Tencent Console](https://console.cloud.tencent.com/cam/capi). Tencent Translate is the translation API with the highest free quota to our knowledge besides Google Translate, with a free quota of 5 million characters per month, and no fee will be deducted if there is no manual recharge (that is, there is no need to worry about misuse).
 
-## Installation
-`pip install --upgrade mathtranslate`
+## Installation & Update
+`pip install --upgrade mathtranslate -i https://pypi.org/simple`
 
 **We suggest the users to always check update before using because we update frequently**
 
