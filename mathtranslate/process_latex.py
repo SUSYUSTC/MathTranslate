@@ -1,13 +1,40 @@
 import re
 import regex
-from .config import math_code
+from .config import math_code, test_environment
 
 match_code = r"(" + math_code + r"_\d+(?:_\d+)*)"
 match_code_replace = math_code + r"_(\d+(?:_\d+)*)*"
-pattern_env = r"\\begin\{(.*?)\}(.*?)\\end\{\1\}"  # \begin{xxx} \end{xxx}, group 1: name, group 2: content
+
+pattern_env = r"\\begin\{(.*?)\}(\[[a-zA-Z\s,]*?\])?(.*?)\\end\{\1\}"  # \begin{xxx} \end{xxx}, group 1: name, group 2: option, group 3: content
 pattern_command_full = r"\\([a-zA-Z]+\*?)(\[[a-zA-Z\s,]*?\])?(\{((?:[^{}]++|(?3))++)\})"   # \xxx[xxx]{xxx} and \xxx{xxx}, group 1: name, group 2: option, group 4: content
 pattern_command_simple = r"\\([a-zA-Z]+)"  # \xxx, group 1: name
 pattern_brace = r"\{((?:[^{}]++|(?0))++)\}"  # {xxx}, group 1: content
+pattern_theorem = r"\\newtheorem\{(.+?)\}"  # \newtheorem{xxx}, group 1: name
+pattern_accent = r"\\([`'\"^~=.])(?:\{([a-zA-Z])\}|([a-zA-Z]))"  # match special characters with accents, group 1: accent, group 2/3: normal character
+match_code_accent = rf'{math_code}([A-Z]{{2}})([a-zA-Z])'  # group 1: accent name, group 2: normal character
+list_special = ['\\', '%', '&', '#', '$', '{', '}', ' ']  # all special characters in form of \x
+
+special_character_forward = {
+    '\\': 'BS',
+    '%': 'PC',
+    '&': 'AD',
+    '#': 'NB',
+    '$': 'DL',
+    '{': 'LB',
+    '}': 'RB',
+    '^': 'UT',
+    ' ': 'SP',
+    '`': 'BQ',
+    '~': 'TD',
+    "'": 'SQ',
+    '"': 'DQ',
+    '=': 'EQ',
+    '.': 'DT',
+    '*': 'ST',
+    '@': 'AT',
+}
+special_character_backward = {special_character_forward[key]: key for key in special_character_forward}
+assert len(set(special_character_forward.values())) == len(special_character_forward)
 
 
 def variable_code(count):
@@ -44,8 +71,8 @@ def modify_after(text):
 
 def replace_latex_objects(text):
     r"""
-    Replaces all LaTeX objects in a given text with the format "XMATH_{digit1}_{digit2}_..._{digit_last}",
-    applies a given function to the resulting text (excluding the "XMATH_{digit1}_{digit2}_..._{digit_last}" parts),
+    Replaces all LaTeX objects in a given text with the format "{math_code}_{digit1}_{digit2}_..._{digit_last}",
+    applies a given function to the resulting text (excluding the "{math_code}_{digit1}_{digit2}_..._{digit_last}" parts),
     and returns both the processed text and a list of replaced LaTeX objects.
     Supported LaTeX objects: \[ xxx \], \begin{xxx} \end{xxx}, $$ $$,
     $ $, \( xxx \), \xxx[xxx]{xxx}, \xxx{xxx}, and \xxx.
@@ -64,7 +91,7 @@ def replace_latex_objects(text):
         pattern_brace,  # {xxx}
     ]
 
-    # iterate through each LaTeX object and replace with "XMATH_{digit1}_{digit2}_..._{digit_last}"
+    # iterate through each LaTeX object and replace with "{math_code}_{digit1}_{digit2}_..._{digit_last}"
     count = 0
     replaced_objs = []
     for regex_symbol in latex_obj_regex:
@@ -89,7 +116,8 @@ def recover_latex_objects(text, replaced_objs, final=False):
         if index < nobjs:
             return replaced_objs[index]
         else:
-            #assert final
+            if test_environment:
+                assert final
             return '???'
 
     text = modify_text(text, modify_after)
@@ -143,10 +171,13 @@ def process_specific_env(latex, function, env_names):
     def process_function(match):
         # \begin{env_name} content \end{env_name}
         env_name = match.group(1)
-        content = match.group(2)
+        options = match.group(2)
+        if options is None:
+            options = ''
+        content = match.group(3)
         if env_name in env_names:
             processed_content = function(content)
-            return rf'\begin{{{env_name}}}{processed_content}\end{{{env_name}}}'
+            return rf'\begin{{{env_name}}}{options}{processed_content}\end{{{env_name}}}'
         else:
             return match.group(0)
     return pattern.sub(process_function, latex)
@@ -214,3 +245,55 @@ def is_complete(latex_code):
         return False
 
     return True
+
+
+def get_theorems(text):
+    pattern = re.compile(pattern_theorem, re.DOTALL)
+    matches = re.finditer(pattern, text)
+    theorems = [match.group(1) for match in matches]
+    return theorems
+
+
+def replace_special(text):
+    for special in list_special:
+        # add space around
+        text = text.replace(f'\\{special}', f' {math_code}{special_character_forward[special]} ')
+
+    return text
+
+
+def recover_special(text):
+    for special in list_special:
+        text = text.replace(math_code + special_character_forward[special], f'\\{special}')
+
+    return text
+
+
+def replace_accent(text):
+    def replace_function(match):
+        special = match.group(1)
+        char1 = match.group(2)
+        char2 = match.group(3)
+        if char1 is None:
+            assert char2 is not None
+            char = char2
+        else:
+            assert char2 is None
+            char = char1
+        # do not add space around
+        return math_code + special_character_forward[special] + f'{char}'
+
+    text = re.compile(pattern_accent).sub(replace_function, text)
+
+    return text
+
+
+def recover_accent(text):
+    def replace_function(match):
+        special = special_character_backward[match.group(1)]
+        char = match.group(2)
+        return rf'\{special}{{{char}}}'
+
+    text = re.compile(match_code_accent).sub(replace_function, text)
+
+    return text

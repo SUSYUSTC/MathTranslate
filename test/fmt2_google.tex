@@ -6,7 +6,7 @@
 
 因为当 $D=0$ 时 DS 方程是代数的，我们可以分析地推导出这种渐近行为：我们代入 $G_{2 n}=(-1)^{n+1}(2 n-1) ! g_{2 n}$ ，将 $2 n$ th DS 方程乘以 $x^{2 n}$ ，从 $n=1$ 到 $\infty$ 求和，并定义生成函数 $u(x) \equiv x g_2+x^3 g_4+x^5 g_6+\cdots$ 。 $u(x)$ 满足的微分方程是非线性的： $$u^{\prime \prime}(x)=3 u^{\prime}(x) u(x)-u^3(x)-x
 $$ 其中 $u(0)=0$ 和 $u^{\prime}(0)=G_2$ 。我们通过代入 $u(x)=-y^{\prime}(x) / y(x)$ 线性化 (5) 并得到 $y^{\prime \prime \prime}(x)=x y(x)$ ，其中 $y(0)=1, y^{\prime}(0)=0, y^{\prime \prime}(0)=-G_2$ 。满足这些初始条件的精确解是 $$y(x)=\frac{2 \sqrt{2}}{\Gamma(1 / 4)} \int_0^{\infty} d t \cos (x t) e^{-t^4 / 4} .
-$$ 如果 $y(x)=0$ ，则生成函数 $u(x)$ 变为无穷大，因此 $|x|$ 的最小值 $y(x)=0$ 是 $u(x)$ 级数的收敛半径。一个简单的图显示 $y(x)$ 在 $x_0= \pm 2.4419682 \ldots$ 处消失。 [9].因此， $r=1 / x_0=0.409506 \ldots$ 证实了 (4)。
+$$ 如果 $y(x)=0$ ，生成函数 $u(x)$ 变为无穷大，因此 $|x|$ 的最小值 $y(x)=0$ 是 $u(x)$ 级数的收敛半径。一个简单的图显示 $y(x)$ 在 $x_0= \pm 2.4419682 \ldots$ 处消失。 [9].因此， $r=1 / x_0=0.409506 \ldots$ 证实了 (4)。
 
 (4) 中的渐近行为表明 $G_{2 n}$ 比 $\gamma_{2 n}$ 增长得更快，因为 $n \rightarrow \infty$ : $$
 \gamma_{2 n}=\frac{\int_{-\infty}^{\infty} d x x^{2 n} e^{-x^4 / 4}}{\int_{-\infty}^{\infty} d x e^{-x^4 / 4}} \sim 2^n \frac{\Gamma(n / 2+1 / 4)}{\Gamma(1 / 4)} .

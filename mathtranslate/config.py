@@ -45,3 +45,9 @@ tencent_secret_id = read_variable(tencent_secret_id_path, tencent_secret_id_defa
 tencent_secret_key = read_variable(tencent_secret_key_path, tencent_secret_key_default)
 
 math_code = 'XMATHX'
+
+if os.path.exists(f'{ROOT}/TEST'):
+    test_environment = True
+    print('This is a test environment!')
+else:
+    test_environment = False
