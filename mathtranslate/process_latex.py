@@ -5,11 +5,13 @@ from .config import math_code, test_environment
 match_code = r"(" + math_code + r"_\d+(?:_\d+)*)"
 match_code_replace = math_code + r"_(\d+(?:_\d+)*)*"
 
-pattern_env = r"\\begin\{(.*?)\}(\[[a-zA-Z\s,]*?\])?(.*?)\\end\{\1\}"  # \begin{xxx} \end{xxx}, group 1: name, group 2: option, group 3: content
-pattern_command_full = r"\\([a-zA-Z]+\*?)(\[[a-zA-Z\s,]*?\])?(\{((?:[^{}]++|(?3))++)\})"   # \xxx[xxx]{xxx} and \xxx{xxx}, group 1: name, group 2: option, group 4: content
-pattern_command_simple = r"\\([a-zA-Z]+)"  # \xxx, group 1: name
+options = r"\[[a-zA-Z\s,\\\*\.\+\-=_]*?\]"  # ,\*.+-=_
+
+pattern_env = r"\\begin[ \t]*\{(.*?)\}[ \t]*(options)?(.*?)\\end[ \t]*\{\1\}".replace('options', options)  # \begin{xxx} \end{xxx}, group 1: name, group 2: option, group 3: content
+pattern_command_full = r"\\([a-zA-Z]+\*?)[ \t]*(options)?[ \t]*(\{((?:[^{}]++|(?3))++)\})".replace('options', options)   # \xxx[xxx]{xxx} and \xxx{xxx}, group 1: name, group 2: option, group 4: content
+pattern_command_simple = r"\\([a-zA-Z]+\*?)"  # \xxx, group 1: name
 pattern_brace = r"\{((?:[^{}]++|(?0))++)\}"  # {xxx}, group 1: content
-pattern_theorem = r"\\newtheorem\{(.+?)\}"  # \newtheorem{xxx}, group 1: name
+pattern_theorem = r"\\newtheorem[ \t]*\{(.+?)\}"  # \newtheorem{xxx}, group 1: name
 pattern_accent = r"\\([`'\"^~=.])(?:\{([a-zA-Z])\}|([a-zA-Z]))"  # match special characters with accents, group 1: accent, group 2/3: normal character
 match_code_accent = rf'{math_code}([A-Z]{{2}})([a-zA-Z])'  # group 1: accent name, group 2: normal character
 list_special = ['\\', '%', '&', '#', '$', '{', '}', ' ']  # all special characters in form of \x
@@ -207,15 +209,13 @@ def remove_blank_lines(text):
     return text
 
 
-def insert_package(text, package):
+def insert_macro(text, macro):
     pattern = re.compile(r"\\documentclass(\[.*?\])?\{(.*?)\}", re.DOTALL)
     match = pattern.search(text)
-    if match:
-        start, end = match.span()
-        new_text = text[:end] + f"\n\\usepackage{{{package}}}\n" + text[end:]
-        return new_text
-    else:
-        return text
+    assert match is not None
+    start, end = match.span()
+    new_text = text[:end] + f"\n{macro}\n" + text[end:]
+    return new_text
 
 
 def is_complete(latex_code):
