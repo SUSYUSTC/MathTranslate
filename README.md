@@ -47,16 +47,18 @@ We are now supporting all operating systems! Now you can install simply by `pip 
 
 ## Requirements
 1. Python3 and pip. [Anaconda](https://www.anaconda.com) is recommended.
-2. (For users with IP in Mainland China): [Tencent Translation API](https://cloud.tencent.com/product/tmt) account. After registration, you can get the secret ID and secret key in [Tencent Console](https://console.cloud.tencent.com/cam/capi). Tencent Translate is the translation API with the highest free quota to our knowledge besides Google Translate, with a free quota of 5 million characters per month, and no fee will be deducted if there is no manual recharge (that is, there is no need to worry about misuse).
+2. (For users with IP in Mainland China): [Tencent Translation API](https://cloud.tencent.com/product/tmt) account. After registration, you can get the secret ID (not the APP ID!) and secret Key in [Tencent Console](https://console.cloud.tencent.com/cam/capi). Tencent Translate is the translation API with the highest free quota to our knowledge besides Google Translate, with a free quota of 5 million characters per month, and no fee will be deducted if there is no manual recharge (that is, there is no need to worry about misuse).
 
-## Installation
-`pip install --upgrade mathtranslate`
+## Installation & Update
+`pip install --upgrade mathtranslate -i https://pypi.org/simple`
+
+**We suggest the users to always check update before using because we update frequently**
 
 ## Usage
 1. Prepare or generate a tex file. You can get the tex file by the following two ways:
      - For most [arxiv](https://arxiv.org/) papers, you can download the latex source code (Download - Other formats - Source). If the file you downloaded has no suffix, in most cases it is in .tar format, you may need to add the suffix manually. After decompression you can get a latex project, and then you can translate the .tex files in it.
-     - Use [mathpix](https://mathpix.com/) to take a screenshot of the part you want to translate and save in a file. You can screenshot many connected paragraphs at one time, or combine multiple converted latex code into one file. Unfortunately, it's not completely free. Currently mathpix offers 100 screenshots for free (an edu email is required for registration) or 5000 screenshots for $5 per month.
-2. (Tencent Translate API users) run `translate_tex --setkey` to store the API ID and key.
+     - Use [mathpix](https://mathpix.com/) to convert the pdf you want to translate into latex code. mathpix can directly convert pdf page into latex code or convert screenshots into code. We can handle both of these methods. Unfortunately, mathpix charges after a certain amount of usage, here is the [price](https://mathpix.com/pricing).
+2. (Tencent Translate API users) run `translate_tex --setkey` to store the API secretID and secretKey.
 3. Translate the tex file by `translate_tex input.tex -o output.tex`.
 4. Compile your tex file. You can compile it with the  [texlive](https://www.tug.org/texlive/) command `xelatex output.tex`. For Chinese you need the xeCJK package. If it is a downloaded arxiv project, we recommend compressing all files into a zip file and uploading it to [overleaf](https://www.overleaf.com/project) for online compilation. **Note, you need to set the XeLatex compiler in `Menu - Compiler`, otherwise it cannot handle other languages.**
 5. You can change the default settings of the translation language and engine through the command line arguments `-engine`, `-from`, `-to`. For example `translate_tex -engine tencent input.tex -o output.tex`. You can also permanently change the setting via `translate_tex --setdefault`. You can see more details with `translate_tex --help`.
@@ -69,8 +71,7 @@ In the example directory, you can see `main.txt` which is the mathpix output of 
 2. There is a small probability to get something like "XMATHX_1_2" or wrong formula during translation. The accuracy rate of Tencent translation is slightly lower than that of Google translation.
 
 ## Further developments
-1. Automatically extract images from pdf, process images in a batch and output a single translated pdf by one click!
-2. Reduce the number of mathpix requests by open-source techniques.
-3. A more user-friendly interface.
+1. Fix bugs in the latex translations.
+2. A more user-friendly interface.
 
 If you have any questions or have interests in making contributions, please contact me by susyustc@gmail.com or joining QQ group 288646946.
