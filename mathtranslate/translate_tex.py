@@ -91,18 +91,18 @@ def main():
     options = parser.parse_args()
 
     if options.setkey:
-        print('Tencent API ID')
+        print('Tencent secretID')
         config.set_variable(config.tencent_secret_id_path, config.tencent_secret_id_default)
-        print('Tencent API Key')
+        print('Tencent secretKey')
         config.set_variable(config.tencent_secret_key_path, config.tencent_secret_key_default)
         print('saved!')
         config.reread()
-        print('ID:', config.tencent_secret_id)
-        print('Key:', config.tencent_secret_key)
+        print('secretID:', config.tencent_secret_id)
+        print('secretKey:', config.tencent_secret_key)
         sys.exit()
 
     if options.setdefault:
-        print('Translation engine (default google)')
+        print('Translation engine (google or tencent, default google)')
         config.set_variable(config.default_engine_path, config.default_engine_default)
         print('Translation language from (default en)')
         config.set_variable(config.default_language_from_path, config.default_language_from_default)

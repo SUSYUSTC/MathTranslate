@@ -161,7 +161,7 @@ class LatexTranslator:
             latex_original, tex_begin, tex_end = process_latex.split_latex_document(latex_original, r'\begin{document}', r'\end{document}')
             tex_begin = process_latex.remove_blank_lines(tex_begin)
             # TODO: change xeCJK to be compatible with other compiler & languages
-            tex_begin = process_latex.insert_package(tex_begin, 'xeCJK')
+            tex_begin = process_latex.insert_macro(tex_begin, r'\usepackage{xeCJK}')
         else:
             print('It is not a full latex document')
             latex_original = process_text.connect_paragraphs(latex_original)
