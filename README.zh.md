@@ -47,7 +47,7 @@
 
 ## 安装需求
 1. Python3 和 pip。建议使用 [Anaconda](https://www.anaconda.com)。
-2. （中国大陆IP用户）： [腾讯翻译 API](https://cloud.tencent.com/product/tmt) 帐户。 注册后可以在 [腾讯控制台](https://console.cloud.tencent.com/cam/capi) 获取 secret ID 和 secret key 。 腾讯翻译是除谷歌翻译之外我们认知范围内免费额度最高的翻译 API，每月有500万字符免费额度，且不手动充值情况下不会扣费（即不用担心误操作）。
+2. （中国大陆IP用户）： [腾讯翻译 API](https://cloud.tencent.com/product/tmt) 帐户。 注册后可以在 [腾讯控制台](https://console.cloud.tencent.com/cam/capi) 获取 secret ID (不是APP ID!) 和 secret Key 。 腾讯翻译是除谷歌翻译之外我们认知范围内免费额度最高的翻译 API，每月有500万字符免费额度，且不手动充值情况下不会扣费（即不用担心误操作）。
 
 ## 安装与更新
 `pip install --upgrade mathtranslate -i https://pypi.org/simple`
@@ -57,8 +57,8 @@
 ## 使用
 1. 准备或生成一个 tex 文件。你可以用如下方式得到 tex 文件：
     - 对于大多数 [arxiv](https://arxiv.org/) 论文，你可以下载到 latex 源代码 (Download - Other formats - Source)。如果你下载得到的文件没有后缀，大部分情况下是 .tar 格式，您可能需要手动加上后缀。解压后你可以得到一个 latex 项目，然后你可以翻译其中的 .tex 文件。
-    - 使用 [mathpix](https://mathpix.com/) 对你想翻译的部分截图。你可以一次性截图连着的一大片（甚至可以直接截图一整页，如果没有图片的话），并且可以多次截图的 Latex 代码合成成一个文件。不幸的是，它不是完全免费的。目前 mathpix 免费提供 100 个截图（注册时需要一封edu电子邮件）或者以每月 5 美元的价格提供 5000 个截图。
-2. （腾讯翻译API用户）运行`translate_tex --setkey`来存储 API ID 和 key。
+    - 使用 [mathpix](https://mathpix.com/) 把你想翻译的 pdf 转成 latex 代码。mathpix 可以直接把 pdf 转换成 latex 代码或者截图后把图片转成代码，这两种方式我们都可以处理。不幸的是，mathpix 在使用超过一定数量之后需要收费，这里是[价格表](https://mathpix.com/pricing)。
+2. （腾讯翻译API用户）运行`translate_tex --setkey`来存储 API secretID 和 secretKey。
 3. 通过 `translate_tex input.tex -o output.tex` 翻译 tex 文件。
 4. 编译您的 tex 文件。您可以用 [texlive](https://www.tug.org/texlive/) 的命令 `xelatex output.tex` 编译。中文翻译需要 xeCJK 包。如果是下载的 arxiv 项目我们建议把所有文件压缩成 zip 文件后上传到 [overleaf](https://www.overleaf.com/project) 在线编译。**注意，您需要在 `Menu - Compiler` 中设置成 XeLatex 编译器，否则无法处理其他语言。**
 5. 您可以通过命令行参数 `-engine`、`-from`、`-to` 更改翻译语言和引擎的默认设置。 例如 `translate_tex -engine tencent input.tex -o output.tex`。 您还可以通过 `translate_tex --setdefault` 永久更改设置。 您可以通过 `translate_tex --help` 查看更多细节。
