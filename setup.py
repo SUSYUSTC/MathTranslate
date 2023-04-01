@@ -24,6 +24,7 @@ setuptools.setup(
                       "regex",
                       ],
     classifiers=[
+        "License :: OSI Approved :: Apache-2.0",
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
