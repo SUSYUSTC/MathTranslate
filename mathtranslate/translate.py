@@ -4,6 +4,7 @@ from . import process_text
 from .config import math_code
 from .process_text import char_limit
 import time
+import re
 
 default_begin = r'''
 \documentclass[UTF8]{article}
@@ -33,6 +34,9 @@ class TextTranslator:
         return self.translator.translate(text, self.language_to, self.language_from)
 
     def translate(self, text):
+        if not re.match(re.compile(r'.*[a-zA-Z].*', re.DOTALL), text):
+            # no meaningful word inside
+            return text
         while True:
             try:
                 result = self.try_translate(text)
@@ -95,13 +99,14 @@ class LatexTranslator:
         text_original_paragraph = process_text.split_too_long_paragraphs(text_original_paragraph)
         if not complete:
             text_original_paragraph = process_text.split_titles(text_original_paragraph)
-        text_translated_paragraph = self.translate_paragraph_text(text_original_paragraph)
         if self.debug:
             print(f'\n\nParagraph {num}\n\n', file=self.f_old)
-            print(f'\n\nParagraph {num}\n\n', file=self.f_new)
-            print(f'\n\nParagraph {num}\n\n', file=self.f_obj)
             print(text_original_paragraph, file=self.f_old)
+        text_translated_paragraph = self.translate_paragraph_text(text_original_paragraph)
+        if self.debug:
+            print(f'\n\nParagraph {num}\n\n', file=self.f_new)
             print(text_translated_paragraph, file=self.f_new)
+            print(f'\n\nParagraph {num}\n\n', file=self.f_obj)
             for i, obj in enumerate(objs):
                 print(f'obj {i}', file=self.f_obj)
                 print(obj, file=self.f_obj)
@@ -115,7 +120,7 @@ class LatexTranslator:
         3. convert text back to objects
         '''
         text, objs = process_latex.replace_latex_objects(latex)
-        paragraphs_text = text.split('\n\n')
+        paragraphs_text = re.split(r'\n\n+', text)
         paragraphs_latex = [process_latex.recover_latex_objects(paragraph_text, objs) for paragraph_text in paragraphs_text]
         return paragraphs_latex
 
