@@ -10,3 +10,4 @@ from . import encoding
 from . import process_latex
 from . import process_text
 from . import translate_tex
+from . import update
