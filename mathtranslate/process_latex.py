@@ -5,7 +5,7 @@ from .config import math_code, test_environment
 match_code = r"(" + math_code + r"_\d+(?:_\d+)*)"
 match_code_replace = math_code + r"_(\d+(?:_\d+)*)*"
 
-options = r"\[[a-zA-Z\s,\\\*\.\+\-=_]*?\]"  # ,\*.+-=_
+options = r"\[[a-zA-Z\s,\\\*\.\+\-=_{}]*?\]"  # ,\*.+-=_{}
 
 pattern_env = r"\\begin[ \t]*\{(.*?)\}[ \t]*(options)?(.*?)\\end[ \t]*\{\1\}".replace('options', options)  # \begin{xxx} \end{xxx}, group 1: name, group 2: option, group 3: content
 pattern_command_full = r"\\([a-zA-Z]+\*?)[ \t]*(options)?[ \t]*(\{((?:[^{}]++|(?3))++)\})".replace('options', options)   # \xxx[xxx]{xxx} and \xxx{xxx}, group 1: name, group 2: option, group 4: content
@@ -100,7 +100,7 @@ def replace_latex_objects(text):
         pattern = regex.compile(regex_symbol, regex.DOTALL)
         while pattern.search(text):
             latex_obj = pattern.search(text).group()
-            replaced_objs.append(f'{latex_obj}')
+            replaced_objs.append(f' {latex_obj} ')
             text = pattern.sub(' ' + variable_code(count) + ' ', text, 1)
             count += 1
 
@@ -297,3 +297,16 @@ def recover_accent(text):
     text = re.compile(match_code_accent).sub(replace_function, text)
 
     return text
+
+
+def combine_sentences(text):
+    pattern = re.compile(r'\n(\s*([^\s]))')
+
+    def process_function(match):
+        char = match.group(2)
+        if char == '\\':
+            return match.group(0)
+        else:
+            return ' '+match.group(1)
+
+    return pattern.sub(process_function, text)

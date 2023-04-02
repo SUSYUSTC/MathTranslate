@@ -92,13 +92,14 @@ class LatexTranslator:
         '''
         Translate a latex paragraph, which means that it could contain latex objects
         '''
+        latex_original_paragraph = process_latex.combine_sentences(latex_original_paragraph)
         text_original_paragraph, objs = process_latex.replace_latex_objects(latex_original_paragraph)
         # Since \n is equivalent to space in latex, we change \n back to space
         # otherwise the translators view them as separate sentences
-        text_original_paragraph = text_original_paragraph.replace('\n', '')
         text_original_paragraph = process_text.split_too_long_paragraphs(text_original_paragraph)
         if not complete:
             text_original_paragraph = process_text.split_titles(text_original_paragraph)
+        text_original_paragraph = re.sub(r'  +', ' ', text_original_paragraph)
         if self.debug:
             print(f'\n\nParagraph {num}\n\n', file=self.f_old)
             print(text_original_paragraph, file=self.f_old)
