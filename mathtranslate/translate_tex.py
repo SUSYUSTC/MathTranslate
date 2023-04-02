@@ -75,6 +75,16 @@ def main():
     from mathtranslate.config import default_engine, default_language_from, default_language_to
     from mathtranslate.encoding import get_file_encoding
     from mathtranslate.translate import TextTranslator, LatexTranslator
+    from mathtranslate.update import get_latest_version
+    latest = get_latest_version()
+    updated = mathtranslate.__version__ == latest
+    if updated:
+        print("The current mathtranslate is latest")
+    else:
+        print("The current mathtranslate is not latest, please update by `pip install --upgrade mathtranslate -i https://pypi.org/simple`")
+        if not config.test_environment:
+            sys.exit()
+
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("file", nargs='?', type=str, help='input file')

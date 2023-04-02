@@ -1,4 +1,4 @@
-__version__ = "2.1.6"
+__version__ = "2.1.7"
 __author__ = "Jiace Sun"
 
 import os
@@ -10,3 +10,4 @@ from . import encoding
 from . import process_latex
 from . import process_text
 from . import translate_tex
+from . import update
