@@ -142,9 +142,7 @@ def recover_latex_objects(text, replaced_objs, final=False):
     n_bad1 = len(matched_indices) - n_good
     n_bad2 = nobjs - n_good
     n_bad = max(n_bad1, n_bad2)
-    if final and n_bad > 0:
-        print(n_bad, 'latex objects are probably wrong in total', nobjs)
-    return text
+    return text, n_bad, nobjs
 
 
 def remove_tex_comments(text):
@@ -175,39 +173,35 @@ def split_latex_document(text, begin_code, end_code):
     return body, pre, post
 
 
-def process_specific_env(latex, function, env_names):
-    pattern = regex.compile(pattern_env, regex.DOTALL)
+def process_specific_env(latex, function, env_name):
+    pattern = regex.compile(get_pattern_env(env_name), regex.DOTALL)
 
     def process_function(match):
-        # \begin{env_name} content \end{env_name}
-        env_name = match.group(1)
+        # \begin{env_name}[options] content \end{env_name}
+        name = match.group(1)
+        assert re.match(env_name, name)
         options = match.group(2)
         if options is None:
             options = ''
         content = match.group(3)
-        if env_name in env_names:
-            processed_content = function(content)
-            return rf'\begin{{{env_name}}}{options}{processed_content}\end{{{env_name}}}'
-        else:
-            return match.group(0)
+        processed_content = function(content)
+        return rf'\begin{{{env_name}}}{options}{processed_content}\end{{{env_name}}}'
     return pattern.sub(process_function, latex)
 
 
-def process_specific_commands(latex, function, command_names):
-    pattern = regex.compile(pattern_command_full, regex.DOTALL)
+def process_specific_command(latex, function, command_name):
+    pattern = regex.compile(get_pattern_command_full(command_name), regex.DOTALL)
 
     def process_function(match):
         # \{command_name}[options]{content}
-        command_name = match.group(1)
+        name = match.group(1)
+        assert re.match(command_name, name)
         options = match.group(2)
         if options is None:
             options = ''
         content = match.group(4)
-        if command_name in command_names:
-            processed_content = function(content)
-            return rf'\{command_name}{options}{{{processed_content}}}'
-        else:
-            return match.group(0)
+        processed_content = function(content)
+        return rf'\{command_name}{options}{{{processed_content}}}'
     return pattern.sub(process_function, latex)
 
 
@@ -305,3 +299,17 @@ def recover_accent(text):
     text = re.compile(match_code_accent).sub(replace_function, text)
 
     return text
+
+
+def combine_split_to_sentences(text):
+    n = len(math_code)
+    pattern = re.compile(r'\n(\s*([^\s]+))')
+
+    def process_function(match):
+        string = match.group(2)
+        if string[0:n] == math_code:
+            return match.group(0)
+        else:
+            return ' '+match.group(1)
+
+    return pattern.sub(process_function, text)

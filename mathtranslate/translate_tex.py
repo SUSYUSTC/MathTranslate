@@ -96,7 +96,6 @@ def main():
     parser.add_argument("--setkey", action='store_true', help='set id and key of tencent translator')
     parser.add_argument("--setdefault", action='store_true', help='set default translation engine and languages')
     parser.add_argument("--debug", action='store_true')
-    parser.add_argument("--loadmain", action='store_true')
     parser.add_argument("--compile", action='store_true')
     options = parser.parse_args()
 
@@ -166,7 +165,7 @@ def main():
 
     input_encoding = get_file_encoding(input_path)
     text_original = open(input_path, encoding=input_encoding).read()
-    text_final = latex_translator.translate_full_latex(text_original, options.loadmain)
+    text_final = latex_translator.translate_full_latex(text_original)
     with open(output_path, "w", encoding='utf-8') as file:
         print(text_final, file=file)
     print(output_path, 'is generated')
