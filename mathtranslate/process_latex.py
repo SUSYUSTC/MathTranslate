@@ -5,12 +5,20 @@ from .config import math_code, test_environment
 match_code = r"(" + math_code + r"_\d+(?:_\d+)*)"
 match_code_replace = math_code + r"_(\d+(?:_\d+)*)*"
 
-options = r"\[[a-zA-Z\s,\\\*\.\+\-=_{}]*?\]"  # ,\*.+-=_{}
+#options = r"\[[a-zA-Z\s,\\\*\.\+\-=_{}\(\)\!]*?\]"  # ,\*.+-=_{}!
+options = r"\[.*?\]"
+spaces = r"[ \t]*"
 
-pattern_env = r"\\begin[ \t]*\{(.*?)\}[ \t]*(options)?(.*?)\\end[ \t]*\{\1\}".replace('options', options)  # \begin{xxx} \end{xxx}, group 1: name, group 2: option, group 3: content
-pattern_command_full = r"\\([a-zA-Z]+\*?)[ \t]*(options)?[ \t]*(\{((?:[^{}]++|(?3))++)\})".replace('options', options)   # \xxx[xxx]{xxx} and \xxx{xxx}, group 1: name, group 2: option, group 4: content
-pattern_command_simple = r"\\([a-zA-Z]+\*?)"  # \xxx, group 1: name
-pattern_brace = r"\{((?:[^{}]++|(?0))++)\}"  # {xxx}, group 1: content
+get_pattern_brace = lambda index: rf"\{{((?:[^{{}}]++|(?{index}))++)\}}"
+get_pattern_env = lambda name: rf"\\begin{spaces}\{{({name})\}}{spaces}({options})?(.*?)\\end{spaces}\{{\1\}}".replace('options', options)
+get_pattern_command_full = lambda name: rf'\\({name}){spaces}({options})?{spaces}({get_pattern_brace(3)})'
+match_command_name = r'[a-zA-Z]+\*?'
+
+pattern_env = get_pattern_env(r'.*?')  # \begin{xxx} \end{xxx}, group 1: name, group 2: option, group 3: content
+pattern_command_full = get_pattern_command_full(match_command_name)   # \xxx[xxx]{xxx} and \xxx{xxx}, group 1: name, group 2: option, group 4: content
+pattern_command_simple = rf'\\({match_command_name})'  # \xxx, group 1: name
+pattern_brace = get_pattern_brace(0)  # {xxx}, group 1: content
+
 pattern_theorem = r"\\newtheorem[ \t]*\{(.+?)\}"  # \newtheorem{xxx}, group 1: name
 pattern_accent = r"\\([`'\"^~=.])(?:\{([a-zA-Z])\}|([a-zA-Z]))"  # match special characters with accents, group 1: accent, group 2/3: normal character
 match_code_accent = rf'{math_code}([A-Z]{{2}})([a-zA-Z])'  # group 1: accent name, group 2: normal character
@@ -297,16 +305,3 @@ def recover_accent(text):
     text = re.compile(match_code_accent).sub(replace_function, text)
 
     return text
-
-
-def combine_sentences(text):
-    pattern = re.compile(r'\n(\s*([^\s]))')
-
-    def process_function(match):
-        char = match.group(2)
-        if char == '\\':
-            return match.group(0)
-        else:
-            return ' '+match.group(1)
-
-    return pattern.sub(process_function, text)

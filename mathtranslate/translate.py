@@ -92,7 +92,6 @@ class LatexTranslator:
         '''
         Translate a latex paragraph, which means that it could contain latex objects
         '''
-        latex_original_paragraph = process_latex.combine_sentences(latex_original_paragraph)
         text_original_paragraph, objs = process_latex.replace_latex_objects(latex_original_paragraph)
         # Since \n is equivalent to space in latex, we change \n back to space
         # otherwise the translators view them as separate sentences
