@@ -22,6 +22,7 @@ setuptools.setup(
                       "chardet",
                       "requests",
                       "regex",
+                      "tqdm",
                       ],
     classifiers=[
         "Programming Language :: Python :: 3",
