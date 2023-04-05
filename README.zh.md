@@ -35,8 +35,6 @@
 <img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/translated.png" width="400">
 </p>
 
-虽然它目前是一个小项目，但我们知道这个项目受到的关注比我们预期的要多得多。 我们正在计划更多的开发，以获得更好的用户体验。
-
 ## 发布
 ### 2023年3月24日
 增加了直接翻译 arxiv 论文的功能。
