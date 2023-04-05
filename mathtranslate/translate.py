@@ -18,7 +18,7 @@ default_end = r'''
 
 # TODO: add more here
 environment_list = ['abstract', 'acknowledgments', 'itemize', 'enumerate', 'description', 'list', 'proof']
-command_list = ['section', 'subsection', 'subsubsection', 'caption', 'subcaption', 'footnote', 'paragraph']
+command_list = ['section', 'subsection', 'subsubsection', 'caption', 'subcaption', 'footnote', 'paragraph', 'textbf','textit']
 
 
 class TextTranslator:
