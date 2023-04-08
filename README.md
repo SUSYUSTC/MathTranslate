@@ -35,8 +35,6 @@ Here's an example of what you get finally.
 <img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/translated.png" width="400">
 </p>
 
-Although it is currently a small project, we are aware that this project has received much more attention that we expected. We are planning more developments for better user experience.
-
 ## Releases
 ### Mar 24, 2023
 We add the ability to directly translate arxiv papers.
