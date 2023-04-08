@@ -91,7 +91,7 @@ class LatexTranslator:
         text_translated = '\n'.join(parts_translated)
         return text_translated.replace("\u200b", "")
 
-    def translate_paragraph_latex(self, latex_original_paragraph):
+    def translate_text_in_paragraph_latex(self, latex_original_paragraph):
         '''
         Translate a latex paragraph, which means that it could contain latex objects
         '''
@@ -115,9 +115,37 @@ class LatexTranslator:
             for i, obj in enumerate(objs):
                 print(f'obj {i}', file=self.f_obj)
                 print(obj, file=self.f_obj)
-        latex_translated_paragraph, nbad, ntotal = process_latex.recover_latex_objects(text_translated_paragraph, objs, final=True)
+        latex_translated_paragraph, nbad, ntotal = process_latex.recover_latex_objects(text_translated_paragraph, objs, tolerate_error=True)
         self.nbad += nbad
         self.ntotal += ntotal
+        return latex_translated_paragraph
+
+    def translate_latex_all_objects(self, latex):
+        '''
+        Terminology:
+        env: '\\begin{xxx} \\end{xxx}'
+        command: '\\command[options]{text}
+        object: env or command
+        '''
+        translate_function = self.translate_text_in_paragraph_latex_and_leading_brace
+        for env_name in environment_list + self.theorems:
+            latex = process_latex.process_specific_env(latex, translate_function, env_name)
+            latex = process_latex.process_specific_env(latex, translate_function, env_name + r'\*')
+        for command_name in command_list:
+            latex = process_latex.process_specific_command(latex, translate_function, command_name)
+            latex = process_latex.process_specific_command(latex, translate_function, command_name + r'\*')
+        return latex
+
+    def translate_text_in_paragraph_latex_and_leading_brace(self, latex_original_paragraph):
+        latex_translated_paragraph = self.translate_text_in_paragraph_latex(latex_original_paragraph)
+        latex_translated_paragraph = process_latex.process_leading_level_brace(latex_translated_paragraph, self.translate_text_in_paragraph_latex_and_leading_brace)
+        return latex_translated_paragraph
+
+    def translate_paragraph_latex(self, latex_original_paragraph):
+        #latex_translated_paragraph = self.translate_text_in_paragraph_latex(latex_original_paragraph)
+        #latex_translated_paragraph = process_latex.process_leading_level_brace(latex_translated_paragraph, self.translate_text_in_paragraph_latex)
+        latex_translated_paragraph = self.translate_text_in_paragraph_latex_and_leading_brace(latex_original_paragraph)
+        latex_translated_paragraph = self.translate_latex_all_objects(latex_translated_paragraph)
         return latex_translated_paragraph
 
     def split_latex_to_paragraphs(self, latex):
@@ -131,21 +159,6 @@ class LatexTranslator:
         paragraphs_latex = [process_latex.recover_latex_objects(paragraph_text, objs)[0] for paragraph_text in paragraphs_text]
         return paragraphs_latex
 
-    def translate_latex_all_objects(self, latex, envs, commands):
-        '''
-        Terminology:
-        env: '\\begin{xxx} \\end{xxx}'
-        command: '\\command[options]{text}
-        object: env or command
-        '''
-        for env_name in envs:
-            latex = process_latex.process_specific_env(latex, self.translate_paragraph_latex, env_name)
-            latex = process_latex.process_specific_env(latex, self.translate_paragraph_latex, env_name + r'\*')
-        for command_name in commands:
-            latex = process_latex.process_specific_command(latex, self.translate_paragraph_latex, command_name)
-            latex = process_latex.process_specific_command(latex, self.translate_paragraph_latex, command_name + r'\*')
-        return latex
-
     def translate_full_latex(self, latex_original):
         self.nbad = 0
         self.ntotal = 0
@@ -156,7 +169,7 @@ class LatexTranslator:
         latex_original = process_latex.replace_special(latex_original)
 
         self.complete = process_latex.is_complete(latex_original)
-        theorems = process_latex.get_theorems(latex_original)
+        self.theorems = process_latex.get_theorems(latex_original)
         if self.complete:
             print('It is a full latex document')
             latex_original, tex_begin, tex_end = process_latex.split_latex_document(latex_original, r'\begin{document}', r'\end{document}')
@@ -176,7 +189,6 @@ class LatexTranslator:
         for latex_original_paragraph in tqdm.tqdm(latex_original_paragraphs):
             try:
                 latex_translated_paragraph = self.translate_paragraph_latex(latex_original_paragraph)
-                latex_translated_paragraph = self.translate_latex_all_objects(latex_translated_paragraph, environment_list + theorems, command_list)
                 latex_translated_paragraphs.append(latex_translated_paragraph)
             except BaseException as e:
                 print('Error found in Parapragh', self.num)
@@ -191,7 +203,7 @@ class LatexTranslator:
 
         # Title is probably outside the body part
         self.num = 'title'
-        latex_translated = process_latex.process_specific_command(latex_translated, self.translate_paragraph_latex, 'title')
+        latex_translated = process_latex.process_specific_command(latex_translated, self.translate_text_in_paragraph_latex, 'title')
 
         latex_translated = process_latex.recover_special(latex_translated)
         latex_translated = process_latex.recover_accent(latex_translated)

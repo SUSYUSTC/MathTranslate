@@ -10,7 +10,7 @@ options = r"\[.*?\]"
 spaces = r"[ \t]*"
 
 get_pattern_brace = lambda index: rf"\{{((?:[^{{}}]++|(?{index}))++)\}}"
-get_pattern_env = lambda name: rf"\\begin{spaces}\{{({name})\}}{spaces}({options})?(.*?)\\end{spaces}\{{\1\}}".replace('options', options)
+get_pattern_env = lambda name: rf"\\begin{spaces}\{{({name})\}}{spaces}({options})?(.*?)\\end{spaces}\{{\1\}}"
 get_pattern_command_full = lambda name: rf'\\({name}){spaces}({options})?{spaces}({get_pattern_brace(3)})'
 match_command_name = r'[a-zA-Z]+\*?'
 
@@ -79,7 +79,7 @@ def modify_after(text):
     return text
 
 
-def replace_latex_objects(text):
+def replace_latex_objects(text, brace=True):
     r"""
     Replaces all LaTeX objects in a given text with the format "{math_code}_{digit1}_{digit2}_..._{digit_last}",
     applies a given function to the resulting text (excluding the "{math_code}_{digit1}_{digit2}_..._{digit_last}" parts),
@@ -98,8 +98,9 @@ def replace_latex_objects(text):
         pattern_env,  # \begin{xxx} \end{xxx}
         pattern_command_full,  # \xxx[xxx]{xxx}
         pattern_command_simple,  # \xxx
-        pattern_brace,  # {xxx}
     ]
+    if brace:
+        latex_obj_regex.append(pattern_brace)
 
     # iterate through each LaTeX object and replace with "{math_code}_{digit1}_{digit2}_..._{digit_last}"
     count = 0
@@ -116,7 +117,7 @@ def replace_latex_objects(text):
     return text, replaced_objs
 
 
-def recover_latex_objects(text, replaced_objs, final=False):
+def recover_latex_objects(text, replaced_objs, tolerate_error=False):
     nobjs = len(replaced_objs)
     matched_indices = []
 
@@ -127,7 +128,7 @@ def recover_latex_objects(text, replaced_objs, final=False):
             return replaced_objs[index]
         else:
             if test_environment:
-                assert final
+                assert tolerate_error
             return '???'
 
     text = modify_text(text, modify_after)
@@ -203,6 +204,22 @@ def process_specific_command(latex, function, command_name):
         processed_content = function(content)
         return rf'\{command_name}{options}{{{processed_content}}}'
     return pattern.sub(process_function, latex)
+
+
+def process_leading_level_brace(latex, function):
+    # leading level means that the {xxx} is not inside other objects, i.e. \command{} or \begin{xxx} \end{xxx}
+    text, envs = replace_latex_objects(latex, brace=False)
+
+    def process_function(match):
+        # {content}
+        content = match.group(1)
+        # function here is translate_paragraph_latex, which cannot contain replaced environemtns
+        processed_content = function(recover_latex_objects(content, envs)[0])
+        return rf'{{ {processed_content} }}'
+
+    text = regex.compile(pattern_brace, regex.DOTALL).sub(process_function, text)
+    latex = recover_latex_objects(text, envs)[0]
+    return latex
 
 
 def remove_blank_lines(text):
