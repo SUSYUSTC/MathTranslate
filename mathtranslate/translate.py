@@ -33,6 +33,8 @@ class TextTranslator:
         self.translator = translator
         self.language_to = language_to
         self.language_from = language_from
+        self.number_of_calls = 0
+        self.tot_char = 0
 
     def try_translate(self, text):
         return self.translator.translate(text, self.language_to, self.language_from)
@@ -50,6 +52,8 @@ class TextTranslator:
                     time.sleep(0.5)
                 else:
                     raise e
+        self.number_of_calls += 1
+        self.tot_char += len(text)
         return result
 
 

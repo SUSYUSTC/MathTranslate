@@ -170,6 +170,8 @@ def main():
         print(text_final, file=file)
     print(output_path, 'is generated')
 
+    print('Number of translation called:', text_translator.number_of_calls)
+    print('Total characters translated:', text_translator.tot_char)
     if options.compile:
         os.system(f'xelatex {output_path}')
     else:
