@@ -141,13 +141,12 @@ class LatexTranslator:
         return latex
 
     def translate_text_in_paragraph_latex_and_leading_brace(self, latex_original_paragraph):
+        # it acts recursively, i.e. it also translates braces inside braces
         latex_translated_paragraph = self.translate_text_in_paragraph_latex(latex_original_paragraph)
         latex_translated_paragraph = process_latex.process_leading_level_brace(latex_translated_paragraph, self.translate_text_in_paragraph_latex_and_leading_brace)
         return latex_translated_paragraph
 
     def translate_paragraph_latex(self, latex_original_paragraph):
-        #latex_translated_paragraph = self.translate_text_in_paragraph_latex(latex_original_paragraph)
-        #latex_translated_paragraph = process_latex.process_leading_level_brace(latex_translated_paragraph, self.translate_text_in_paragraph_latex)
         latex_translated_paragraph = self.translate_text_in_paragraph_latex_and_leading_brace(latex_original_paragraph)
         latex_translated_paragraph = self.translate_latex_all_objects(latex_translated_paragraph)
         return latex_translated_paragraph

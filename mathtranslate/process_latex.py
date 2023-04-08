@@ -21,7 +21,7 @@ pattern_brace = get_pattern_brace(0)  # {xxx}, group 1: content
 
 pattern_theorem = r"\\newtheorem[ \t]*\{(.+?)\}"  # \newtheorem{xxx}, group 1: name
 pattern_accent = r"\\([`'\"^~=.])(?:\{([a-zA-Z])\}|([a-zA-Z]))"  # match special characters with accents, group 1: accent, group 2/3: normal character
-match_code_accent = rf'{math_code}([A-Z]{{2}})([a-zA-Z])'  # group 1: accent name, group 2: normal character
+match_code_accent = rf'{math_code}([A-Z]{{2}})([a-zA-Z])'  # group 1: accent name, group 2: normal character, e.g. \"o or \"{o}
 list_special = ['\\', '%', '&', '#', '$', '{', '}', ' ']  # all special characters in form of \x
 
 special_character_forward = {
@@ -89,6 +89,7 @@ def replace_latex_objects(text, brace=True):
     Returns the processed text and a list of replaced LaTeX objects.
     """
 
+    # You need to make sure that the input does not contain {math_code}
     # define regular expressions for each LaTeX object
     latex_obj_regex = [
         r"\$\$(.*?)\$\$",  # $$ $$
@@ -118,6 +119,7 @@ def replace_latex_objects(text, brace=True):
 
 
 def recover_latex_objects(text, replaced_objs, tolerate_error=False):
+    # recover the latex objects from "replace_latex_objects"
     nobjs = len(replaced_objs)
     matched_indices = []
 
@@ -133,6 +135,7 @@ def recover_latex_objects(text, replaced_objs, tolerate_error=False):
 
     text = modify_text(text, modify_after)
     pattern = re.compile(match_code_replace)
+    # count number of mismatch
     total_num = 0
     while True:
         text, num_modify = pattern.subn(lambda match: get_obj(match.group(1)), text)
@@ -175,10 +178,11 @@ def split_latex_document(text, begin_code, end_code):
 
 
 def process_specific_env(latex, function, env_name):
+    # find all patterns of \begin{env_name}[options] content \end{env_name}
+    # then replace `content` by `function(content)`
     pattern = regex.compile(get_pattern_env(env_name), regex.DOTALL)
 
     def process_function(match):
-        # \begin{env_name}[options] content \end{env_name}
         name = match.group(1)
         assert re.match(env_name, name)
         options = match.group(2)
@@ -191,10 +195,11 @@ def process_specific_env(latex, function, env_name):
 
 
 def process_specific_command(latex, function, command_name):
+    # find all patterns of # \{command_name}[options]{content}
+    # then replace `content` by `function(content)`
     pattern = regex.compile(get_pattern_command_full(command_name), regex.DOTALL)
 
     def process_function(match):
-        # \{command_name}[options]{content}
         name = match.group(1)
         assert re.match(command_name, name)
         options = match.group(2)
@@ -208,12 +213,12 @@ def process_specific_command(latex, function, command_name):
 
 def process_leading_level_brace(latex, function):
     # leading level means that the {xxx} is not inside other objects, i.e. \command{} or \begin{xxx} \end{xxx}
+    # replace `{ content }` by `{ function(content) }`
     text, envs = replace_latex_objects(latex, brace=False)
 
     def process_function(match):
-        # {content}
         content = match.group(1)
-        # function here is translate_paragraph_latex, which cannot contain replaced environemtns
+        # function here is translate_paragraph_latex, which cannot contain replaced environments
         processed_content = function(recover_latex_objects(content, envs)[0])
         return rf'{{ {processed_content} }}'
 
@@ -290,6 +295,8 @@ def recover_special(text):
 
 def replace_accent(text):
     def replace_function(match):
+        # if it is \"{o}, then special is ", char1 is o, char2 is None
+        # if it is \"o, then special is ", char1 is None, char2 is o
         special = match.group(1)
         char1 = match.group(2)
         char2 = match.group(3)
@@ -319,6 +326,8 @@ def recover_accent(text):
 
 
 def combine_split_to_sentences(text):
+    # if two lines are separately by only one \n, in latex they are in the same paragraph so we combine them in the same line
+    # However we don't combine them if the second line does not start from normal letters (so usually some latex commands)
     n = len(math_code)
     pattern = re.compile(r'\n(\s*([^\s]+))')
 
