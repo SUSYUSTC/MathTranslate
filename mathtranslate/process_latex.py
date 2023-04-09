@@ -339,3 +339,8 @@ def combine_split_to_sentences(text):
             return ' '+match.group(1)
 
     return pattern.sub(process_function, text)
+
+
+def delete_specific_format(latex, format_name):
+    pattern = regex.compile(get_pattern_command_full(format_name), regex.DOTALL)
+    return pattern.sub(lambda m: m.group(4), latex)

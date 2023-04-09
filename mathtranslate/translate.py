@@ -19,7 +19,7 @@ default_end = r'''
 # TODO: add more here
 environment_list = ['abstract', 'acknowledgments', 'itemize', 'enumerate', 'description', 'list', 'proof']
 command_list = ['section', 'subsection', 'subsubsection', 'caption', 'subcaption', 'footnote', 'paragraph']
-
+format_list = ['textbf', 'textit', 'emph']
 
 class TextTranslator:
     def __init__(self, engine, language_to, language_from):
@@ -99,6 +99,11 @@ class LatexTranslator:
         '''
         Translate a latex paragraph, which means that it could contain latex objects
         '''
+
+        # remove format about textbf, emph and textit
+        for format_name in format_list:
+            latex_original_paragraph = process_latex.delete_specific_format(latex_original_paragraph, format_name)
+
         text_original_paragraph, objs = process_latex.replace_latex_objects(latex_original_paragraph)
         # Since \n is equivalent to space in latex, we change \n back to space
         # otherwise the translators view them as separate sentences
