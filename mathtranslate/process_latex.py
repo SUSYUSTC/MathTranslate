@@ -11,13 +11,31 @@ spaces = r"[ \t]*"
 
 get_pattern_brace = lambda index: rf"\{{((?:[^{{}}]++|(?{index}))++)\}}"
 get_pattern_env = lambda name: rf"\\begin{spaces}\{{({name})\}}{spaces}({options})?(.*?)\\end{spaces}\{{\1\}}"
-get_pattern_command_full = lambda name: rf'\\({name}){spaces}({options})?{spaces}({get_pattern_brace(3)})'
+
+
+def get_pattern_command_full(name, n=None):
+    pattern = rf'\\({name})'
+    if n is None:
+        pattern += rf'{spaces}({options})?'
+        n = 1
+        begin_brace = 3
+    else:
+        begin_brace = 2
+    for i in range(n):
+        tmp = get_pattern_brace(i*2+begin_brace)
+        pattern += rf'{spaces}({tmp})'
+    if n == 0:
+        pattern += r'(?=[^a-zA-Z])'
+    return pattern
+
+
 match_command_name = r'[a-zA-Z]+\*?'
 
 pattern_env = get_pattern_env(r'.*?')  # \begin{xxx} \end{xxx}, group 1: name, group 2: option, group 3: content
 pattern_command_full = get_pattern_command_full(match_command_name)   # \xxx[xxx]{xxx} and \xxx{xxx}, group 1: name, group 2: option, group 4: content
 pattern_command_simple = rf'\\({match_command_name})'  # \xxx, group 1: name
 pattern_brace = get_pattern_brace(0)  # {xxx}, group 1: content
+pattern_newcommand = rf'\\(?:newcommand|def){spaces}(?:\{{\\([a-zA-Z]+)\}}|\\([a-zA-Z]+)){spaces}(?:\[(\d)\])?{spaces}({get_pattern_brace(4)})'  # \newcommand{name}[n_arguments]{content}, group 1/2: name, group 3: n_arguments, group 5: content
 
 pattern_theorem = r"\\newtheorem[ \t]*\{(.+?)\}"  # \newtheorem{xxx}, group 1: name
 pattern_accent = r"\\([`'\"^~=.])(?:\{([a-zA-Z])\}|([a-zA-Z]))"  # match special characters with accents, group 1: accent, group 2/3: normal character
@@ -278,6 +296,12 @@ def get_theorems(text):
     return theorems
 
 
+def get_nonNone(*args):
+    result = [arg for arg in args if arg is not None]
+    assert len(result) == 1
+    return result[0]
+
+
 def replace_special(text):
     for special in list_special:
         # add space around
@@ -300,12 +324,7 @@ def replace_accent(text):
         special = match.group(1)
         char1 = match.group(2)
         char2 = match.group(3)
-        if char1 is None:
-            assert char2 is not None
-            char = char2
-        else:
-            assert char2 is None
-            char = char1
+        char = get_nonNone(char1, char2)
         # do not add space around
         return math_code + special_character_forward[special] + f'{char}'
 
@@ -336,7 +355,7 @@ def combine_split_to_sentences(text):
         if string[0:n] == math_code:
             return match.group(0)
         else:
-            return ' '+match.group(1)
+            return ' ' + match.group(1)
 
     return pattern.sub(process_function, text)
 
@@ -344,3 +363,45 @@ def combine_split_to_sentences(text):
 def delete_specific_format(latex, format_name):
     pattern = regex.compile(get_pattern_command_full(format_name), regex.DOTALL)
     return pattern.sub(lambda m: m.group(4), latex)
+
+
+def replace_newcommand(newcommand, latex):
+    command_name, n_arguments, content = newcommand
+    pattern = regex.compile(get_pattern_command_full(command_name, n_arguments), regex.DOTALL)
+
+    def replace_function(match):
+        this_content = content
+        name = match.group(1)
+        assert re.match(command_name, name)
+        for i in range(n_arguments):
+            text = match.group(3 + i * 2)
+            this_content = this_content.replace(f'#{i+1}', text)
+        return this_content
+
+    return pattern.sub(replace_function, latex)
+
+
+def process_newcommands(latex):
+    pattern = regex.compile(pattern_newcommand, regex.DOTALL)
+    count = 0
+    full_newcommands = []
+    while True:
+        match = pattern.search(latex)
+        if not match:
+            break
+        name1 = match.group(1)
+        name2 = match.group(2)
+        name = get_nonNone(name1, name2)
+        n_arguments = match.group(3)
+        if n_arguments is None:
+            n_arguments = 0
+        else:
+            n_arguments = int(n_arguments)
+        content = match.group(5)
+        latex = pattern.sub(f'XMATH_REPLACE{count}_NEWCOMMAND', latex, 1)
+        full_newcommands.append(match.group(0))
+        latex = replace_newcommand((name, n_arguments, content), latex)
+        count += 1
+    for i in range(count):
+        latex = latex.replace(f'XMATH_REPLACE{i}_NEWCOMMAND', full_newcommands[i])
+    return latex

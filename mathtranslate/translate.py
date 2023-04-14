@@ -172,6 +172,7 @@ class LatexTranslator:
         self.ntotal = 0
 
         latex_original = process_latex.remove_tex_comments(latex_original)
+        latex_original = process_latex.process_newcommands(latex_original)
 
         latex_original = process_latex.replace_accent(latex_original)
         latex_original = process_latex.replace_special(latex_original)
