@@ -1,0 +1,45 @@
+%! Author = sbbfti
+%! Date = 10/06/2020
+
+\begin{frontmatter}
+
+\title{Syntactic-Aware On-the-Fly Code Completion}
+% GTC/GTT/TypeC/TypeComp: Generative Type-Aware Transformers for Code Completion\tnoteref{mytitlenote}
+% \tnotetext[mytitlenote]{Fully documented templates are available in the elsarticle package on \href{http://www.ctan.org/tex-archive/macros/latex/contrib/elsarticle}{CTAN}.}
+
+%% Group authors per affiliation:
+\author{Wannita Takerngsaksiri\fnref{myfootnote}}
+\address{Monash University}
+\fntext[myfootnote]{Since 1880.}
+
+%% or include affiliations in footnotes:
+\author[mymainaddress,mysecondaryaddress]{Elsevier Inc}
+\ead[url]{www.elsevier.com}
+
+\author[mysecondaryaddress]{Global Customer Service\corref{mycorrespondingauthor}}
+\cortext[mycorrespondingauthor]{Corresponding author}
+\ead{support@elsevier.com}
+
+\address[mymainaddress]{1600 John F Kennedy Boulevard, Philadelphia}
+\address[mysecondaryaddress]{360 Park Avenue South, New York}
+
+\begin{abstract}
+Code Completion, which helps improve developers productivity by suggest the next code token from a given context, is one of the most essential features in IDEs. 
+Many current techniques for code completion apply ASTs information to train the model on syntactic information. 
+However, in practice, the ASTs information requires the syntactically correct and completed source code to be extracted.
+On the other hand, the approaches that require no completeness of source code do not consider syntactic information.
+Therefore, in this paper we propose \our: the Syntactic-Aware On-the-Fly Code Completion model leveraging the token type information with multi-task training techniques.
+We perform the experiments on both token-level and line-level prediction with various of training techniques. 
+Moreover, we intensively study the impact of the different task weighting parameters and decoding methods.
+Finally, we compare our results with four state-of-the-arts approaches and CodeXGLUE benchmark.
+The results indicate that our \our~surpass all baselines achieving the accuracy of 77.12 in token-level prediction and 43.37 in line-level prediction.
+Our models is publicly available at \nolinkurl{hugging face}.
+\end{abstract}
+
+\begin{keyword}
+% \texttt{elsarticle.cls}\sep \LaTeX\sep Elsevier \sep template
+Code Completion \sep Multi-task learning \sep Type-aware \sep Transformers
+\MSC[2010] 00-01\sep  99-00
+\end{keyword}
+
+\end{frontmatter}

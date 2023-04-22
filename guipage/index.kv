@@ -1,0 +1,118 @@
+
+<IndexPage>:
+    canvas.before:
+        Color:
+            rgba: [1,1,1,1]
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: './gui/static/index.jpg'
+
+
+    Label:
+        id: 'title_label'
+        text: '[ref="click"][b]MathTranslate[/b][/ref]'
+        color: kivy.utils.get_color_from_hex('#0081CF')
+        font_size: 72  # 24
+        pos_hint: {"center_x":0.5,"y":0.2}
+        markup: True
+        on_ref_press: root.page_go()
+
+    Label:
+        text: '[b]v2.1.11[/b]'
+        color: kivy.utils.get_color_from_hex('#0081CF')
+        font_size: 45  #18
+        pos_hint: {"center_x":0.5,"y":0.0}
+        markup: True
+
+
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: (1,.1)
+        spacing: 50
+        padding: 100,0
+        pos_hint: {"center_x":0.5,"y":0.2}
+
+        Button:
+            text: "[b]Load Latex File[/b]"
+            markup: True
+            on_press:root.show_load()
+
+        Button:
+            text: "[b]Preferences[/b]"
+            markup: True
+            on_release: root.page_preferences()
+
+        Button:
+            text: "[b]Translate[/b]"
+            markup: True
+            on_release: root.translate_load()
+
+<LoadDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserIconView:
+            id: filechooser
+            rootpath: root.cwdir
+            filters: ['*.jpg',"*.png","*.tex","*.jpeg"]
+            on_selection: text_input.text = self.selection and self.selection[0] or ''
+
+        TextInput:
+            id: text_input
+            size_hint_y: .1
+            multiline: False
+
+
+        BoxLayout:
+            size_hint_y: .1
+            spacing: 30
+            Button:
+                text: "[b]Conform[/b]"
+                on_release: root.load(filechooser.path,text_input.text)
+                markup: True
+
+            Button:
+                text: "[b]Cancel[/b]"
+                on_release: root.cancel()
+                markup: True
+
+<TranslationDialog>:
+
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+
+        BoxLayout:
+            orientation: "vertical"
+            size_hint_y: .5
+            padding: 10,70
+
+            Label:
+                text: '[ref="click"][b]Output File Path:[/b][/ref]'
+                color: kivy.utils.get_color_from_hex('#FFFFFF')
+                font_size: 24  # 24
+                markup: True
+                size_hint_y: .2
+
+            TextInput:
+                id: output_path
+                text: root.file
+                size_hint_y: .03
+                multiline: False
+
+
+        BoxLayout:
+            size_hint_y: .1
+            spacing: 30
+            Button:
+                text: "[b]Conform[/b]"
+                on_release: root.load(output_path.text)
+                markup: True
+
+            Button:
+                text: "[b]Cancel[/b]"
+                on_release: root.cancel()
+                markup: True

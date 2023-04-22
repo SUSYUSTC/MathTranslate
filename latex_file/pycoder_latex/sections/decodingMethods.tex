@@ -1,0 +1,50 @@
+\begin{itemize}
+    \item \textbf{Greedy} is a method to select the maximum probable vocabulary to be the next tokens.
+    This method assumes that the model already outputs the best probability in every timestep.
+    % it generates all possible tokens in the vocabulary list; then, it will choose top B candidates that have the most probability. Those B candidates will move to the next time step, and the process repeats. In the end, there will only be B candidates. The search space is only (10,000)*B.
+%     Although selecting only the highest
+% probability token is suitable for a specific time step, it
+% might be a sub-optimal for a sequence. 
+    
+    \item \textbf{Beam Search} applies a search algorithm to generate all possible tokens in the vocabulary; then, it selects the top $b$ (i.e., beam size) probable tokens to continue.
+    The Beam Search method is one of the most commonly used decoding methods in text generation tasks~\cite{li-etal-2016-deep, wiseman-etal-2017-challenges}.
+    % However, Beam Search may not always achieve optimal results, since it does not consider the whole vocabulary, but instead only the top $b$ (i.e., beam size) probable tokens.
+    % Nevertheless, Beam Search still performs faster than an exhaustive search.
+    
+    % ; however, it balances between the performance and the computational time.
+    % The method's time complexity is equals to $O(b*V)$ where $V$ is the vocabulary size.
+    % It . 
+    
+    % recommend the most probable $b$ next tokens according to a defined $b$ beam size threshold.
+
+    
+    
+    
+    % by expanding the graph in a limited set called beam~size~($b$).
+    % In each timestep, the method generates all possible tokens in the vocabulary; then, it select the top $B$ probability tokens to continue.
+      
+    
+    \item \textbf{Sampling} is a method to randomly select the next token from the actual probability distribution assigned by the model.
+    Different from Greedy and Beam search methods which in some cases may recommend only the same probable next tokens at different timesteps, the sampling method may recommend different next tokens at different timesteps (i.e., non-deterministic).
+    % We put the sampling method in this study as the baseline for other decoding methods. All of the methods that required sampling are set the seed value to the same number.
+    
+    % Temperature is used to increase the probability of probable tokens while reducing the one that is not. Usually, the range is 0 < temp ≤ 1. Note that when temp=1, there is no effect.
+    \item \textbf{Sampling with Temperature} applies a temperature parameter to shape the probability distribution~\cite{ackley1985learning}, which is different from the original sampling method where the randomness is arbitrary.
+    The temperature is used to increase the probability of the most probable next tokens, while decreasing the probability of the others.
+    We note that the probability of the least probable next tokens is only decreased, but they are not removed from the recommendation.
+    The range of the temperature value is usually at $0 < temp \le 1$, where $temp = 1$ is a normal sampling.
+
+    % Additional to normal sampling which could be arbitrary, sampling with temperature method 
+    \item \textbf{Top-K Sampling} aims to truncate the probability distribution by choosing the top-$k$ probable next tokens from the vocabulary, then, re-scale the distribution and perform sampling based on the new distribution.
+    This method ensures that the less probable next tokens will not be generated, while only the top-$k$ probable next tokens are only considered during the sampling process.
+    
+    \item \textbf{Top-P Sampling (Nucleus Sampling)} is similar to the Top-k sampling method where the Top-P sampling method also truncates the probability distribution, but with different criteria. 
+    Top-P sampling prunes the distribution by the cumulative probability of the current step $\ge p$~\cite{holtzman2019curious}; then, re-scale and perform sampling.
+    Formally, given the probability P, we can define the smallest summation of the probability as $V_p$ in
+    \begin{equation}
+        \label{eq:top-p}
+        \sum_{x\in V_p} P(x|x_{1:i-1}) \ge p
+    \end{equation}
+    The benefit of this method is that it can dynamically adjust the number of $k$ depending on the certainty of the model.
+    If the model is very certain on some tokens, the search space is small, and vice versa.
+\end{itemize}

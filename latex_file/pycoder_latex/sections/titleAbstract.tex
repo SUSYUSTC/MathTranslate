@@ -1,0 +1,76 @@
+%
+% paper title
+% Linebreaks \\ can be used within to get better formatting as desired.
+% Do not put math or special symbols in the title.
+\title{Syntax-Aware On-the-Fly Code Completion}
+% \title{Syntax-Aware On-the-Fly Python \\Code Completion with Multi-Task Learning}
+
+\author{Wannita~Takerngsaksiri,~\IEEEmembership{Student Member,~IEEE,}
+        Chakkrit Tantithamthavorn,~\IEEEmembership{Member,~IEEE,}
+        and~Yuan-Fang Li,~\IEEEmembership{Member,~IEEE.}% <-this % stops a space
+\IEEEcompsocitemizethanks{\IEEEcompsocthanksitem W. Takerngsaksiri, C. Tantithamthavorn, Y.-F. Li are with  the Faculty of Information Technology, Monash University, Australia.\protect\\
+% \\ is fragile and will error, could use \hfil\break instead.
+E-mail: \{wannita.takerngsaksiri, chakkrit, yuanfang.li\}@monash.edu
+% \IEEEcompsocthanksitem J. Doe and J. Doe are with Anonymous University.
+}% <-this % stops a space
+\thanks{Manuscript received November 4, 2022.}}
+% revised February XX, 2023.
+
+
+% The paper headers
+\markboth{IEEE Transactions on Software Engineering (TSE),~Vol.~XX, No.~X, November~2022}%
+{Wannita \MakeLowercase{\textit{et al.}}: Syntax-Aware On-the-Fly Code Completion}
+% \markboth{Journal of \LaTeX\ Class Files,~Vol.~14, No.~8, August~2015}%
+% {Shell \MakeLowercase{\textit{et al.}}: Bare Advanced Demo of IEEEtran.cls for IEEE Computer Society Journals}
+
+\IEEEtitleabstractindextext{%
+\begin{abstract}
+
+Code completion aims to help improve developers' productivity by suggesting the next code tokens from a given context. 
+Various approaches have been proposed to incorporate abstract syntax tree (AST) information for model training, ensuring that code completion is aware of the syntax of the programming languages.
+However, existing syntax-aware code completion approaches are not on-the-fly, as we found that for every two-thirds of characters that developers type, AST fails to be extracted because it requires the syntactically correct source code, limiting its practicality in real-world scenarios.
+On the other hand, existing on-the-fly code completion does not consider syntactic information yet.
+In this paper, we propose \our~to leverage token types, a kind of lightweight syntactic information, which is readily available and align with the natural order of source code.
+Our \our~is trained in a multi-task training manner so that by learning the supporting task of predicting token types during the training phase, the models achieve better performance on predicting tokens and lines of code without the need for token types in the inference phase.
+Comprehensive experiments show that \our~achieves the first rank on the CodeXGLUE leaderboard with an accuracy of 77.12\% for the token-level predictions, which is 0.43\%-24.25\% more accurate than baselines.
+In addition, \our~achieves an exact match of 43.37\% for the line-level predictions, which is 3.63\%-84.73\% more accurate than baselines.
+These results lead us to conclude that token type information (an alternative to syntactic information) that is rarely used in the past can greatly improve the performance of code completion approaches, without requiring the syntactically correct source code like AST-based approaches do.
+Our \our~is publicly available on HuggingFace.
+
+% Comprehensive experiments show that our model outperforms four state-of-the-art techniques. Specifically, relative to the second-best models, our models achieve an improvement in accuracy of 1.89\% (from 75.69\% to 77.12\%) in token-level prediction and an improvement in an exact match of 8.34\% (from 40.03\% to 43.37\%) in the line-level prediction. 
+% On the widely-used CodeXGLUE benchmark, our model sets a new state-of-the-art result.
+
+
+
+
+
+% A recent study found that code completion can significantly help improve developers' productivity by suggesting the next code tokens from a given context.
+% Many current techniques for code completion incorporate abstract syntax tree (AST) information for model training.
+% However, we found that , thus limiting the practicality of the AST-based code completion approaches.
+
+
+
+% On the other hand, the approaches that require no completeness of source code consider only the sequence of code without syntactic information.
+
+
+% Code Completion, which helps improve developers' productivity by suggesting the next code tokens from a given context, is one of the most essential features in IDEs. 
+% Many current techniques for code completion incorporate abstract syntax tree (AST) information for model training. 
+% However, in practice, the AST information requires the syntactically correct and completed source code to be available before it can be extracted. However, AST information may not available for the code completion task at inference time, thus limiting the practicality of these approaches 
+% On the other hand, the approaches that require no completeness of source code do not consider syntactic information.
+% In this paper, we propose to leverage token types, a kind of lightweight syntactic information, which is readily available even for partially complete code. Our \our: the Syntax-aware On-the-fly code completion model is trained in a multi-task learning manner so that by learning on the auxiliary task of predicting token types, the models achieves better performance on predicting tokens and lines of code.
+% Comprehensive experiments show that our model outperforms four state-of-the-art techniques. Specifically, relative to the second best models, our models achieves with an improvement in accuracy of 1.89\% (from 75.69\% to 77.12\%) in token-level prediction and an improvement in exact match of 8.34\% (from 40.03\% to 43.37\%) in line-level prediction. 
+% On the widely-used CodeXGLUE benchmark, our model sets a new state-of-the-art result.
+% Our models is publicly available at \nolinkurl{HuggingFace}.
+
+% The results indicate that our \our~surpass all baselines achieving the accuracy of 77.12 in token-level prediction and 43.37 in line-level prediction.
+% We perform the experiments on both token-level and line-level prediction with various of training techniques. 
+% Moreover, we intensively study the impact of the different task weighting parameters and decoding methods.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Code Completion, Multi-Task Learning
+\end{IEEEkeywords}}
+
+
+% make the title area
+\maketitle

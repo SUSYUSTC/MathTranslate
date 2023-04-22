@@ -1,0 +1,72 @@
+\ProvidesPackage{mypreamble}
+
+\usepackage{lineno}
+\usepackage{hyperref}
+\usepackage{import}
+\modulolinenumbers[5]
+
+% \journal{Journal of \LaTeX\ Templates}
+
+%\User defined packages
+% highlight
+\usepackage{color,soul}
+\DeclareRobustCommand{\hlc}[1]{{\sethlcolor{lightgray}\hl{#1}}}
+% todonotes
+\usepackage{todonotes}
+% degree symbol
+\usepackage{gensymb}
+% tables
+\usepackage{caption}
+\usepackage{csvsimple}
+\usepackage{booktabs, tabularx, wrapfig}
+\usepackage{array, ltablex, multirow}
+\usepackage{placeins}
+\usepackage{graphicx}
+\usepackage{subcaption}
+
+\usepackage[nonumberlist,nogroupskip]{glossaries}
+
+% algorithm
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\setglossarystyle{super}
+
+\hypersetup{%
+  colorlinks=false,% hyperlinks will be black
+  linkbordercolor=[rgb]{0.6,0.6,0.6},% hyperlink borders will be red
+  pdfborderstyle={/S/U/W 0}% border style will be underline of width 1pt
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%% Elsevier bibliography styles
+%%%%%%%%%%%%%%%%%%%%%%%
+%% To change the style, put a % in front of the second line of the current style and
+%% remove the % from the second line of the style you would like to use.
+%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Numbered
+%\bibliographystyle{model1-num-names}
+
+%% Numbered without titles
+%\bibliographystyle{model1a-num-names}
+
+%% Harvard
+%\bibliographystyle{model2-names.bst}\biboptions{authoryear}
+
+%% Vancouver numbered
+%\usepackage{numcompress}\bibliographystyle{model3-num-names}
+
+%% Vancouver name/year
+%\usepackage{numcompress}\bibliographystyle{model4-names}\biboptions{authoryear}
+
+%% APA style
+% \bibliographystyle{model5-names}\biboptions{authoryear}
+
+%% AMA style
+%\usepackage{numcompress}\bibliographystyle{model6-num-names}
+
+%% `Elsevier LaTeX' style
+% \bibliographystyle{elsarticle-num}
+%%%%%%%%%%%%%%%%%%%%%%%
+

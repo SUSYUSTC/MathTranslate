@@ -1,0 +1,70 @@
+\section{Related Work}
+\label{sec:relatedwork}
+
+In this section, we explain the related work of multi-task learning in code completion and the syntactic information. Additionally, we discuss the difference of our work to the existing literature.
+% \kla{? bra bra. check GPT2SP paper}
+
+% \subsection{Code Completion}
+
+% \kla{not sure if we need this section, as we already mentioned before.}
+
+% Different from existing work, this paper is the first to ?
+
+
+\subsection{Multi-Task Learning in SE}
+
+% \kla{how MTL is used in SE? for which tasks? examples?}
+
+% \kla{what papers applied MTL to code completion? what did they do? what tasks do they consider? how our is different from them? are we the first to consider the combination of type+semantic?}
+
+% \kla{are we the first to explore hard/soft/stilts?}
+
+Multi-task learning has been use in many software engineering research~\cite{aung2022multi,she2020mtfuzz, le2021deepcva,8882756}.
+For example, Aung~\ea~\cite{aung2022multi} propose multi-triage, a multi-task learning model to address a bug triage process which consists of two tasks: assigning developer and allocating issue types.
+Multi-triage has text encoder and AST encoder to extract the feature representation of bug descriptions and source code simultaneously via the hard parameters sharing technique.
+She~\ea~\cite{she2020mtfuzz} also propose the multi-task neural networks to improve a fuzzing method which is a technique for detecting software bugs and vulnerabilities.
+The model learns a compact embedding of the input from multiple related tasks and guide the fuzzing mutation process for the diverse training samples.
+Le~\ea~and Gong~\ea~works also adapt multi-task learning to address the  software vulnerability.
+Le~\ea~\cite{le2021deepcva} adapt multi-task learning for the joint prediction of multiple vulnerability characteristics based on the vulnerability descriptions.
+Gong~\ea~\cite{8882756} propose DeepCVA to automate seven commit-level vulnerability assessment tasks simultaneously.
+
+In code completion, multi-task learning has also been applied.
+Liu~\ea~\cite{liu2020self} firstly introduces a multi-task learning model with AST information to solve the code completion task.
+The model has partial AST encoder and path2root encoder sharing the same model parameters (i.e. hard parameters sharing) between AST type and value prediction tasks, and the task-specific output layers to produce the outputs.
+Additionally, Liu~\ea~propose UMTLM~\cite{liu2022unified} the extended version of previous work to perform not only AST node-level but also token-level prediction.
+The new model explores on the new components, i.e. code element encoder.
+Next, Liu~\ea~propose CugLM~\cite{liu2020multi}, a multi-objective transformer-based pre-training language model for code completion. 
+CugLM's model parameters are shared (i.e. hard parameters sharing) across the three pre-training objectives: masked bidirectional LM, next code segment prediction and unidirectional LM; then, fine-tune on the code completion task.
+This work also applies the user-defined identifier types to help in the prediction step.
+In addition to the hard parameters sharing technique,
+recently Izadi~\ea~\cite{izadi2022codefill} propose CodeFill, a parallel transformer-based model with the MTL (i.e. soft parameters sharing) technique.
+CodeFill consumes AST token value and type, and pretrains on three tasks: AST token-type prediction, token-level prediction and statement-level prediction.
+
+Different from existing works, this paper is the first to explicitly explore between different multi-task training techniques: soft and hard parameters sharing (MTL), and intermediate fine-tuning (IFN).
+To the best of our knowledge, we are also the first to bring forward intermediate fine-tuning (IFN) technique to the code completion problem.
+
+
+% \subsection{Syntactic Information}
+
+% \kla{what syntactic information has been used, considered in SE (e.g., AST, CFG, DFG).} 
+
+% - what are the limitations?
+
+% - so we consider type.
+
+% - anyone using standard type information, are we the first to use it?
+
+
+% Syntax describes how language variables and characters may be combined into strings. Semantics gives meaning to the combined strings
+
+% AST is an entirely syntactical construct. But a CST is well integrated with language's semantics. Also they represent different stuff.
+
+% A control-flow graph represents the flow of control: which instruction can follow another. A data-flow graph represents the flow of data: which instruction can read data that was created by another.
+
+% Syntactic information relates to the rules of languages (i.e. syntax in programming language) which define the arrangement of symbol, words, or punctuation to create a valid statement in the language.
+% To extract this particular information from a source code, many research~\cite{kim2021code, izadi2022codefill, li2017code} represent the source code in the form of abstract syntax tree (AST).
+% Such AST can represent the syntactic structure of the source code; however, it is inflexible to extract as discuss in section~\ref{sec:motivation}. 
+
+% Different from existing work, to the best of our knowledge this paper is the first to adapt the token type information to code completion.
+% This information can be considered as programming language's syntax elements (e.g. keywords, names, operators, etc.).
+% Although the token type data may not represent the full hierarchy of syntactic structure, it can give the lightweight syntactic information while preserving the original sequence of source code and shows the benefits in the code completion performance as shown in this paper.

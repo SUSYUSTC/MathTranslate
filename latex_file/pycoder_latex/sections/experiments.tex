@@ -1,0 +1,204 @@
+\section{Experimental Setup}\label{sec:experiment}
+
+In this section, we present the goal of our experiment, along with the research questions, followed by the experimental setup in detail.
+% We describe our python (4.1) dataset and our (4.2) pre-processing methods which are adjusted from CodeXGLUE.
+% Then, we describe the details of our implementation on (4.3) model training and (4.4) evaluation measurement.
+% Lastly, we explain our four state-of-the-art (4.5) baselines.
+% We present: our (4.1) Dataset, which the models train and test on PY150 dataset; our (4.2) Pre-processing method, which is adjusted from CodeXGLUE.; our (4.3) Model Training, about the parameters; (4.4) Evaluation Measurement; and (4.5) Baselines, which is 4 State-of-the-art.
+
+% We present our (4.1) Dataset, (4.2) Pre-processing Methods, (4.3) Model Training, (4.4) Evaluation Measurement, and lastly (4.5) 4 State-of-the-art Baselines.
+
+
+\subsection{Goal and Research Questions}
+
+The goal of this paper is to empirically evaluate our \our~and compare with the state-of-the-art approaches according to the token-level and line-level code completion tasks and to provide a better understanding of the impact of the components of our \our. 
+To achieve this goal, we present the motivation and the research questions below.
+
+\begin{description}
+    \item \textbf{RQ1) \rqone} \\
+    \textbf{Motivation.} 
+    As motivated earlier, existing syntax-aware code completions are not on-the-fly, while existing on-the-fly code completions are not syntax-aware.
+    To address this important gap, we introduce \our~(a syntax-aware on-the-fly code completion).
+    Thus, we formulate this RQ to investigate how well our \our~perform when compared to the state-of-the-art approaches for both token-level and line-level code completion tasks based on the CodeXGlue Benchmark.
+    % In this work, \our~addresses the limitations of state-of-the-art approaches as discussed in section~2.
+    % In particular, 
+    % instead of leverage either AST information or only source code like state-of-the-art approaches, 
+    % the goal of \our~is to perform the code completion with lightweight syntax-aware information while remaining the on-the-fly feature.
+    % Thus, to evaluate that our syntactic information (i.e., token type) benefit the model,
+    % we formulate this RQ to compare our \our~to CodeXGLUE benchmark and four state-of-the-art approaches which include both AST and non-AST approaches.
+    % and also CodeXGLUE benchmark
+    \item \textbf{RQ2) \rqtwo} \\
+    \textbf{Motivation.} 
+    There exist various training strategies for multi-task learning used in code completion.
+    For example, Liu~\ea~\cite{liu2022unified} found that hard parameter sharing performs best, while Izadi~\ea~\cite{izadi2022codefill} found that soft parameter sharing performs better than hard parameter sharing for code completion.
+    % In addition, an alternate approach widely used in NLP (i.e., Intermediate Fine-Tuning) has not been explored.
+    This contradictory finding motivates us to investigate the impact of training strategies on the performance of \our.
+    % leaapproach; however, there are various ways available to alternate the use of supporting task (e.g., IFN and different ways to manipulate data for MTL).
+    % In NLP field, Weller~\ea~\cite{weller2022use} study on these different training techniques; yet, little knowledge is known about code completion.
+    % Therefore, we formulate this RQ to investigate the impact of training techniques on our \our~code completion.
+    \item \textbf{RQ3) \rqthree} \\
+    \textbf{Motivation.}
+    Our \our~relies on two prediction tasks, i.e., code prediction and token type prediction tasks. 
+    It could be possible that these two tasks may be conflicting with each other or one task has a higher influence than the other task during the learning process. 
+    Thus, prior studies ~\cite{vandenhende2021multi,sener2018multi} raised concerns that the conflicting issue (aka. conflicting gradient) may degrade the performance of multi-task learning.
+    Therefore, task weighting parameters are used to weigh the importance of each task to achieve optimal accuracy.
+    However, \our~may be sensitive to the task weighting parameters.
+    Thus, we set out this RQ to investigate the impact of the task weighting parameters on the performance of \our.
+    
+    
+    
+    
+    % ensure that different tasks that are learned simultaneously have equal importance during the learning process.
+    % This w
+    
+    
+    % are an important mechanism used in multi-task learning to weigh the importance of each task during the learning process.
+
+    
+    % Prior studies~\cite{vandenhende2021multi} raised concerns that different task weighting may have an impact on the performance of the MTL models. 
+    
+    % This means that when training multiple tasks simultaneously, one task that is weighted more than another may have a stronger influence on the predictions than the other task, which could result in sub-optimal performance.
+
+    
+    
+    % \kla{I don't get this one --- will discuss with Wannita later}
+    % While MTL approach achieves success in many deep learning application, many studies mention about task weighing problem~\cite{vandenhende2021multi}.
+    % In other words, when training multiple tasks simultaneously, the model may face a problem of one task dominantly influence others resulting in the sub-optimal performance.
+    % To avoid this problem, the importance of task's weights adjustment has been highlighted~\cite{sener2018multi}.
+    % Thus, we formulate this RQ to explore the impact of the task weighing parameters in our \our.
+    \item \textbf{RQ4) \rqfour} \\
+    \textbf{Motivation.}
+    Decoding methods are an important component of code completion used to generate the next probably code tokens.
+    Recently, only a few methods are used for code completion (e.g., Beam Search, Greedy)~\cite{svyatkovskiy2020intellicode, kim2021code, izadi2022codefill, li2017code}.
+    However, there are other decoding methods that have been used for text generation in the natural language processing field, yet have never been explored in software engineering.
+    Thus, there is a lack of understanding of whether decoding methods widely used in code completion are the best.
+    % Many decoding methods have been proposed for , and many of them are widely adopted in software engineering.
+    % Beam Search seems to be 
+    % Holztman~\ea~\cite{holtzman2019curious} study on the impact of different decoding methods to generate English text; however, little knowledge has been explore on decoding methods in code completion field.
+    % Specifically, most of the time only Beam search method or Greedy method is selected off-the-self~\cite{svyatkovskiy2020intellicode, kim2021code, izadi2022codefill, li2017code}.
+    % Thus, we formulate this RQ to explore the impact of the different decoding methods to our \our~code completion.
+\end{description}
+
+
+
+\input{sections/datasets}
+
+\subsection{Pre-processing Methods}
+Sensitive data information (e.g. name, number, credential, IP address) could appear in the source code.
+To avoid the models unnecessarily paying attention to this information, we mask these sensitive data by creating a placeholder for any string and numeric literals in the source code.
+Particularly, following CodeXGLUE~\cite{lu2021codexglue}, we first identify tokens based on their STRING and NUMBER types.
+Then, in the top-200 most frequent strings and the top-30 most frequent numeric literals, we replace the string with $\langle$STR\_LIT:\textit{value}$\rangle$ 
+ and replace the number with $\langle$NUM\_LIT:\textit{value}$\rangle$.
+The rest of the uncommon literals are masked by $\langle$STR\_LIT$\rangle$ or $\langle$NUM\_LIT$\rangle$.
+Finally, these placeholders are also added to the special tokens of the tokenizer, avoiding any subword tokenization for these special tokens.
+
+% the most 200 frequent
+
+% We use CodeXGLUE~\cite{lu2021codexglue} methods to mask the literals of t with placeholders.
+% Specifically, the most 200 frequent string and the most 30 frequent numerical literals are normalized in $\langle$STR\_LIT:\textit{value}$\rangle$ or $\langle$NUM\_LIT:\textit{value}$\rangle$ formats.
+% The rest uncommon literals are masked by $\langle$STR\_LIT$\rangle$ or $\langle$NUM\_LIT$\rangle$.
+% These placeholders are also added to the special tokens in the tokenizer; thus, they are not separated in the tokenization step (section 3.2).
+
+
+
+% In this step, the string and numeric literals in source code dataset are normalized.
+% The purposes are to mask the sensitive data that sometimes developers leave in the code  and for better training as we do not encourage the model to emphasize on different literals when predicting. 
+% We use CodeXGLUE~\cite{lu2021codexglue} methods to mask the literals of token type STRING and NUMBER with placeholders.
+% Specifically, the most 200 frequent string and the most 30 frequent numerical literals are normalized in $\langle$STR\_LIT:\textit{value}$\rangle$ or $\langle$NUM\_LIT:\textit{value}$\rangle$ formats.
+% The rest uncommon literals are masked by $\langle$STR\_LIT$\rangle$ or $\langle$NUM\_LIT$\rangle$.
+% These placeholders are also added to the special tokens in the tokenizer; thus, they are not separated in the tokenization step (section 3.2).
+
+In addition, we preserve the original indentation of the source code that is ignored by CodeXGLUE's pre-processing step.
+Indentation plays an important role as part of the Python syntax grammars, as it is used to indicate a group of statements that belongs to a particular code block, assisting a Python interpreter to decide the execution of the next statement.
+To do so, for any positions of the indentation, we use $\langle$INDENT$\rangle$ and $\langle$DEDENT$\rangle$ special tokens.
+$\langle$INDENT$\rangle$ denotes the indentation, which appears once at the beginning of a code block, \emph{not once per line}, while  $\langle$DEDENT$\rangle$ denotes the dedentation at the end of the code block.
+% Thus, every $\langle$INDENT$\rangle$ token is matched by a corresponding $\langle$DEDENT$\rangle$ token.
+% Similarly, these 
+% We discard the indentation only when training the model for CodeXGLUE benchmark in RQ1 (section 5).
+
+% assists on deciding which statement to execute next.
+
+
+% Because the indentation is important in python language syntax as it assigns a group of statements to a particular block of code and assists on deciding which statement to execute next.
+% We store the position of the indentation using $\langle$INDENT$\rangle$ and $\langle$DEDENT$\rangle$ tokens.
+% While the $\langle$INDENT$\rangle$ token is presented once at the beginning per block of code, not once per line; the $\langle$DEDENT$\rangle$ token denotes the dedentation or the end of the block.
+% Thus, every $\langle$INDENT$\rangle$ token is matched by a corresponding $\langle$DEDENT$\rangle$ token.
+% We discard the indentation only when training the model for CodeXGLUE benchmark in RQ1 (section 5).
+
+% \begin{table}[]
+%     \centering
+%     \begin{tabular}{l|c|c|c}
+%         Dataset & Success & Indentation Error & Syntax Error \\
+%         \hline
+%         CodeXGLUE & 11.51 & 87.84 & 0.65 \\ 
+%         Our & 88.07 & 0.00 & 11.93 \\
+%     \end{tabular}
+%     \caption{Compare the parsing rate between datasets.}
+%     \label{tab:parsing rate}
+% \end{table}
+
+\subsection{Model Training}
+
+% model backbone & hyperparameter -> move to model
+% We use GPT-2, a decoding model consisting of 12 layers of transformers, as the based model for all our architectures.
+% The warm-up checkpoint is the pre-train checkpoint from CodeGPT~\cite{lu2021codexglue} which is trained on 1.1M python function from CodeSearchNet dataset~\cite{husain2019codesearchnet}.
+% Then we fine-tuned both our models and baselines on PY150 dataset. 
+
+% tokenizer -> move to tokenization
+% We adapt our tokenizer from CodeGPT. The vocabulary size for BPE method is set to 50,000.
+% Additionally, the placeholders for types, and for sensitive data in strings and numbers are included in as the \emph{special tokens}. Thus, such placeholders are not split into sub-word.
+% Overall, the final size of TypeComp's vocabulary is 50,288.
+
+% For the tokenizer, we also use tokenizer from CodeGPT. The tokenizer is \gls{bpe} train for 50,000 token vocabs. The placeholder for sensitive data in strings and numbers are included in as the special tokens. Additionally, we also add all token types as the special tokens. Therefore the final size of vocabulary is 50288.
+
+% training
+We use PyTorch\footnote{https://pytorch.org}~\cite{paszke2019pytorch} and HuggingFace\footnote{https://huggingface.co}~\cite{wolf2019huggingface} libraries for the implementation of our GPT-2 based model with the pre-trained checkpoint of CodeGPT.
+The base model is the default GPT-2 small configuration~\cite{radford2019language},   consisting of 12 layers of Transformer decoders, 12 attention heads, $n\_position$~=~1024, $n\_ctx$~=~1024, and $n\_embd$~=~768.
+We train our models for 200,000 steps with an Adam optimizer~\cite{kingma2014adam}. 
+The hyperparmeters setting is shown in Table~\ref{tab:1}.
+We do not fine-tune the hyperparameters due to limited resources.
+Therefore, our results could serve as a lower bound, but the optimization may improve the accuracy of our model.
+Overall we train 12 variants of \our~(3 multi-task training techniques + 9 task weighing parameters) for a total of more than 850 training hours.
+For the baseline, we use all the best hyperparameters described in their papers.
+Our experiments is run on one NVIDIA GeForce RTX 3090 GPU with 24 GB memory, an Intel(R) Core(TM) i9-9980XE CPU @ 3.00GHz with 36 core processors, and 64G RAM.
+
+% \kla{may be mention model training time and inference time, how many models are built, which is an approx of X GPU hours (~? days) for a commodity GPU}.
+
+% n_positions=1024,
+% n_ctx=1024,
+% n_embd=768,
+% n_layer=12,
+% n_head=12,
+
+% seqeunce?
+% For RQ2 we compare our 3 architecture models without tasks weighing parameters.
+% Then we use the best model regarding to the results from RQ2 to fine-tune tasks weighing parameters in RQ3.
+% Combine results of RQ2 and RQ3, we use the best model and task weighing parameters to test for decoding methods in RQ4.
+% Lastly, TypeComp, which has the best model architecture, tasks weighing parameters, and decoding method, is used to compete the state-of-the-art baselines in RQ1.
+
+\begin{table}[]
+    \centering
+    \begin{tabular}{c|c}
+        Hyperparameter & Value \\
+        \hline
+        Learning rate & 8e-5 \\
+        Weight decay & 0.01 \\ 
+        Batch size & 2 \\
+        Gradient accumulation steps & 4 \\
+        Block size for token-level & 1024 \\ 
+        Block size for line-level & 924 \\
+    \end{tabular}
+    \caption{Model Hyperparameters.}
+    \label{tab:1}
+\end{table}
+
+% During the training on \gls{mtl} models, we also have try different tasks weighing technique. The results are shown in session 5.3. 
+
+% We improve the post-processing process from CodeXGLUE source code \footnote{https://github.com/microsoft/CodeXGLUE/tree/main/Code-Code/CodeCompletion-line}. As we observe that after finish line-predicting the existing CodeXGLUE method use function '.strip($\langle EOL \rangle$)' to truncate the $\langle EOL \rangle$ token. We found that this function doesn't remove only the given word, however every given characters from the beginning and the end of the original string \footnote{https://www.simplilearn.com/tutorials/python-tutorial/strip-in-python}. Therefore, it creates the false truncated results such as in Fig. \ref{}. 
+
+% We propose to use '.replace($\langle EOL \rangle$,'')' for post-processing instead. Since in line-level prediction the $\langle EOL \rangle$ token is represented as the end, there will certainly have no $\langle EOL \rangle$ token in-between the results. Thus the replace function is more suitable for the truncation in this scenario. 
+
+\input{sections/evaluation}
+
+\input{sections/baseline}
+

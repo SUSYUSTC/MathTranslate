@@ -1,0 +1,23 @@
+
+\documentclass[UTF8]{article}
+\usepackage{xeCJK}
+\usepackage{amsmath,amssymb}
+\begin{document}
+
+ \subsection{评估测量}  我们根据以下评估指标评估我们的模型：令牌级预测的准确性（Acc）；行级预测的精确匹配 (EM)、编辑相似性 (ES) 和平均倒数排名 (MRR)。
+
+ \textbf{准确度（加速）}  是预测代码标记与真实标记之间正确性的比例。
+
+ \textbf{完全匹配 (EM)}  类似于 Accuracy，但在行级别进行评估，这意味着整个预测行必须与地面实况行完全匹配。
+
+ \textbf{编辑相似度 (ES)}  使用 Levenshtein 距离~  \cite{1966SPhD...10..707L}  来测量预测线和真实线之间的编辑距离。 Levenshtein 距离是预测行和真实行之间的字符编辑（插入、删除或替换字符）的最小数量。
+
+ \textbf{平均倒数排名 (MRR)}  使用第一个正确预测的秩的乘法逆来评估前  $R$  可能的结果。形式上，MRR 定义为：
+  \begin{equation}
+    \label{eq:mrr}
+    MRR=\frac{1}{|Q|}\sum_{i=1}^{|Q|}\frac{1}{rank_i}
+\end{equation} 
+  \noindent  ，其中  $Q$  是样本数， $rank_i$  是模型给出的正确预测的排名。如果正确预测超过等级  $R$  ，则倒数等级为 0。在本文中，我们使用  $R=5$  。
+
+\end{document}
+

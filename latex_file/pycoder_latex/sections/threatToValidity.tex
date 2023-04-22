@@ -1,0 +1,33 @@
+\section{Threats to Validity}
+\label{sec:threats to validity}
+
+% In this section, we discuss threat to the validity.
+
+% relate to the granularity level of code completion, and the baseline selection.
+% Our \our~is trained to work on token-level code completion and can be adapted to line-level code completion.
+% Thus, the model is generalized to use in different granularity.
+
+\textbf{Threats to construct validity} relate to the selection of baseline approaches.
+In this paper, we select the publicly accessible approach, which could reduce biases and increase the transparency of the comparison of the experimental results. 
+Therefore, 
+% instead of comparing with nonpublic MTL code completion models~\cite{izadi2022codefill, liu2020self, liu2020multi}, 
+we select the competitive state-of-the-art approaches which are publicly available by the authors as the baselines.
+We run all the experiments using the replication package and the best hyperparameter settings in their papers.
+
+\textbf{Threats to internal validity} relate to the impact of the hyperparameters on the performance of \our.
+To mitigate this threat, we conduct experiments with various hyperparameter settings (see RQ3 and RQ4).
+However, we find that \our~is generally robust to the model task weights.
+Thus, we suspect that hyperparameters will have a minimal impact on the performance of \our.
+Nevertheless, optimizing the hyperparameters of the Transformer model could be expensive and is not the main goal of this paper.
+Due to the limited access to premium GPU computing resources, our results serve as a minimum bound, which could be further improved after optimization and with premium GPU access.
+Nevertheless, to mitigate this threat, we report the hyperparameter settings in our replication package.
+
+% These hyperarameters haven't be optimized due to the very expensive cost in large search space of Transformer architecture.
+% Thus, there might be room for further improvement; nonetheless, the current settings have the considerable performance to compete with the baselines.
+% To mitigate this threat, we reports the hyperarameter settings for future replication studies.
+
+\textbf{Threats to external validity} relate to the degree to which our approach can be generalized across other context.
+We evaluate our \our~with 50,000 python files from PY150 dataset which is the dataset used in many literature~\cite{lu2021codexglue, kim2021code, izadi2022codefill, li2017code, liu2020self, liu2022unified, wang2020towards}.
+We also evaluate the model with the code completion benchmark in CodeXGLUE~\cite{lu2021codexglue}.
+However, we limit the scope of this paper to python and have not demonstrated the results to other languages.
+Thus, other datasets can be explored in the future work.

@@ -1,0 +1,240 @@
+
+
+<PreferencesPage>:
+    canvas.before:
+        Color:
+            rgba: [1,1,1,1]
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: './gui/static/index.jpg'
+
+    FloatLayout:
+
+        Label:
+            id: 'engine'
+            text: '[ref="click"][b]Translation Engine:[/b][/ref]'
+            color: kivy.utils.get_color_from_hex('#0081CF')
+            font_size: 30  # 24
+            pos_hint: {"y":0.35,"x":-0.2}
+            markup: True
+
+        Label:
+            id: 'language'
+            text: '[ref="click"][b]Language Setting:[/b][/ref]'
+            color: kivy.utils.get_color_from_hex('#0081CF')
+            font_size: 30  # 24
+            pos_hint: {"y":0.15,"x":-0.2}
+            markup: True
+
+
+        Spinner:
+            size_hint: 0.2, 0.08
+
+            pos_hint: {'x':0.7, 'top': 0.9}
+            text: 'Google'
+            values: 'Google', 'Tencent'
+            on_text:
+                root.engine_show_load(self.text)
+                print("The spinner {} has text {}".format(self, self.text))
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: 0.2, 0.08
+            pos_hint: {'x':0.7, 'top': 0.7}
+
+            Button:
+                id: 'language_setting'
+                text: 'Choose'
+                markup: True
+                on_press:root.language_show_load()
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: (1,.1)
+            spacing: 50
+            padding: 50,0
+            pos_hint: {"center_x":0.5,"y":0.1}
+
+            Button:
+                text: "[b]Back to Index[/b]"
+                markup: True
+                on_press:root.back_index()
+
+<EngineDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        padding: 10
+        spacing: 100
+        BoxLayout:
+            size_hint: 0.9, 0.2
+            Label:
+                id: 'TencentID '
+                text: '[ref="click"][b]Tencent secretID:[/b][/ref]'
+                color: kivy.utils.get_color_from_hex('#FFFFFF')
+                font_size: 24  # 24
+                markup: True
+                size_hint_y: .2
+            TextInput:
+                id: id_input
+                size_hint_y: .4
+                multiline: False
+
+        BoxLayout:
+            pos_hint_y: 0
+            size_hint: 0.9, 0.2
+            Label:
+                id: 'TencentKey '
+                text: '[ref="click"][b]Tencent secretKey:[/b][/ref]'
+                color: kivy.utils.get_color_from_hex('#FFFFFF')
+                font_size: 24  # 24
+                markup: True
+                size_hint_y: .2
+
+            TextInput:
+                id: key_input
+                size_hint_y: .4
+                multiline: False
+
+        BoxLayout:
+            spacing: 30
+            size_hint_y: .1
+            Button:
+                text: "[b]Conform[/b]"
+                on_release: root.load(id_input.text,key_input.text)
+                markup: True
+
+            Button:
+                text: "[b]Cancel[/b]"
+                on_release: root.cancel()
+                markup: True
+
+<LanguageDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        padding: 10
+        spacing: 100
+
+        BoxLayout:
+            ScrollView:
+                size_hint: 1, 0.8
+                do_scroll_x: False
+                do_scroll_y: True
+
+                Label:
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                    text_size: self.width, None
+                    padding: 10, 10
+                    text:
+                        '''
+                        Afrikaans            af
+                        Irish                ga
+                        Albanian             sq
+                        Italian              it
+                        Arabic               ar
+                        Japanese             ja
+                        Azerbaijani          az
+                        Kannada              kn
+                        Basque               eu
+                        Korean               ko
+                        Bengali              bn
+                        Latin                la
+                        Belarusian           be
+                        Latvian              lv
+                        Bulgarian            bg
+                        Lithuanian           lt
+                        Catalan              ca
+                        Macedonian           mk
+                        Chinese_Simplified   zh-CN
+                        Malay                ms
+                        Chinese_Traditional  zh-TW
+                        Maltese              mt
+                        Croatian             hr
+                        Norwegian            no
+                        Czech                cs
+                        Persian              fa
+                        Danish               da
+                        Polish               pl
+                        Dutch                nl
+                        Portuguese           pt
+                        English              en
+                        Romanian             ro
+                        Esperanto            eo
+                        Russian              ru
+                        Estonian             et
+                        Serbian              sr
+                        Filipino             tl
+                        Slovak               sk
+                        Finnish              fi
+                        Slovenian            sl
+                        French               fr
+                        Spanish              es
+                        Galician             gl
+                        Swahili              sw
+                        Georgian             ka
+                        Swedish              sv
+                        German               de
+                        Tamil                ta
+                        Greek                el
+                        Telugu               te
+                        Gujarati             gu
+                        Thai                 th
+                        Haitian_Creole       ht
+                        Turkish              tr
+                        Hebrew               iw
+                        Ukrainian            uk
+                        Hindi                hi
+                        Urdu                 ur
+                        Hungarian            hu
+                        Vietnamese           vi
+                        Icelandic            is
+                        Welsh                cy
+                        Indonesian           id
+                        Yiddish              yi
+                        '''
+
+            BoxLayout:
+                orientation: "vertical"
+                Label:
+                    text: '[ref="click"][b]Translate from:[/b][/ref]'
+                    color: kivy.utils.get_color_from_hex('#FFFFFF')
+                    font_size: 24  # 24
+                    markup: True
+                    size_hint_y: .2
+
+                TextInput:
+                    id: trans_from
+                    size_hint_y: .1
+                    multiline: False
+
+                Label:
+
+                    text: '[ref="click"][b]to:[/b][/ref]'
+                    color: kivy.utils.get_color_from_hex('#FFFFFF')
+                    font_size: 24  # 24
+                    markup: True
+                    size_hint_y: .2
+
+                TextInput:
+                    id: trans_to
+                    size_hint_y: .1
+                    multiline: False
+
+
+        BoxLayout:
+            spacing: 30
+            size_hint_y: .1
+            Button:
+                text: "[b]Conform[/b]"
+                on_release: root.load(trans_to.text,trans_from.text)
+                markup: True
+
+            Button:
+                text: "[b]Cancel[/b]"
+                on_release: root.cancel()
+                markup: True

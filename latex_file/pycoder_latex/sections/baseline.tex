@@ -1,0 +1,120 @@
+\subsection{Baselines}
+
+There exist various non-AST-based code completion approaches in CodeXGLUE~\cite{lu2021codexglue,radford2019language} and AST-based code completion approaches~\cite{kim2021code,izadi2022codefill,li2017code} in the literature.
+To ensure that our evaluation is reasonably comprehensive, we consider a total of seven (7) baselines with respect to two evaluation settings: (1) externally evaluate the prediction results through the CodeXGLUE leaderboard,\footnote{https://microsoft.github.io/CodeXGLUE/} and (2) internally evaluate the prediction results within our own setting.
+
+For the CodeXGLUE evaluation setting, we compare our approach with CodeGPT-adapt, CodeGPT, GPT-2, Transformer (12L), and LSTM+BPE.
+To do so, we apply our \our~to the testing set provided by CodeXGLUE for both token-level and line-level predictions.
+Then, the prediction results are submitted to the CodeXGLUE team to obtain the results based on their evaluation setting.
+
+For our own evaluation setting, we consider two AST-based approaches (i.e., Pointer Mixture Network~\cite{li2017code} and TravTrans~\cite{kim2021code}); and two non AST-based approaches (i.e., GPT-2 and CodeGPT).
+We do not consider CodeFill~\cite{izadi2022codefill}, since the available replication package is not executable. 
+We also do not consider Codex (i.e., a descendant of GPT-3 for source code) in our experiment due to the different levels of model parameter size. 
+GPT-3, a base model of Codex, has 175B model parameters, which is 100x larger than the size of our GPT-2 based model which has only 117M model parameters.
+Below, we describe the details of each approach. 
+
+
+% We also consider CodeFill model\footnote{https://github.com/saltudelft/codefill}
+% as a baseline; however, the replication package of CodeFill is not available at the time of the experiments\footnote{We try sending an email to ask the authors, but there is still no updates on the replication package.}.
+
+
+
+
+
+% \kla{we can even say that we compare with both AST-based and non AST-based approaches.}
+% Apart from sending our model results to evaluate in CodeXGLUE benchmark~\cite{lu2021codexglue}, we compare our model with four state-of-the-art approaches to provide the concise evaluation.
+% The baselines include both AST-based models: Pointer Mixture Network and TravTrans; and non AST-based models: GPT-2 and CodeGPT. 
+
+
+
+
+
+% We run all baselines using their replication packages provided by authors. 
+
+
+% The string and numerical literals in PY150 AST dataset of Pointer Mixture Network and TravTrans are masked with the similar pre-processing method to ours before the training process. 
+% We also consider CodeFill model\footnote{https://github.com/saltudelft/codefill}
+% as a baseline; however, the replication package of CodeFill is not available at the time of the experiments\footnote{We try sending an email to ask the authors, but there is still no updates on the replication package.}.
+% \kla{codefill [AST], but the replication not available}
+
+
+\begin{table*}[t]
+\centering
+% \resizebox{\columnwidth}{!}{
+\begin{tabular}{c|l|l|l|c|c|c}
+    & & & & \multicolumn{2}{c}{Line-level} & \multicolumn{1}{|c}{Token-level} \\
+    \hline
+    Rank & Model & Team name & Date & EM & ES & Acc \\
+    \hline
+    1 & \our-Hard & Monash University & 2022-10-13 & \textbf{43.91} & \textbf{71.74} & \textbf{76.93}\\
+    \hline
+    2 & CodeGPT-adapt & CodeXGLUE Team & 2020-08-30 & 42.37 & 71.59 & 76.60 \\
+    3 & CodeGPT & CodeXGLUE Team & 2020-08-30 & 42.18 & 71.23 & 76.58 \\
+    4 & GPT-2 & CodeXGLUE Team & 2020-08-30 & 41.73 & 70.60 & 75.90 \\
+    5 & Transformer (12L) & CodeXGLUE Team & 2020-08-30 & 38.51 & 69.01 & 74.48 \\
+    6 & LSTM + BPE & CodeXGLUE Team & 2020-08-30 & 23.77 & 56.26 & 61.94 \\
+    % \hline
+    % \our-Hard& \textbf{76.93} & \textbf{43.91} & \textbf{71.74} \\
+\end{tabular}
+% }
+\caption{(RQ1) The results that appear in the CodeXGLUE leaderboard 
+% as of 15 October 2022 filtered only Python
+(\url{https://microsoft.github.io/CodeXGLUE/}).
+% The evaluation results are calculated based on their ground-truth dataset.
+% \kla{add ranking column? team name?}
+% Compare results to the baseline in CodeXGLUE Benchmark. \kla{will check again after the table is revised. PyCoder to the top, sort from max to min. Double-check capitalization carefully, Make it neat, fits the table nicely to the column. add batch size column too. }
+}
+\label{tab:rq1 codexglue}
+\end{table*}
+
+
+% The evaluation results based on the CodeXGLUE leaderboard show that \our~outperform other baselines by \kla{X\%-Y\%}.
+
+\begin{table}[t]
+\centering
+% \resizebox{\columnwidth}{!}{
+\begin{tabular}{l|c|c|c|c}
+    & \multicolumn{3}{c}{Line-level} & \multicolumn{1}{|c}{Token-level} \\
+    \hline
+    Model & EM & ES & MRR & Acc \\
+    \hline
+    \our-Hard & \textbf{43.37} & \textbf{73.20} & \textbf{48.82} & \textbf{77.12} \\
+    \hline
+    CodeGPT & 40.03 & 70.61 & 46.64 & 75.69 \\
+    TravTrans & - & - & - & 75.50\\
+    GPT-2 & 37.64 & 68.44 & 43.85 & 73.89 \\
+    PMN & - & - & - & 69.02\\
+\end{tabular}
+% }
+\caption{(RQ1) The results of \our~when compared to existing approaches through our internal evaluation.
+}
+\label{tab:rq1 our}
+\end{table} 
+
+\begin{itemize}
+    \item \textbf{Pointer Mixture Network (PMN)}, proposed by Li~\ea~\cite{li2017code}, is an LSTM-based code completion
+    % \kla{code completion--to make it context-specific, not generic LSTM model } model 
+    % ?????\kla{fix the rest, same pattern as below} 
+    leveraging AST information for syntactic structures.
+    The model is designed with pointer networks to mitigate the OOV problems in code completion.
+    % The model learns to generate the next token from either within vocabulary word or regenerate an Out-of-Vocabulary word from local context through the pointer component.
+    Their replication package is available on Github\footnote{https://github.com/jack57lee/neuralCodeCompletion} and also in Pytorch version.\footnote{https://github.com/oleges1/code-completion}
+
+    \item \textbf{TravTrans}, proposed by Kim~\ea~\cite{kim2021code}, is a transformer-based model that considers the syntactical structure of source code via AST information.
+    Their replication package is available on GitHub\footnote{https://github.com/facebookresearch/code-prediction-transformer}.
+    
+    \item \textbf{GPT-2}, proposed by Radford~\ea~\cite{radford2019language}, is a GPT-2-based model for text generation tasks. 
+    The GPT-2 model is first pre-trained on millions of English web pages (the WebText corpus) to build a language model through self-supervision learning without any explicit labels. 
+    The model is available on HuggingFace.\footnote{https://huggingface.co/gpt2}
+    
+    % The tokenizer use in this work is BPE~\cite{sennrich2015neural}.
+    \item \textbf{CodeGPT}, proposed by Lu~\ea~\cite{lu2021codexglue}, is a GPT-2-based model for source code generation.
+    The CodeGPT model is a GPT-2 model that is pre-trained on a monolingual python source code from CodeSearchNet~\cite{husain2019codesearchnet} dataset.
+    % \kla{CSN has many PLs. are you sure only python?}.
+    The model is available on HuggingFace.\footnote{https://huggingface.co/microsoft/CodeGPT-small-py}
+    
+    % In CodeXGLUE benchmark dataset from Lu~\ea~\cite{lu2021codexglue} proposed baseline: CodeGPT for code generation tasks.
+    % CodeGPT has the similar transformer-based model as GPT-2; however, the model is pre-trained on monolingual python source code dataset i.e. CodeSearchNet~\cite{husain2019codesearchnet}.
+    % The BPE tokenizer was also newly train on source code data.
+    % The model is available on HuggingFace\footnote{https://huggingface.co/microsoft/CodeGPT-small-py}
+\end{itemize}

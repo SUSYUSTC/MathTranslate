@@ -1,0 +1,505 @@
+\section{Syntax-Aware On-the-Fly Code Completion}\label{sec:approach}
+
+
+In this section, we present an overview of our syntax-aware on-the-fly Python code completion approach (\our).
+
+Conceptually, \our~aims to generate source code at any time regardless of the completeness of the source code, while considering the syntactic and semantic information of the source code during the learning phase, but \emph{do not} require syntactic information during the inference phase.
+To ensure that the learning process considers both semantic and syntactic information, we design our approach to focus on two prediction tasks, i.e., the code token prediction task and the token type prediction task.
+In particular, we leverage a Multi-Task Training technique (MTT) to cooperatively learn both the code token prediction task (Task 1: Predict the next code token, considered as a Target Task) and the token type prediction task (Task 2: Predict its token type, considered as a Supporting Task).
+For the type prediction task, we propose to leverage the standard Python token type information (e.g., String, Number, Name, Keyword), which is readily available and lightweight, instead of using the AST information~\cite{kim2021code, izadi2022codefill, li2017code, svyatkovskiy2019pythia, liu2020self, liu2022unified} where we found not available for the two-third of the executions (see our finding in Section~\ref{sec:motivation}), limiting its ability to perform on-the-fly code completion.
+In contrast, our \our~\emph{does not} require syntactic information at the inference phase.
+Thus, the completeness of the source code at the inference time is not required.
+
+
+% , 
+% we found 
+
+
+% Unlike some previous work that leverages AST information as an individual learning objective for the AST node prediction task~\cite{kim2021code,li2017code},
+% Our research study on how to best use this token type information along with source code.
+% To ensure that our model captures both syntactic and semantic information during the learning process, we leverage Multi-Task Learning (MTL) techniques to simultaneously learn both the token prediction task and the type prediction task. 
+
+
+
+% \textit{Finish}  \kla{please add some key general principles. what is the model? how does the model work? what is the learning objective of the model? how does this model differ from others? why new data collection is needed? what existing dataset is not enough to be used? so we need to perform the following three steps}
+
+% In this section, we present an overview of our approach, \emph{SynComp}, a multi-task training model which learns semantic and syntactic information cooperatively.
+% % which learn semantics information via source code, and light-weight syntactic information via token types.
+% \kla{should we talk about two prediction tasks somewhere? Task1=? and Task2=}
+% The model learn a semantic information from source code which does not require the completeness (i.e. on-the-fly); 
+% and apply a token type information to solve the limitation (section 2.2) and learn a light-weight syntactic information (i.e. syntactic-aware).
+% Thus, SynComp training phase consists of 2 tasks: source code prediction (target task) and token type prediction (supporting task).
+% In order to train the model to learn on multiple task simultaneously, 
+% The supporting task (a.k.a. an auxiliary task) is a non-target task that help improve the performance of the target task.
+% There are variety techniques on training multi-task SynComp leverage Multi-Task Learning (MTL) and Intermediate Fine-tuning (STILTs) techniques in this work.
+% Such techniques have different way
+
+% SynComp leverages Byte-Pair-Encoding (BPE) method~\cite{sennrich2015neural} to handle new unseen tokens; leverages MTL and STILTs~\cite{weller2022use} to address multiple tasks training challenge; and explores varieties of task weighing parameters and decoding methods to find the best perform architecture for code completion.
+
+% In this section, we present an overview of our approach, \emph{SynComp}, a Syntactic-Aware On-the-Fly Code Completion model that learn to complete code with the knowledge enhancement in syntactic information by token types.
+% Pure source code sequential model (e.g. CodeGPT and GPT-2) learn semantics data from source code. 
+% However, with the support of auxiliary task, i.e. the non-target task which help improve the performance of primary task, such as token type information, SynComp picks up both semantics and syntactic information. 
+
+\textbf{Overview.} Figure~\ref{fig:overview} presents the overview of our \our, which consists of two phases: training and inference.
+During the training phase, \our~performs 6 main steps:
+Step~\circled{1} Type Extraction, to extract the token type information from source code;
+Step~\circled{2} Tokenization, to perform subword tokenization on the source code;
+Step~\circled{3} Data Alignment, to align the type information which is word level to the code information which is currently subword level;
+Step~\circled{4} Multi-task Training Architecture with 3 training techniques: hard parameters sharing (MTL), soft parameters sharing (MTL), and intermediate fine-tuning (IFN);
+then in Step~\circled{5} Hyperparameter Task Weighing and Step~\circled{6} Decoding Methods are the exploration steps to maximize the performance.
+For the inference phase, we describe in Step~\circled{7} Code Generation step in the details of token-level prediction and line-level prediction.
+% Below, we present the details of each step.
+
+% \textbf{Problem Formulation.} 
+% We perform the experiments on 2 kinds of completion level: token-level prediction and line-level prediction.
+
+% MTL - Hard/Soft
+% IFT - STILTs
+
+% First, in \emph{(3.1) Data Collection} we extract the token type information from the source code. Then, in \emph{(3.2) Data Processing}, we tokenize the source code with \gls{bpe} algorithm and align the type information to the sub-words. Thus, the training phase consist of 2 tasks: source code prediction and token type prediction. In \emph{(3.3) Model Architectures}, we proposed 3 training techniques: hard parameters sharing MTL, soft parameters sharing MTL, and intermediate fine-tuning. For the inference phase, the model predict the task separately requiring no additional data for each task. Following is the details of our approach.
+
+% We describe our approach in this session. Firstly, we elaborate how we collect the type dataset. Then since our model use BPE tokenizer, we align the type dataset to our source code to be in the same sequences. Lastly, we describe the models experiments which consist of 3 kinds: hard parameters sharing model, soft parameters sharing model, and intermediate fine-tuning model.
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=\textwidth]{figures/overview.pdf}
+    \caption{
+    % \kla{An} \kla{o}verview of our \kla{syntactic-aware on-the-fly code completion} approach (\kla{SynComp})\kla{.} \kla{add a full stop in the caption everytime.} \kla{remove tag when reading this one.} \kla{This figure is nicely presented. Well done! Looks very neat.}
+    An overview of our Syntax-Aware On-the-Fly Python Code Completion approach (PyCoder). 
+    % \kla{can you use 1,2,3 instead of 3.1, 3.2, 3.3? Thank you.}
+    }
+    \label{fig:overview}
+\end{figure*}
+
+\subsection{(Step 1) Type Extraction}
+
+Syntactic information can be represented in many forms, e.g., Abstract Syntax Tree (AST) which is widely used in the previous work, and Token Type information which remains largely unexplored.
+In fact, both AST and token type information have their own advantages and disadvantages.
+While AST provides a formal representation of syntactic information of source code, it requires syntactically correct source code in order to be successfully parsed by a Python AST parser.
+Since our finding in Section~\ref{sec:motivation} shows that the Python AST parser failed to execute for every two out of three characters that developers type, the usage scenarios of the existing AST-based code completion approach are still limited in practice.
+
+To address this challenge, we leverage a standard Python token type information, offering a more abstract representation of the syntactic structure of source code (e.g., Name, String, Number), which (1) is more lightweight, (2) follows the natural order of code sequences; and (3) can be successfully parsed at any times without requiring the complete and syntactically correct source code.
+Generally, the standard Python token consists of two pieces of information i.e., (1) the token type, which provides syntactic meaning, and (2) the token value, which provides semantic meaning.
+% Thus, each token is a substring that has semantic meaning in the grammar of the Python programming language.\footnote{https://www.asmeurer.com/brown-water-python/intro.html}
+For example, given a \texttt{logging} token, the token type is \texttt{NAME} and its value is \texttt{logging}.
+Since the token type information is not available in the existing code completion benchmark, we describe the steps to extract the type information below.
+
+
+
+
+
+% The definition of a token for this tokenizer is a substring that has semantic meaning in the grammar of python language 4; thus, every token extracted by this tokenizer has a type (i.e. token type)
+
+
+
+
+
+
+
+
+% To address the limitation, the token type information from a standard python tokenizer is leveraged in this work. The definition of a token for this tokenizer is a substring that has semantic meaning in the grammar of python language 4; thus, every token extracted by this tokenizer has a type (i.e. token type). Unlike AST, this token type information can be extracted at any points in source code, and can handle the invalid source code. Only the case that user has not finished typing the whole last word that the type information of the last word could return incorrectly. However, the rest of the token type information will still be able to accurately achieve
+
+
+
+
+
+
+% - token type - pros - lightweight - abstracted 
+% cons - not syntactically correct guaranteed like AST when generate
+% - natural order of source code 
+
+
+% While AST provides a formal representation of 
+
+
+% AST - type and value
+
+% correct type, wrong value -> generated code is syntactically correct, but incorrect predictions
+
+% incorrect type, correct value -> generated code is (i.1 instead of i=1) due to incorrect type prediction.
+
+
+% - AST  - cons - it requires syntactically correct source code all the time.
+% - pros, generate syntactically correct nodes all the time
+
+% given source code-> code to AST -> AST is fed into the model -> model learn to generate a new node -> producing a tree with a new node -> this tree can be parsed back to a sequence of source code, for code completion - 
+
+% code and AST is inter-parsability
+
+% 2/3 --- failed
+
+% incorrect node prediction -> wrong tree -> wrong code completion
+
+% correct node prediction, incorrect value prediction -> correct tree, but wrong code, but executable.
+
+
+
+
+
+
+
+
+
+
+% Type information plays an important role in teaching model to learn the syntactic information.
+% Since the benefit behind the types is to categorize the unstructured data of natural text in source code (e.g. different variable naming) into discrete groups.
+% These discrete groups arranged together in sequences could represent the structures of source code, i.e. syntactic information.
+% In previous works, AST type has been widely used for syntactic information; however, as discussed earlier  (section 2.2), AST is not on-the-fly information.
+
+% To address the limitation, the token type information from a standard python tokenizer is leveraged in this work.
+% The definition of \emph{a token} for this tokenizer is a substring that has semantic meaning in the grammar of python language~\footnote{https://www.asmeurer.com/brown-water-python/intro.html}; thus, every token extracted by this tokenizer has a type (i.e. token type).
+% Unlike AST, this token type information can be extracted at any points in source code, and can handle the invalid source code.
+% Only the case that user has not finished typing the whole last word that the type information of the last word could return incorrectly. 
+% However, the rest of the token type information will still be able to accurately achieve.
+
+
+To extract type information, we use the \texttt{tokenizer} function provided by the standard Python tokenizer library\footnote{https://docs.python.org/3/library/tokenize.html} with an option \texttt{exact\_type} in order to extract the most fine-grained type for each token.
+For the Python tokenizer (Python 3.7 version), there will be a total of 58 different types.
+In particular, we focus on the 12 primary types of code tokens as follows: \texttt{<NAME>}, \texttt{<NUMBER>}, \texttt{<STRING>}, \texttt{<INDENT>}, \texttt{<DEDENT>}, \texttt{<ERRORTOKEN>}, \texttt{<ENDCODING>}, \texttt{<ENDMARKER>}, \texttt{<COMMENT>}, \texttt{<NL>}, \texttt{<NEWLINE>}, and \texttt{<OP>}, where the \texttt{<OP>} type consists of the remaining 46 operational types (e.g., operator. delimiter), such as \texttt{<LESS>}, \texttt{<GREATER>}, \texttt{<EQUAL>}, \texttt{<DOT>}.
+Then, we perform the following pre-processing steps.
+
+\begin{itemize}
+    \item First, we discard the following three token types that will not be executed, i.e., \texttt{<ENCODING>} which describes the encoding of the Python file, \texttt{<ENDMARKER>} which describes the end position of the Python file, and \texttt{<COMMENT>} which describes the code comment of the Python file.
+    \item Second, \texttt{<NAME>} provided by the Python tokenizer could be either identifier names (e.g., \texttt{logging}) or Python reserved names (e.g., \texttt{True}).
+    Thus, a code completion approach may not be able to recognize the difference between the identifier names and the Python reserved names---which does not reflect the reality.
+    To ensure that our code completion approach can recognize the difference between different types of names, we use the \texttt{keyword.iskeyword()} function\footnote{https://docs.python.org/3/library/keyword.html} in order to check and rename all of the Python reserved words which is originally extracted as  \texttt{<NAME>} to \texttt{<KEYWORDS>}. 
+    \item Third, since the CodeXGLUE~\cite{lu2021codexglue} benchmark dataset treats any new line equally, we also convert  \texttt{<NEWLINE>} (a new line), \texttt{<NL>} (a new blank/comment line) as \texttt{<EOL>} (the end of line).
+\end{itemize}
+
+
+With this approach, the representation of the token types (i.e., each token has its own type) follows the natural order of source code, not the AST structure which addresses the limitations of the AST-based code completion approaches.
+As shown in Figure~\ref{fig:overview},  \texttt{logging.getLogger()} will be tokenized as \texttt{[logging, ., getLogger, (, )]} with the following token types \texttt{[NAME, DOT, NAME, LPAR, RPAR]}.
+
+
+
+
+
+
+% extracting token-by-token in source code order, the token type information can solve limitation of AST abstract node order and perfectly fit with the natural order of the corresponding source code.
+
+
+
+
+% Then, 
+
+
+% Generally, reserved words or \emph{keywords} in python will be return as NAME type from tokenizer lib. We transform them to be KEYWORD type checking by keyword lib\footnote{https://docs.python.org/3/library/keyword.html}. 
+
+
+% We also transform NL and NEWLINE types to EOL to be consistent with standard when ending a line.
+
+
+
+%  We process each type by the following methods:
+%     \begin{itemize}
+%         % \item \textbf{Discard} : We discard the following types , ENDMARKER, COMMENT in order to focus only to the source code.
+        
+        
+%         \item \textbf{Transform} : Generally, reserved words or \emph{keywords} in python will be return as NAME type from tokenizer lib. We transform them to be KEYWORD type checking by keyword lib\footnote{https://docs.python.org/3/library/keyword.html}. We also transform NL and NEWLINE types to EOL to be consistent with CodeXGLUE~\cite{lu2021codexglue} standard when ending a line.
+        
+        
+        
+        
+%         \item \textbf{Filter} : We filter ERRORTOKEN type that has the corresponding code token as empty string.
+% ""
+
+% a=""
+
+% a = 
+% NAME, EQUAL, ERRORTOKEN
+
+
+
+        
+        % \item \textbf{Preserve} : We preserve all the rest which are INDENT, DEDENT, STRING, NUMBER and all the operational types.
+        % \item \textbf{Masked sensitive data} : We apply the same methods from CodeXGLUE \cite{lu2021codexglue} to masked the sensitive data of type STRING and NUMBER in source code data.
+    % \end{itemize}
+    
+    % After processing, the type dataset has 54 types consist of 8 primary types and 46 operational types.
+    % Then the types are transformed into the placeholder $\langle$~\emph{type}~$\rangle$. For instance, NAME type will be represented as $\langle$NAME$\rangle$.
+    % The example list of the final types with placeholders are shown below.
+    
+    % Primary types:
+    % \texttt{<NAME>, <KEYWORD>, <NUMBER>, <STRING>, <INDENT>, <DEDENT>, <ERRORTOKEN>, <EOL>}
+    
+    % Operation types:
+    % \texttt{<LPAR>, <RPAR>, <LSQB>, <RSQB>, <COLON>, <COMMA>, <SEMI>, <PLUS>, <MINUS>, <STAR>, <SLASH>, <VBAR>, <AMPER>, <LESS>, <GREATER>, <EQUAL>, <DOT>,} etc.
+
+
+% name convert to keyword=  python specific keywords
+
+
+% NL and NEWLINE
+
+% There are two kinds of token types, i.e., the primary type and the operational type.
+% The primary type describes the object types (e.g. Name, String, and Number) of the tokens.
+% On the other hand, the operational type is for an operator, delimiter, or ellipsis literal token (e.g. plus, comma, parenthesis, and dot).
+
+
+
+
+   
+
+    
+% \begin{itemize}
+%     % \item \kla{I feel this could be part of the approach called data collection / to make the work more contributions. normally, anything in the experimental design will be on a standard basis. nothing new.} 
+%     \item \textbf{Token Type Dataset} 
+%     To extract type dataset from source code, we use the standard python tokenizer library\footnote{https://docs.python.org/3/library/tokenize.html} and the \emph{exact type} defined by the library.
+%     % Unlike AST, this token type information can be extracted at any points in source code, and can handle the incomplete or invalid source code.
+%     % Only the case that user has not finish typing the whole last word that the type information of the last word could return incorrectly. 
+%     % However, the rest of the type information will still be able to accurately achieve.
+%     % \textit{Finish} \kla{what are the benefits of this type, how does it differ from AST types? and what information that this type offer? how many types are extracted? which types do we choose? which types do we ignore? and why? what is the reason behind it?}
+%     Originally there are 58 types in total (Python 3.7) which are 12 primary types, and 46 operational types.
+%     We process each type by the following methods:
+%     \begin{itemize}
+%         \item \textbf{Discard} : We discard the following types ENDCODING, ENDMARKER, COMMENT in order to focus only to the source code.
+%         \item \textbf{Transform} : Generally, reserved words or \emph{keywords} in python will be return as NAME type from tokenizer lib. We transform them to be KEYWORD type checking by keyword lib\footnote{https://docs.python.org/3/library/keyword.html}. We also transform NL and NEWLINE types to EOL to be consistent with CodeXGLUE~\cite{lu2021codexglue} standard when ending a line.
+%         \item \textbf{Filter} : We filter ERRORTOKEN type that has the corresponding code token as empty string.
+%         \item \textbf{Preserve} : We preserve all the rest which are INDENT, DEDENT, STRING, NUMBER and all the operational types.
+%         % \item \textbf{Masked sensitive data} : We apply the same methods from CodeXGLUE \cite{lu2021codexglue} to masked the sensitive data of type STRING and NUMBER in source code data.
+%     \end{itemize}
+    
+%     After processing, the type dataset has 54 types consist of 8 primary types and 46 operational types.
+%     Then the types are transformed into the placeholder $\langle$~\emph{type}~$\rangle$. For instance, NAME type will be represented as $\langle$NAME$\rangle$.
+%     The example list of the final types with placeholders are shown below.
+    
+%     Primary types:
+%     \texttt{<NAME>, <KEYWORD>, <NUMBER>, <STRING>, <INDENT>, <DEDENT>, <ERRORTOKEN>, <EOL>}
+    
+%     Operation types:
+%     \texttt{<LPAR>, <RPAR>, <LSQB>, <RSQB>, <COLON>, <COMMA>, <SEMI>, <PLUS>, <MINUS>, <STAR>, <SLASH>, <VBAR>, <AMPER>, <LESS>, <GREATER>, <EQUAL>, <DOT>,} etc.
+%     % <PERCENT>, <LBRACE>, <RBRACE>, <EQEQUAL>, <NOTEQUAL>, <LESSEQUAL>, <GREATEREQUAL>, <TILDE>, <CIRCUMFLEX>, <LEFTSHIFT>, <RIGHTSHIFT>, <DOUBLESTAR>, <PLUSEQUAL>, <MINEQUAL>, <STAREQUAL>, <SLASHEQUAL>, <PERCENTEQUAL>, <AMPEREQUAL>, <VBAREQUAL>, <CIRCUMFLEXEQUAL>, <LEFTSHIFTEQUAL>, <RIGHTSHIFTEQUAL>, <DOUBLESTAREQUAL>, <DOUBLESLASH>, <DOUBLESLASHEQUAL>, <AT>, <ATEQUAL>, <RARROW>, <ELLIPSIS>}
+    
+%     % \item \textbf{Source Code Dataset} We apply the same methods from CodeXGLUE \cite{lu2021codexglue} to masked the sensitive data of type STRING and NUMBER in source code with placeholders.
+%     % In addition, we preserve the indentation of the dataset which CodeXGLUE pre-processing process discards.
+%     % Because it keep the details of the data.
+%     % and makes the dataset be more compilable (success to parse to AST). The comparation of parsing rate \kla{unclear the parsing rate: parse for Type or for AST? I thought we will not use AST so it should not be parsed for AST.} for the test set is shown in table \ref{tab:parsing rate}
+%     % We discard the indentation only when training the model for CodeXGLUE competition in RQ1.
+    
+% \end{itemize}
+
+%  \kla{have we discussed about the special tokens so they will not be splitter into subword?} \textit{Gam: will mention in tokenization}
+
+\subsection{(Step 2) Tokenization}
+% Generally, source code is a sequence of code tokens where each token has its own semantic meaning.
+% \gam{} Therefore, 
+Tokenization is an important step in automated code completion, aiming to split the source code into meaningful units.
+There are three general levels of granularity, i.e., a word level, a subword level, and a character level.
+While the word-level representation is the simplest tokenization approach, it may produce a massive vocabulary size. 
+However, limiting the vocabulary size based on its frequency may cause an Out-of-Vocabulary words (OOV) problem.
+While the character-level representation can diminish the OOV problem with the limited vocabulary size (e.g., English characters), models may not be able to handle an excessively long sequence of source code (i.e., each character has its own vector).
+Instead, we use sub-word tokenization with the Byte-Pair Encoding (BPE) algorithm~\cite{sennrich2015neural}, as prior studies found that BPE can substantially reduce the vocabulary size~\cite{fu2022gpt2sp, karampatsis2020big}, while being able to generate new identifiers that never appear in the dataset~\cite{thongtanunam2022autotransform}.
+First, BPE splits source code into characters.
+Then, BPE iteratively merges the characters into subwords based on the frequency of the occurrences to create the vocabulary until the desired size.
+In this paper, we use the CodeGPT tokenizer, which has a vocabulary size of 50,000 subwords.
+To ensure that the CodeGPT tokenizer can recognize the token types, we represent the token types in the bracket parenthesis form $\langle...\rangle$, which are included in the special token vocabulary for the BPE tokenizer to avoid any subword tokenization on these token types.
+% In total, our vocabulary size is 50,288.
+
+
+
+% Such method make BPE able to handle any new words that may appear in the future.
+% The SynComp's vocabulary size for BPE method is set to 50,000.
+% Additionally, we include all the placeholders for token types (section 3.1), and placeholders for masked sensitive data (section 4.2) as \emph{special tokens} in the vocabulary. 
+% Thus, the placeholders are not split into sub-words when performing tokenization.
+% Overall, the final size of SynComp's vocabulary is 50,288.
+
+
+% be tiny and handle the OOV problem; nonetheless, there is a trade-off with the oversized input sequence length.
+% The word-level tokenization is the most simple method; however, it may lead to a massive vocabulary size and one of the most important problems for tokenization step, the unknown words or Out-of-Vocabulary words (OOV) problem.
+% On the contrary, the character-level tokenization can diminish the vocabulary size to be tiny and handle the OOV problem; nonetheless, there is a trade-off with the oversized input sequence length.
+
+% to ensure that the models can learn the smallest unit of code tokens with their own meaning.
+
+
+% To ensure that a code completion approach can generate the most meaningful vector representation for each token, 
+
+% Intuitively, code tokens have their own semantic meanings. 
+% Thus, 
+
+
+
+
+% Tokenization step split the text data into small units and encode before inputting into the models.
+% These small units can be either words, sub-words, or characters which benefit differently.
+% The word-level tokenization is the most simple method; however, it may lead to a massive vocabulary size and one of the most important problems for tokenization step, the unknown words or Out-of-Vocabulary words (OOV) problem.
+% On the contrary, the character-level tokenization can diminish the vocabulary size to be tiny and handle the OOV problem; nonetheless, there is a trade-off with the oversized input sequence length.
+% To address these problems, SynComp performs the sub-word tokenization which exploiting word segmentation to handle unknown word and optimize the vocabulary size.
+% To provide the inputs to the model, the data need to be tokenized and encoded into words or sub-words.
+% One of the most important problems for this step is the unknown words or Out-of-Vocabulary words (OOV).
+% To solve this problem, we choose sub-word level tokenization which is more flexible for unknown word combination in this work.
+% Since our model backbone is GPT-2 with CodeGPT checkpoint (section 3.4), we adapt the tokenizer from CodeGPT~\cite{lu2021codexglue}.
+% The source code inputs are encoded by Byte-Pair-Encoding (BPE) technique~\cite{sennrich2015neural}. 
+% The algorithm iteratively merges the characters or character sequences by the frequency of occurrences to create the vocabulary until the desired size.
+% Such method make BPE able to handle any new words that may appear in the future.
+% The SynComp's vocabulary size for BPE method is set to 50,000.
+% Additionally, we include all the placeholders for token types (section 3.1), and placeholders for masked sensitive data (section 4.2) as \emph{special tokens} in the vocabulary. 
+% Thus, the placeholders are not split into sub-words when performing tokenization.
+% Overall, the final size of SynComp's vocabulary is 50,288.
+
+% \textit{finish} \kla{what are the existing tokenization approaches? why BPE is chosen? why others are not chosen e.g., sentencepiece? or word level? any references to support the argument? why not use code abstraction?}
+
+\subsection{(Step 3) Data Alignment}
+Data alignment is an important step to ensure that the sequence of code tokens and their corresponding token types are correctly matched and aligned.
+With the use of BPE, some words may be tokenized as subwords, while their type is not tokenized into the subword level, making the sequence of code tokens and the corresponding token types not correctly matched.
+For example, as shown in Figure~\ref{fig:overview}, BPE splits \texttt{logging} into \texttt{[logg, ing]} with a single corresponding \texttt{<NAME>} token type.
+To address this problem, we repeat the token type for any word that is split by BPE.
+Therefore, in Figure~\ref{fig:overview}, the token type \texttt{<NAME>} is repeated twice in order to match the subword-level code sequence of \texttt{[logg, ing]}.
+This data alignment step will produce a sequence of code tokens and their corresponding token types with the same length, which is ready to be fed into our code completion approach to learn both syntactic and semantic meanings of source code.
+
+
+
+% The result of the data alignment step is the type dataset that consistent and has the same data length as sub-word code dataset.
+% These datasets are the inputs of our multi-task training models.
+
+
+
+
+ % and splits \texttt{getLogger} into \texttt{[get, Logg, er]}, respectively
+
+ 
+
+
+% nonetheless, the type still be only \emph{one} NAME for each word which will shift the index of type data to be slip up.
+% To solve this problem, we repeat the type of corresponding word if the word is split by BPE.
+
+% the function name \emph{sum\_number} is split by BPE into \emph{$[sum, \_number]$} sub-words, 
+% \textit{finish} \kla{what is the purpose of data preprocessing? why do we need this step? should we call processing, preprocessing, or tokenization? how are they different?}
+
+% \kla{from a high-level perspective, what should the dataset look like? need more technical details/description}
+
+% \textit{finish} \kla{I would not call align dataset since this is the dataset that we are going to use.}
+%  step adjusts the different tasks information (i.e. code dataset and type dataset) to be in a corresponding length with one another for multi-task training models.
+% In word level, our source code dataset and token type dataset are already consistent.
+% However, the tokenization step separates the source code into sub-words which could cause these dataset to be lapsed.
+% To train , we need the datasets for target task (source code prediction) and auxiliary task 
+% \kla{auxiliary is not defined yet - fixed, mention in data collection} 
+% (type prediction) to be consistent with each others.
+% However, in sub-word level from BPE tokenization, these datasets could be lapsed.
+% For example, in Fig.~\ref{fig:overview}, 
+% the function name \emph{sum\_number} is split by BPE into \emph{$[sum, \_number]$} sub-words, 
+% an object \emph{logging} and an attribute \emph{getLogger} are split by BPE method into \emph{$[logg, ing]$} and \emph{$[get, Logg, er]$} sub-words;
+% nonetheless, the type still be only \emph{one} NAME for each word which will shift the index of type data to be slip up.
+% To solve this problem, we repeat the type of corresponding word if the word is split by BPE.
+% Therefore, in Fig.~\ref{fig:overview} the type NAME is repeated to create the aligned datasets. 
+% The result of the data alignment step is the type dataset that consistent and has the same data length as sub-word code dataset.
+% These datasets are the inputs of our multi-task training models.
+% The example is shown in Fig. \ref{fig:align_dataset}.
+
+
+% \begin{itemize}
+%     \item \textbf{Tokenization} 
+
+    % The source code input is encoded by Byte Pair Encoding (BPE) technique~\cite{sennrich2015neural}. 
+    % \kla{what are the existing tokenization approaches? why BPE is chosen? why others are not chosen e.g., sentencepiece? or word level? any references to support the argument? why not use code abstraction?}
+    % The algorithm iteratively merges the characters or character sequences by the frequency of occurrences to create the vocabulary.
+    % Instead of using word-level tokenization, such method make SynComp able to handle the out-of-vocabulary words.
+
+    % \item \textbf{Align Datasets} 
+    
+    % \kla{should not call BPE as dataset, but a data preprocessing step.} 
+    % \textbf{Repeated type dataset / BPE type dataset} To train \gls{mtl} models, we need the datasets for main task and auxiliary task to be consistent with each others. For example, the code should be numerical at the same index of type NUMBER. Currently our code dataset and type dataset are consistent in word-level, however in sub-word-level from BPE, these dataset could be lapsed. Therefore, we propose repeated type dataset to solve this problem. Using BPE tokenizer to tokenize the words, we then repeating the type of corresponding word if the word is split by BPE. The algorithm of this process is shown in Algorithm~\ref{alg:repeat type dataset}. The result is the type dataset that has the same data length as code dataset when tokenized with BPE. The example is shown in Fig. \ref{fig:ex_repeated_type}.
+    
+    % \begin{algorithm}
+    % \caption{For creating repeated type dataset}
+    % \begin{algorithmic}
+    % \For {i in length(predsList)}.
+    %     \State $j \gets 0$
+    %     \State $currentType \gets typeList[i][j]$
+    %     \State $words \gets predsList[i]$
+    %     \State $subwords\gets BPE(words)$
+    %     \State $subwordTypes\gets list()$
+    %     \For{subword in subwords}
+    %         \If{isNewWord(subword)}
+    %             \State $j \gets j + 1$
+    %             \State $currentType \gets typeList[i][j]$
+    %         \EndIf
+    %         \State $subWordTypes.append(currentType)$
+    %     \EndFor
+    % \EndFor
+    % \end{algorithmic}
+    % \label{alg:repeat type dataset}
+    % \end{algorithm}
+% \end{itemize}
+
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=\textwidth/2]{figures/align_dataset.png}
+%     \caption{Example of align dataset}
+%     \label{fig:align_dataset}
+% \end{figure}
+
+\input{sections/models}
+
+\subsection{(Step 5) Hyperparameter Task Weighting}
+\label{sec:approach-weight}
+
+Since our \our~leverages MTL training techniques to learn multiple different tasks simultaneously, some tasks may have a higher influence than others, which later may produce an unsatisfactory accuracy for the other tasks (called a conflicting gradient problem).
+To prevent such conflicting gradients between tasks, it is important to find the most optimal task weights by minimizing the loss.
+Therefore, we optimize the hyperparameters ($\alpha_i$) to adjust the task weights to find optimal task weights for our architecture.
+Specifically, we aim to minimize the loss of the code prediction task along with the type prediction task using the following loss function.
+
+\begin{equation}
+    \label{eq:rq3}
+    L_{MTL} = \argmin_{\omega}(\sum_{i}\alpha_i \cdot L_{i}(d, \omega))
+    % L_{MTL} = \min_{\omega}(\alpha * L_{code}(\omega) + (1 - \alpha) * L_{type}(\omega))
+    % loss = \alpha * codeLoss + (1 - \alpha) * typeLoss
+\end{equation} 
+
+% \our~performs a static weighted linear sum of losses which fixed the task's weights throughout the training phase.
+% In Equation.~\ref{eq:rq3} presents SynComp's task weighing formula where $\alpha$ is the hyperparameter weight. 
+
+\subsection{(Step 6) Decoding Methods}
+\label{sec:approach-decoding}
+
+Decoding is a method to select the next token from the potential vocabulary when generating a sequence.
+Although selecting only the highest probable token is suitable for a single step, it might be a sub-optimal for the sequence.
+Since the search space of the next tokens is large, different decoding methods will have different mechanisms, providing different predictions of the next tokens.
+Thus, the selection of the decoding methods may have an impact on the overall performance of our ~\our.
+In the code completion literature, we found that Beam Search is one of the most commonly used decoding methods.
+However, Holtzman~\ea~\cite{holtzman2019curious} found that there exist other decoding methods that are widely used in the NLP area, yet remain largely explored in the code completion literature.
+Thus, we aim to experiment with the six following decoding methods.
+
+\input{sections/decodingMethods}
+
+%  the decoding method defines the way the system handles its search space over potential output utterances when generating a sequence
+% The result performance in code completion may not depend only on the model, but also a method to select the output tokens from the probability distribution, i.e. a decoding method.
+% The decoding method defines the way to handle the search space over potential output tokens when generating a sequence.
+% Although selecting only the highest probability token is suitable for a specific time step, it might be a sub-optimal for a sequence.
+% Therefore, various alternative way for decoding methods is proposed in NLP field; however, there is still a limited exploration in code completion which is similar to text generation field.
+% Thus, we select 6 following decoding methods to study in this work in order to seek for the best use of our architecture.
+
+% Even though the model leverages the token type prediction as the supporting task during the training process, at the inference phase, the model will perform only the code token prediction.
+% Thus, the token type information is not required at the inference phase, allowing our \our~to perform on-the-fly code completion.
+
+
+
+\subsection{(Step 7) Code Completion}
+\our~performs predictions at two granularity levels, i.e., at the token level and at the line level.
+
+\textbf{Token-level code completion} is a process to predict the next token (the right side), given the prior code tokens as a context (the left side).
+
+\textbf{Line-level code completion} is similar to the token-level prediction, but the model aims to predict the next tokens until completing the whole line of code (i.e., not just only one single next token).
+For the line-level prediction, we leverage the same model used for the token-level code completion task to iteratively generate the next token, where the newly generated token is used as a context for the next step of the prediction.
+This process is repeated iteratively until the model generates a $\langle EOL \rangle$ token, or until it reaches a certain $n$ threshold ($n=100$, following the CodeXGlue~\cite{lu2021codexglue}).
+
+
+
+
+% is occurred or the number of generated tokens become specific \emph{n} tokens, has been reach. In this work \emph{n} is set to 100.
+
+
+% The task is to complete an unfinished line of code.
+% Instead of training a new model, \our~adapts the token-level model for line-level prediction using a following process.
+% There are 3 main steps for line-level prediction process: 1.) the model predict the next token; 2.) the predicted token is concatenated to the previous left-side context; 3.) the new sequence is recursively fed back to the model to predict the next new token.
+% Firstly, the model predict the next token.
+% Then, the predicted token is concatenated to the previous left-side context, and recursively fed back to the model to predict the next new token.
+% This procedure performs until either one of the stop conditions, which are generating until tokens $\langle EOL \rangle$ is occurred or the number of generated tokens become specific \emph{n} tokens, has been reach. In this work \emph{n} is set to 100.
+% The two stop conditions for line-level prediction are generating until tokens $\langle EOL \rangle$ is occurred, or the number of generated tokens reach n tokens.
+% line-level tokens by recursively inputting the concatenation of the left-side context and the generated code.
+
+
+% Specifically, as shown in the inference phase in Fig.~\ref{fig:overview}, the model receive only source code as an input in order to perform the code completion.
+% Thus, \our~which has already learnt syntactic information do not need token type data for inferring, and able to remain the ability of \emph{On-the-Fly} code completion. 
+
+
+

@@ -1,0 +1,70 @@
+
+\documentclass[UTF8]{article}
+\usepackage{xeCJK}
+\usepackage{amsmath,amssymb}
+\begin{document}
+
+   \section{语法感知即时代码完成}       \label{sec:approach}   
+
+在本节中，我们将概述我们的语法感知即时 Python 代码完成方法 (   \our   )。
+
+从概念上讲，   \our    ~旨在不管源代码的完整性如何随时生成源代码，同时在学习阶段考虑源代码的句法和语义信息，但在推理阶段不需要句法信息。为了确保学习过程同时考虑语义和句法信息，我们将方法设计为专注于两个预测任务，即代码标记预测任务和标记类型预测任务。特别是，我们利用多任务训练技术 (MTT) 来协同学习代码标记预测任务（任务 1：预测下一个代码标记，视为目标任务）和标记类型预测任务（任务 2：预测它的令牌类型，被视为支持任务）。对于类型预测任务，我们建议利用标准的 Python 令牌类型信息（例如，字符串、数字、名称、关键字），这些信息很容易获得且轻量级，而不是使用我们发现不可用于三分之二的执行（请参阅我们在    \ref{sec:motivation}    节中的发现），限制了其执行即时代码完成的能力。相比之下，我们的    \our    ~ 在推理阶段不需要句法信息。因此，不需要推理时源代码的完整性。
+
+概述。图~    \ref{fig:overview}    展示了我们的    \our    的概览，它包括两个阶段：训练和推理。在训练阶段，   \our    ~执行 6 个主要步骤： 步骤~    \circled{1}    类型提取，从源代码中提取令牌类型信息； Step~    \circled{2}    Tokenization，对源码进行subword tokenization； Step~    \circled{3}    Data Alignment，将字级别的类型信息与当前子字级别的代码信息对齐； Step~    \circled{4}    Multi-task Training Architecture with 3 training techniques: hard parameters sharing (MTL), soft parameters sharing (MTL), and intermediate fine-tuning (IFN); 然后在Step~    \circled{5}    Hyperparameter Task Weighting and Step~    \circled{6}    Decoding Methods是最大化性能的探索步骤。对于推理阶段，我们在Step~   \circled{7}    Code Generation步骤中描述了token-level预测和line-level预测的细节。
+
+   \begin{figure*}
+    \centering
+    \includegraphics[width=\textwidth]{figures/overview.pdf}
+    \caption{我们的语法感知即时 Python 代码完成方法 (PyCoder) 的概述。}
+    \label{fig:overview}
+\end{figure*}   
+
+   \subsection{（步骤 1）类型提取}   
+
+句法信息可以用多种形式表示，例如，在以前的工作中广泛使用的抽象语法树（AST），以及很大程度上未被探索的令牌类型信息。事实上，AST 和 token 类型信息都各有优缺点。虽然 AST 提供了源代码语法信息的形式化表示，但它需要语法正确的源代码才能被 Python AST 解析器成功解析。由于我们在    \ref{sec:motivation}    节中的发现表明 Python AST 解析器无法对开发人员键入的三个字符中的每两个字符执行一次，因此现有的基于 AST 的代码完成方法的使用场景在实践中仍然受到限制。
+
+为了应对这一挑战，我们利用标准的 Python 令牌类型信息，提供源代码语法结构的更抽象表示（例如，名称、字符串、数字），其中 (1) 更轻量级，(2) 遵循自然代码序列的顺序； (3) 可以在任何时候被成功解析，而不需要完整和语法正确的源代码。通常，标准 Python 令牌由两部分信息组成，即 (1) 提供句法含义的令牌类型，以及 (2) 提供语义含义的令牌值。例如，给定一个    \texttt{logging}    令牌，令牌类型是    \texttt{NAME}    并且它的值是    \texttt{logging}    。由于令牌类型信息在现有代码完成基准中不可用，我们在下面描述提取类型信息的步骤。
+
+为了提取类型信息，我们使用标准 Python 标记器库    \footnote{https://docs.python.org/3/library/tokenize.html}    提供的    \texttt{tokenizer}    函数和一个选项    \texttt{exact\_type}    以便为每个标记提取最细粒度的类型。对于 Python 分词器（Python 3.7 版本），总共将有 58 种不同的类型。特别地，我们关注以下 12 种主要类型的代码标记：   \texttt{<NAME>}   、   \texttt{<NUMBER>}   、   \texttt{<STRING>}   、   \texttt{<INDENT>}   、   \texttt{<DEDENT>}   、   \texttt{<ERRORTOKEN>}   、   \texttt{<ENDCODING>}   、   \texttt{<ENDMARKER>}   、   \texttt{<COMMENT>}   、   \texttt{<NL>}   、   \texttt{<NEWLINE>}    和    \texttt{<OP>}   X操作类型（例如，operator.delimiter），例如    \texttt{<LESS>}    、    \texttt{<GREATER>}    、    \texttt{<EQUAL>}    、    \texttt{<DOT>}    。然后，我们执行以下预处理步骤。
+
+   \begin{itemize}   \item    首先，我们丢弃以下三种不会被执行的token类型，即描述Python文件编码的   \texttt{<ENCODING>}   、描述Python文件结束位置的   \texttt{<ENDMARKER>}   和描述Python文件代码注释的   \texttt{<COMMENT>}    .
+    \item    其次，Python 分词器提供的    \texttt{<NAME>}    可以是标识符名称（例如    \texttt{logging}    ）或 Python 保留名称（例如    \texttt{True}    ）。因此，代码完成方法可能无法识别标识符名称和 Python 保留名称之间的区别——这并不反映现实。为了确保我们的代码完成方法能够识别不同类型名称之间的差异，我们使用    \texttt{keyword.iskeyword()}    函数    \footnote{https://docs.python.org/3/library/keyword.html}    来检查并将最初提取为    \texttt{<NAME>}    的所有 Python 保留字重命名为    \texttt{<KEYWORDS>}    。
+    \item    第三，由于 CodeXGLUE~    \cite{lu2021codexglue}    基准数据集对任何新行一视同仁，我们还将    \texttt{<NEWLINE>}   （新行）、   \texttt{<NL>}   （新空白/注释行）转换为    \texttt{<EOL>}   （行尾）。\end{itemize}   
+
+使用这种方法，令牌类型的表示（即每个令牌都有自己的类型）遵循源代码的自然顺序，而不是 AST 结构，它解决了基于 AST 的代码完成方法的局限性。如图~    \ref{fig:overview}    所示，   \texttt{logging.getLogger()}    将被标记为    \texttt{[logging, ., getLogger, (, )]}   ，具有以下标记类型    \texttt{[NAME, DOT, NAME, LPAR, RPAR]}   。
+
+   \subsection{（步骤 2）令牌化}    Tokenization 是自动代码完成的重要步骤，旨在将源代码拆分为有意义的单元。粒度一般分为三个级别，即词级别、子词级别和字符级别。虽然词级表示是最简单的标记化方法，但它可能会产生大量的词汇量。但是，根据频率限制词汇量可能会导致词汇外词 (OOV) 问题。虽然字符级表示可以减少词汇量有限（例如英文字符）的 OOV 问题，但模型可能无法处理过长的源代码序列（即每个字符都有自己的向量）。相反，我们使用字节对编码 (BPE) 算法的子词标记化~    \cite{sennrich2015neural}   ，因为先前的研究发现 BPE 可以大大减少词汇量~    \cite{fu2022gpt2sp, karampatsis2020big}   ，同时能够生成从未出现在数据集中的新标识符~    \cite{thongtanunam2022autotransform}   。首先，BPE 将源代码拆分为字符。然后，BPE 根据出现的频率迭代地将字符合并到子词中，以创建词汇表，直到达到所需的大小。在本文中，我们使用 CodeGPT 分词器，它的词汇量为 50,000 个子词。为确保 CodeGPT 分词器可以识别标记类型，我们在方括号    $\langle...\rangle$    中表示标记类型，它们包含在 BPE 分词器的特殊标记词汇表中，以避免对这些标记类型进行任何子词分词。
+
+   \subsection{（步骤 3）数据对齐}    数据对齐是确保代码令牌的序列及其对应的令牌类型正确匹配和对齐的重要步骤。使用BPE，一些词可能被标记为子词，而它们的类型没有被标记到子词级别，导致代码标记序列和相应的标记类型无法正确匹配。例如，如图~    \ref{fig:overview}    所示，BPE 将    \texttt{logging}    拆分为    \texttt{[logg, ing]}   ，并具有单个对应的    \texttt{<NAME>}    标记类型。为了解决这个问题，我们对任何被 BPE 拆分的单词重复标记类型。因此，在图~    \ref{fig:overview}    中，token 类型    \texttt{<NAME>}    重复了两次，以匹配    \texttt{[logg, ing]}    的子字级代码序列。此数据对齐步骤将生成一系列代码标记及其相应的具有相同长度的标记类型，这些标记已准备好输入我们的代码完成方法以学习源代码的句法和语义含义。
+
+   \input{sections/models}   
+
+   \subsection{（第五步）超参数任务加权}   
+    \label{sec:approach-weight}   
+
+由于我们的    \our    ~ 利用 MTL 训练技术同时学习多个不同的任务，因此某些任务可能比其他任务具有更高的影响力，稍后可能会为其他任务产生不令人满意的精度（称为冲突梯度问题）。为了防止任务之间出现这种梯度冲突，重要的是通过最小化损失来找到最佳任务权重。因此，我们优化超参数 (    $\alpha_i$    ) 来调整任务权重，从而为我们的架构找到最佳任务权重。具体来说，我们的目标是使用以下损失函数最小化代码预测任务以及类型预测任务的损失。
+
+   \begin{equation}
+    \label{eq:rq3}
+    L_{MTL} = \argmin_{\omega}(\sum_{i}\alpha_i \cdot L_{i}(d, \omega))
+\end{equation}   
+
+   \subsection{（第六步）解码方法}   
+    \label{sec:approach-decoding}   
+
+解码是一种在生成序列时从潜在词汇表中选择下一个标记的方法。尽管仅选择最高可能的标记适合单个步骤，但它可能不是序列的最佳选择。由于下一个标记的搜索空间很大，不同的解码方法将有不同的机制，提供对下一个标记的不同预测。因此，解码方法的选择可能会影响我们的 ~    \our    的整体性能。在代码补全文献中，我们发现 Beam Search 是最常用的解码方法之一。然而，Holtzman~    \ea    ~    \cite{holtzman2019curious}    发现存在其他广泛用于 NLP 领域的解码方法，但在代码完成文献中仍大量探索。因此，我们的目标是试验以下六种解码方法。
+
+   \input{sections/decodingMethods}   
+
+   \subsection{（第 7 步）代码完成}   
+    \our    ~在两个粒度级别执行预测，即在令牌级别和行级别。
+
+令牌级代码完成是一个预测下一个令牌（右侧）的过程，给定先前的代码令牌作为上下文（左侧）。
+
+行级代码完成类似于令牌级预测，但该模型旨在预测下一个令牌，直到完成整行代码（即，不仅仅是一个下一个令牌）。对于行级预测，我们利用与令牌级代码完成任务相同的模型来迭代生成下一个令牌，其中新生成的令牌用作下一步预测的上下文。迭代地重复此过程，直到模型生成    $\langle EOL \rangle$    令牌，或直到达到某个    $n$    阈值（   $n=100$   ，遵循 CodeXGlue~   \cite{lu2021codexglue}   ）。
+
+
+
+
+\end{document}
+

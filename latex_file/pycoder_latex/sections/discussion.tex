@@ -1,0 +1,43 @@
+\section{Discussion}
+\label{sec:discussion}
+
+
+
+Intuitively, the performance of \our~may be dependent on the amount of dataset (could be either training or testing).
+Since \our~is specifically designed to incorporate token type information, we perform additional analysis to investigate the relationship between the accuracy of code token predictions for each token type and the frequency of each token type that appears in the training and testing dataset (see Figure~\ref{fig:type_barplot}).
+% its code token accuracy and the token type frequency
+% In this section, we hypothesize that an accuracy performance might reflect on a different size of token type frequency. 
+% \kla{why do we need to discuss?, let's start with what do we want to investigate, and why? need motivation} 
+% Then, we present the token-level accuracy in another aspect showing a relationship between the code token accuracy and the token type frequency.
+% To do so, we analyze the accuracy of code token predictions for each token type and the frequency of each type that appears in the training and testing dataset (see Figure~\ref{fig:type_barplot}).
+
+In general, syntax-related types of tokens tend to be more accurate than other types of tokens (e.g., operational tokens, boolean and logical expressions, strings, and numbers).
+The difference in accuracy could be due to the amount of data in the training/testing dataset.
+Figure~\ref{fig:type_barplot} shows that tokens related to syntax types (i.e., LPAR, RPAR, COLON, KEYWORD, INDENT, DEDENT, EOL) generally achieve an accuracy of  68.35\%-100.00\%, where these types account for 58.50\% and 58.33\% of the training and testing datasets, respectively.
+% NUMBER 64.65
+% ERRORTOKEN 43.75
+On the other hand, operation-related tokens (e.g., PLUS, STAR, GREATER, NOTEQUAL) tend to be less accurate than syntax-related tokens, since these operation-related tokens tend to have less amount of tokens in the dataset.
+The relationship between the code token accuracy and its frequency is also confirmed by Spearman's Rank Correlation of 0.85 (\emph{high}, $p$-value = 1.59$\times10^{-15}$), suggesting that more data in the training dataset may improve the code token predictions that are less frequent in the dataset.
+
+% the models tend to be accurate for the code token predictions where its types frequently appear in the training dataset.
+
+% the token type frequency
+
+% \kla{then explain how?}
+% To do so, the results of token-level prediction are grouped by token type granularity.
+% Then, the accuracy is calculated by a number of correct token predictions in the type divided by the token type frequency.
+% The final results is sorted by the type frequency in training set from left to right (small to large), and presented in Fig.~\ref{fig:type_barplot}.
+
+% In Fig.~\ref{fig:type_barplot} shows the visualization of \our~token-level code completion accuracy grouped by token types.
+% The accuracy groups are sorted by the size of the token type frequency from left to right (small to large).
+% The results indicate the correlation trend between the token accuracy and the log-scale token type frequency with correlation coefficient 0.85 and p-value 1.59e-15.
+% Specifically, Fig.~\ref{fig:type_barplot} shows that on the left side of the figure where the data types barely appear in the training set, the accuracy of such types are usually in poor performance.
+% Oppositely, on the right side of Fig.~\ref{fig:type_barplot} where the data types appear more in the training set, the accuracy tends to be higher.
+% This can lead to the conclusion that the more data in each type, the more the accuracy the model will gain, and vice versa.
+% Thus, in order to receive better performance in the future, the diversity of the token type data should also be in a consideration.
+
+
+
+% From the results, we found that the best model for code completion from our experiments is hard parameters sharing model. This may be because the standard token type is the information for each token of code, so it benefit more if learn simultaneously. Additionally, if combine with the weights tuning, the model can have a slightly better improvement, however not significant. The decoding methods also have impact on the quality of code completions. For our scenario, the best decoding method is beam search. 
+
+% Another benefit of our model is that it requires no additional data during the inference time. Only the code sequences are required for the context information. Therefore, it will has no complication, overhead and dependency.

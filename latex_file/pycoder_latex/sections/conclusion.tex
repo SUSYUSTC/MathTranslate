@@ -1,0 +1,36 @@
+\section{Conclusion}\label{sec:conclusion}
+
+%1
+% Current on-the-fly code completion approaches (e.g. variants of GPT-2 model) consume sequences of source code as inputs to generate the next source code tokens. 
+% Such training objective do not need the completeness of source code, however; it does not consider syntactic information.
+% To include syntactic information, many research studies leverage the use of ASTs information.
+% While predicting the AST nodes may help to ensure the syntactically correct predicted code, the approaches require the complete and syntactically correct code to extract ASTs to be the inputs. 
+
+% ASTs information is hard to be correctly retrieve, therefore we bring forward standard type information which is also represent syntactical structure and easier to retrieve. With \gls{mtl} training technique, we propose TypeComp, the generative type-aware transformers for code completion. We intensively train and test the model on different training techniques and weighing. We also experiment on the variety of decoding methods. In the end, not only we evaluate our best model to many replication of state-of-the-art code completion, but we also send the results to evaluate on CodeXGLUE Benchmark. The results show that our model surpass all baselines in both token-level predictions and line-level predictions.
+
+%2
+% Code completion is an essential feature to help improve developers' performance; however, there are limitations in the previous approach.
+% The GPT-variants code completion approach does not need the completeness of source code (i.e. on-the-fly); however, it does not consider syntactic information.
+% To include syntactic information (i.e. syntactic-aware), many research studies leverage the use of ASTs information which require the complete and syntactically correct source code available before it can be extracted.
+% These yield to the limitation that current approaches are either on-the-fly or syntactic-aware but not both.
+
+% To address these limitations, we propose \our~to leverage token types, a kind of lightweight syntactic information, with a multi-task training strategy that  learning on the supporting task of predicting token types during the training phase.
+% We intensively train and test our \our~on different multi-task training techniques, task weighing parameters, and decoding methods to find the best suitable architecture.
+
+% In the evaluation, \our~surpasses all four state-of-the-art approaches which includes both AST-based and non-AST based models.
+% Specifically, relative to the second best models, our models achieves with an improvement in accuracy of 1.89\% (from 75.69\% to 77.12\%) in token-level prediction and an improvement in exact match of 8.34\% (from 40.03\% to 43.37\%) in line-level prediction.
+% Additionally, \our~also receives the first place on code completion task in CodeXGLUE benchmark.
+% The results highlight that the token type syntactic information can be beneficial in code completion.
+% Thus, \our~could potentially be beneficial to developers on suggesting the code tokens or lines which could help improve developers' performance by reducing effort on coding.
+
+In this work, we propose \our~to leverage token types, a kind of lightweight syntactic information, with a multi-task training strategy that learning on the supporting task of predicting token types during the training phase.
+We intensively train and test our \our~on different multi-task training techniques, task weighing parameters, and decoding methods to find the best suitable architecture.
+Our study underline the following conclusion:
+\begin{itemize}
+    \item \our~surpasses all the state-of-the-art models in our setting and also receives the first place in CodeXGLUE’s python code completion benchmark. The results indicate that the token type syntactic information can be beneficial in code completion.
+    \item In our setting, MTL: Hard Parameter Sharing -- PyCoder-Hard with task's weight (Type:Code) 1:9 and Beam Search performs the best. 
+    \item  Our study highlights the importance of investigating various choices of setting (e.g., multi-task training strategies, parameter setting) instead of solely relying on suggestions from prior work.
+\end{itemize}
+Our \our~has extended the feature of on-the-fly code completion with lightweight syntactic-aware information.
+However, we acknowledge that there is still a space to develop the fully syntactically correct code completion model with on-the-fly feature.
+We leave this exploration for the future research study.

@@ -1,0 +1,34 @@
+\subsection{Evaluation Measurement}
+We evaluate our models based on the following evaluation measures: Accuracy (Acc) for token-level predictions; Exact Match (EM), Edit Similarity (ES), and Mean Reciprocal Rank (MRR) for line-level predictions.
+
+
+% \our~performs two level of predictions: token-level prediction and line-level prediction. We evaluate token-level prediction with one metric: accuracy (Acc); and line-level with three metrics: exact match (EM), edit similarity (ES) and mean reciprocal rank (MRR).
+
+
+% \subsubsection{Token-level prediction} %\textbf{Token-level}
+
+\textbf{Accuracy (Acc)} is the proportion of correctness between predicted code tokens to the ground-truth tokens. 
+% We use the proportion of correctness between predicted code tokens to the ground-truths as the evaluation for single token prediction. 
+
+% \subsubsection{Line-level prediction}
+
+\textbf{Exact Match (EM)} is similar to  Accuracy, but is evaluated at the line level, meaning that the whole predicted lines must be exactly matched with the ground-truth lines. 
+
+% We call this measurement as exact match to be consistent with CodeXGLUE \cite{lu2021codexglue}.
+% Similar to token-level prediction, we also measure the correctness (i.e., accuracy) of line-level prediction by comparing the whole predicted code line. We call this measurement as exact match to be consistent with CodeXGLUE \cite{lu2021codexglue} evaluation.
+
+\textbf{Edit Similarity (ES)} uses a  Levenshtein distance~\cite{1966SPhD...10..707L} to measure the edit distance between the predicted lines and ground-truth lines. 
+The Levenshtein distance is the minimum number of edits in characters (either an insertion, a deletion, or a replacement of a character) between the predicted line and the ground-truth line. 
+% We use Levenshtein distance~\cite{1966SPhD...10..707L} to measure the edit similarity between predictions and ground-truths. The Levenshtein distance is the minimum number of edit in characters from one text to the other. The edit is defined by either an insertion, a deletion, or a replacement of a character. 
+
+\textbf{Mean Reciprocal Rank (MRR)} evaluates the top-$R$ possible results using the multiplicative inverse of the rank of the first correct prediction. 
+Formally, MRR is defined as:
+% We evaluate the list of top-R possible results using multiplicative inverse of the rank of the first correct prediction. The rank is defined as:
+\begin{equation}
+    \label{eq:mrr}
+    MRR=\frac{1}{|Q|}\sum_{i=1}^{|Q|}\frac{1}{rank_i}
+\end{equation}
+% \[ MRR=\frac{1}{|Q|}\sum_{i=1}^{|Q|}\frac{1}{rank_i} \]
+\noindent, where $Q$ is the number of samples, and $rank_i$ is the rank of the correct prediction given by the model.
+If the correct prediction exceeds rank $R$, then the reciprocal rank is 0.
+In this paper, we use $R=5$.

@@ -1,0 +1,34 @@
+\subsection{Dataset}\label{dataset}
+
+We use the ETH PY150 python dataset (the standard code completion benchmark) provided by Raychev~\ea~\cite{raychev2016probabilistic} to ensure a fair comparison with prior studies ~\cite{kim2021code, izadi2022codefill, li2017code, wang2020towards}.
+The dataset is collected from open-source software projects in GitHub repositories with non-viral licenses (e.g. MIT, Apache, and BSD)---a license that an owner gives permission for freely use under specific terms; thus mitigating potential licensing issues.
+Note that this dataset is also used in Microsoft's CodeXGLUE benchmark~\cite{lu2021codexglue}---a worldwide competition for the AI4Code area.
+As any duplicated codes have been removed by Raychev~\ea~\cite{raychev2016probabilistic}, arriving at a total of 150,000 Python files, we confirm that there is no code duplication between the training set and the testing set, thus  mitigating several potential biases like code duplication in our experiment.
+% \kla{need to double check} After the authors remove duplicated files and filter only up to 30K AST nodes, the dataset contains 150,000 python source code files in total.
+Following CodeXGLUE, for token-level predictions, the dataset is split into 95,000 files for the training set, 5,000 files for the validation set, and 50,000 files for the testing set, with the number of tokens of 72.1M, 4.4M, and 37.3M, respectively.
+For line-level predictions, it's a common practice to reuse the same model trained for token-level predictions. 
+Thus, only a testing set is required, but a training set and a validation set are not required.
+Therefore, we use the 10,000 Python files provided by CodeXGLUE~\cite{lu2021codexglue} as a testing set for line-level predictions.
+
+
+% For line-level dataset, there is only testing data because the model is adapted from token-level without any additional training. 
+
+% for training and evaluation.
+
+% It has been widely use in many code completion research~\cite{kim2021code, izadi2022codefill, li2017code, wang2020towards} and also in CodeXGLUE benchmark~\cite{lu2021codexglue}.
+% We follow data split in CodeXGLUE. 
+% , PY150 is 
+
+% The numbers of tokens are 72.1M, 4.4M, and 37.3M respectively.
+% For line-level dataset, there is only testing data because the model is adapted from token-level without any additional training. 
+
+% \kla{hiding this detail may be better?}
+% However, the CodeXGLUE test set does not released ground-truth data.
+% But since line-level test set is a subset of token-level test set, we reconstruct the ground-truth data from CodeXGLUE samples by a following method:
+% firstly, we search the inputs of line-level data in token-level data;
+% then, we fulfill the ground-truths by the up coming source code, i.e. tokens on the right of inputs, until reaching $\langle EOL \rangle$ token. 
+
+% For line-level dataset, there are no training data because the model is applied from token-level. However, the CodeXGLUE test set does also not released the ground-truth data. Thus, we reconstruct the ground-truth data from the same 10,000 testing samples in CodeXGLUE using the testing data from token-level. Since 10,000 test set in line-level is from 50,000 test set in token-level. We search the inputs of each line-level data in token-level data. Then we fulfill the ground-truth by the up coming source code until reaching $\langle EOL \rangle$ token. 
+% \kla{how this part is done?} 
+% Basically, randomly cutting the line and set the left side to be inputs and the rest of the line until $\langle EOL \rangle$ as ground-truths is also applicable. 
+% \kla{I'm not clear this part yet.}
