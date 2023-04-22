@@ -7,7 +7,8 @@ def read_variable(path, default):
         return open(f'{ROOT}/{path}').read().replace(' ', '').replace('\n', '')
     else:
         return default
-
+def set_variable_4ui(path, default):
+    return print(default, file=open(f'{ROOT}/{path}', 'w'))
 
 def set_variable(path, default):
     var = input().replace(' ', '').replace('\n', '')
@@ -51,3 +52,4 @@ if os.path.exists(f'{ROOT}/TEST'):
     print('This is a test environment!')
 else:
     test_environment = False
+
