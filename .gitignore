@@ -6,3 +6,4 @@ build
 **TENCENT**
 **DEFAULT**
 dist/*
+.idea/
