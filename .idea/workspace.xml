@@ -4,13 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ea05f79-4132-4621-bd5c-d0ca39681715" name="Changes" comment="&quot;fix mathtranslate dependency bugs&quot;">
+    <list default="true" id="6ea05f79-4132-4621-bd5c-d0ca39681715" name="Changes" comment="&quot;fix output file path dialog&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Config.py" beforeDir="false" afterPath="$PROJECT_DIR$/Config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Dialog.py" beforeDir="false" afterPath="$PROJECT_DIR$/Dialog.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/IndexPage.py" beforeDir="false" afterPath="$PROJECT_DIR$/IndexPage.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PreferencesPage.py" beforeDir="false" afterPath="$PROJECT_DIR$/PreferencesPage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Translate.py" beforeDir="false" afterPath="$PROJECT_DIR$/Translate.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/guipage/index.kv" beforeDir="false" afterPath="$PROJECT_DIR$/guipage/index.kv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/guipage/preferencespage.kv" beforeDir="false" afterPath="$PROJECT_DIR$/guipage/preferencespage.kv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,15 +62,15 @@
   </component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
-      <module name="Kivy" />
+      <module name="GUI_MT" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="E:\python\Python311\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
@@ -106,7 +108,10 @@
       <workItem from="1681975475369" duration="1862000" />
       <workItem from="1682042280863" duration="616000" />
       <workItem from="1682056100192" duration="1291000" />
-      <workItem from="1682130521581" duration="18440000" />
+      <workItem from="1682130521581" duration="19677000" />
+      <workItem from="1682161231228" duration="5673000" />
+      <workItem from="1682199547707" duration="17000" />
+      <workItem from="1682201300221" duration="3489000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;fix mathtranslate dependency bugs&quot;">
       <created>1682151979215</created>
@@ -122,7 +127,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682152024444</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="&quot;fix output file path dialog&quot;">
+      <created>1682159922067</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1682159922067</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -141,10 +153,11 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="&quot;fix mathtranslate dependency bugs&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;fix mathtranslate dependency bugs&quot;" />
+    <MESSAGE value="&quot;fix output file path dialog&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;fix output file path dialog&quot;" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Kivy$main.coverage" NAME="main Coverage Results" MODIFIED="1681191458963" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/GUI_MT$main.coverage" NAME="main Coverage Results" MODIFIED="1682159799976" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/GUI_MT$main.coverage" NAME="main Coverage Results" MODIFIED="1682203790389" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

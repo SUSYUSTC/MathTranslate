@@ -10,5 +10,11 @@ class Config:
         self.debug = False
         self.tencent_secret_id = None
         self.tencent_secret_key = None
+        self.tencent_secret_id_path = 'TENCENT_ID'
+        self.tencent_secret_key_path = 'TENCENT_KEY'
+
+        self.updated = False
+
+
 
 

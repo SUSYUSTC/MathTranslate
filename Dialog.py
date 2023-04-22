@@ -45,11 +45,6 @@ class DownloadDialog(BoxLayout):
         self.success_load()
 
     def success_load(self):
-        content = SuccessDialog(confrim=self.download_dismiss_popup)
-        self.success_popup = Popup(title="Upload the MathTranslate", content=content, size_hint=(.4, .5))
-        self.success_popup.open()
-
-    def success_load(self):
         content = SuccessDialog(cancel=self.success_dismiss_popup)
         self.success_popup = Popup(title="Upload the MathTranslate", content=content, size_hint=(.4, .5))
         self.success_popup.open()
@@ -60,6 +55,19 @@ class DownloadDialog(BoxLayout):
 
 class SuccessDialog(BoxLayout):
     cancel = ObjectProperty(None)
+
+
+class DownloadDialogEncapsulation:
+    def download_load(self):
+        content = DownloadDialog(load=self.down_load, cancel=self.download_dismiss_popup)
+        self.down_popup = Popup(title="Upload the MathTranslate", content=content, size_hint=(.4, .5))
+        self.down_popup.open()
+
+    def down_load(self):
+        self.down_popup()
+
+    def download_dismiss_popup(self):
+        self.down_popup.dismiss()
 
 
 Factory.register("SuccessDialog", cls=SuccessDialog)

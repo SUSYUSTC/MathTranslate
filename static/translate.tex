@@ -1,0 +1,44 @@
+
+\documentclass[final,5p,times,twocolumn]{elsarticle}
+\usepackage{xeCJK}
+
+\usepackage{mypreamble}
+\usepackage{relsize}
+\usepackage[inline]{enumitem}
+\newcommand\kla[1]{{\textcolor{blue}{Kla: #1}}}
+\newcommand\our{OTFCodeGen}
+\newcommand\ea[1]{\emph{et al.~}}
+\usepackage{tcolorbox}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=0.5pt] (char) {\small{#1}};}}
+\input{myacronyms.tex}
+\begin{document}
+
+
+
+
+   \input{sections/titleAbstract}   
+
+
+   \input{sections/introduction}   
+
+   \input{sections/background}   
+
+
+   \input{sections/approach}   
+
+   \input{sections/experiments}   
+
+
+   \input{sections/results}   
+
+   \input{sections/threatToValidity}   
+
+   \input{sections/conclusion}   
+
+
+   \bibliography{mybibfile}   
+
+
+
+\end{document}
