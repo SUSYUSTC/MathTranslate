@@ -6,7 +6,7 @@
         Rectangle:
             pos: self.pos
             size: self.size
-            source: './gui/static/index.jpg'
+            source: './static/index.jpg'
 
 
     Label:
@@ -79,7 +79,6 @@
                 markup: True
 
 <TranslationDialog>:
-
     BoxLayout:
         size: root.size
         pos: root.pos
@@ -116,3 +115,39 @@
                 text: "[b]Cancel[/b]"
                 on_release: root.cancel()
                 markup: True
+
+<DownloadDialog>:
+    orientation: "vertical"
+    Label:
+        text: '[ref="click"][b]The mathtranslate had not been installed \n Or is not latest. \n\n Are you sure to Download it ?[/b][/ref]'
+        color: kivy.utils.get_color_from_hex('#FFFFFF')
+        font_size: 15 # 24
+        markup: True
+        size_hint_y: .2
+
+    BoxLayout:
+        size_hint_y: .05
+        spacing: 30
+        Button:
+            text: "[b]Conform[/b]"
+            on_release: root.download()
+            markup: True
+        Button:
+            text: "[b]Cancel[/b]"
+            on_release: root.cancel()
+            markup: True
+
+<SuccessDialog>:
+    orientation: "vertical"
+    Label:
+        text: '[ref="click"][b]Successfully![/b][/ref]'
+        color: kivy.utils.get_color_from_hex('#FFFFFF')
+        font_size: 15 # 24
+        markup: True
+        size_hint_y: .2
+    Button:
+        size_hint_y: .02
+        text: "[b]Confrim[/b]"
+        on_release: root.cancel()
+        markup: True
+

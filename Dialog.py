@@ -1,6 +1,10 @@
+import os
+
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty
 from kivy.factory import Factory
+from kivy.uix.popup import Popup
 
 
 class LoadDialog(FloatLayout):
@@ -29,9 +33,34 @@ class TranslationDialog(FloatLayout):
     load = ObjectProperty(None)
     cancel = ObjectProperty(None)
 
+
 class WaitingDialog(FloatLayout):
     pass
 
+
+class DownloadDialog(BoxLayout):
+
+    load = ObjectProperty(None)
+    cancel = ObjectProperty(None)
+
+    def download(self):
+        os.system(f'pip install --upgrade mathtranslate')
+        self.success_load()
+
+
+    def success_load(self):
+        content = SuccessDialog(cancel=self.success_dismiss_popup)
+        self.success_popup = Popup(title="Upload the MathTranslate", content=content, size_hint=(.4, .5))
+        self.success_popup.open()
+    def success_dismiss_popup(self):
+        self.success_popup.dismiss()
+
+class SuccessDialog(BoxLayout):
+    cancel = ObjectProperty(None)
+
+
+Factory.register("SuccessDialog", cls=SuccessDialog)
+Factory.register("DownloadDialog", cls=DownloadDialog)
 Factory.register("WaitingDialog", cls=WaitingDialog)
 Factory.register("TranslationDialog", cls=TranslationDialog)
 Factory.register("LanguageDialog", cls=LanguageDialog)

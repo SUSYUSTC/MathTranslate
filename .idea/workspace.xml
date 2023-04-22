@@ -6,6 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="6ea05f79-4132-4621-bd5c-d0ca39681715" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dialog.py" beforeDir="false" afterPath="$PROJECT_DIR$/Dialog.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IndexPage.py" beforeDir="false" afterPath="$PROJECT_DIR$/IndexPage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/guipage/index.kv" beforeDir="false" afterPath="$PROJECT_DIR$/guipage/index.kv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,7 +105,7 @@
       <workItem from="1681975475369" duration="1862000" />
       <workItem from="1682042280863" duration="616000" />
       <workItem from="1682056100192" duration="1291000" />
-      <workItem from="1682130521581" duration="1491000" />
+      <workItem from="1682130521581" duration="11416000" />
     </task>
     <servers />
   </component>
@@ -121,6 +125,6 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Kivy$main.coverage" NAME="main Coverage Results" MODIFIED="1681191458963" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/GUI_MT$main.coverage" NAME="main Coverage Results" MODIFIED="1682042289771" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/GUI_MT$main.coverage" NAME="main Coverage Results" MODIFIED="1682151822000" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

@@ -1,18 +1,17 @@
+import os
+
 from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.popup import Popup
 
-from mathtranslate.config import default_engine, default_language_to, default_language_from
-from mathtranslate.encoding import get_file_encoding
-from mathtranslate.translate import TextTranslator, LatexTranslator
-
-from Dialog import LoadDialog, TranslationDialog
+from Dialog import LoadDialog, TranslationDialog, DownloadDialog, SuccessDialog
 
 
 class IndexPage(FloatLayout):
 
-    def __init__(self, **kwargs):
+    def __init__(self, config, **kwargs):
         super().__init__(**kwargs)
+        self.config = config
 
     @staticmethod
     def page_preferences(*args):
@@ -28,35 +27,54 @@ class IndexPage(FloatLayout):
 
     def _load(self, path, filename):
         self.dismiss_popup()
-        options.file = filename
+        self.config.file_path = filename
 
     def dismiss_popup(self):
         self._popup.dismiss()
 
     def translate_load(self):
-        print(options.file)
-        content = TranslationDialog(load=self.trans_load, cancel=self.dismiss_popup, file=options.file)
+        content = TranslationDialog(load=self.trans_load, cancel=self.dismiss_popup, file=self.config.file_path)
         self._popup = Popup(title="Output File Path Setting", content=content, size_hint=(.9, .9))
         self._popup.open()
 
     def trans_load(self, output_path):
-        print(output_path)
-        options.o = output_path
+        self.config.output_path = output_path
         self.translate()
         self.dismiss_popup()
         # popup_wait.dismiss()
 
     def translate(self):
-        if options.engine == 'tencent':
-            if options.language_from == 'zh-CN':
-                options.language_from = 'zh'
-            if options.language_to == 'zh-CN':
-                options.language_to = 'zh'
-        text_translator = TextTranslator(options.engine, options.language_to, options.language_from)
-        latex_translator = LatexTranslator(text_translator, options.debug)
+        if self.config.engine == 'tencent':
+            if self.config.language_from == 'zh-CN':
+                self.config.language_from = 'zh'
+            if self.config.language_to == 'zh-CN':
+                self.config.anguage_to = 'zh'
 
-        input_encoding = get_file_encoding(options.file)
-        text_original = open(options.file, encoding=input_encoding).read()
-        text_final = latex_translator.translate_full_latex(text_original)
-        with open(options.o, "w", encoding='utf-8') as file:
-            print(text_final, file=file)
+        try:
+            import mathtranslate
+            latest = mathtranslate.update.get_latest_version()
+            updated = mathtranslate.__version__ == latest
+
+        except ImportError:
+            updated = True
+
+        if updated:
+            self.download_load()
+        else:
+            from Translate import translate
+            translate(self.config)
+
+    def download_load(self):
+        content = DownloadDialog(load=self.down_load, cancel=self.download_dismiss_popup)
+        self.down_popup = Popup(title="Upload the MathTranslate", content=content, size_hint=(.4, .5))
+        self.down_popup.open()
+
+    def down_load(self):
+        self.down_popup()
+    def download_dismiss_popup(self):
+        self.down_popup.dismiss()
+
+    def success_load(self):
+        content = SuccessDialog(confrim=self.download_dismiss_popup)
+        self.success_popup = Popup(title="Upload the MathTranslate", content=content, size_hint=(.4, .5))
+        self.success_popup.open()
