@@ -69,80 +69,28 @@ Yiddish              yi
 '''
 
 
-def main():
-    import mathtranslate
-    from mathtranslate import config
-    from mathtranslate.config import default_engine, default_language_from, default_language_to
+def main(args=None):
+    from mathtranslate import utils
     from mathtranslate.encoding import get_file_encoding
     from mathtranslate.translate import TextTranslator, LatexTranslator
-    from mathtranslate.update import get_latest_version
-    latest = get_latest_version()
-    updated = mathtranslate.__version__ == latest
-    if updated:
-        print("The current mathtranslate is latest")
-    else:
-        print("The current mathtranslate is not latest, please update by `pip install --upgrade mathtranslate -i https://pypi.org/simple`")
-        if not config.test_environment:
-            sys.exit()
+    utils.check_update()
 
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("file", nargs='?', type=str, help='input file')
     parser.add_argument("-o", type=str, help='output path')
-    parser.add_argument("-engine", default=default_engine, help=f'translation engine, avaiable options include google and tencent. default is {default_engine}')
-    parser.add_argument("-from", default=default_language_from, dest='l_from', help=f'language from, default is {default_language_from}')
-    parser.add_argument("-to", default=default_language_to, dest='l_to', help=f'language to, default is {default_language_to}')
-    parser.add_argument("--list", action='store_true', help='list codes for languages')
-    parser.add_argument("--setkey", action='store_true', help='set id and key of tencent translator')
-    parser.add_argument("--setdefault", action='store_true', help='set default translation engine and languages')
-    parser.add_argument("--debug", action='store_true')
+    utils.add_arguments(parser)
     parser.add_argument("--compile", action='store_true')
-    options = parser.parse_args()
-
-    if options.setkey:
-        print('Tencent secretID')
-        config.set_variable(config.tencent_secret_id_path, config.tencent_secret_id_default)
-        print('Tencent secretKey')
-        config.set_variable(config.tencent_secret_key_path, config.tencent_secret_key_default)
-        print('saved!')
-        config.reread()
-        print('secretID:', config.tencent_secret_id)
-        print('secretKey:', config.tencent_secret_key)
-        sys.exit()
-
-    if options.setdefault:
-        print('Translation engine (google or tencent, default google)')
-        config.set_variable(config.default_engine_path, config.default_engine_default)
-        print('Translation language from (default en)')
-        config.set_variable(config.default_language_from_path, config.default_language_from_default)
-        print('Translation language to (default zh-CN)')
-        config.set_variable(config.default_language_to_path, config.default_language_to_default)
-        print('saved!')
-        config.reread()
-        print('engine:', config.default_engine)
-        print('language from:', config.default_language_from)
-        print('language to:', config.default_language_to)
-        sys.exit()
-
-    if options.list:
-        print(language_list)
-        print('tencent translator does not support some of them')
-        sys.exit()
+    if args is None:
+        options = parser.parse_args()
+    else:
+        options = parser.parse_args(args)
 
     if options.file is None:
         parser.print_help()
         sys.exit()
 
-    if options.engine == 'tencent':
-        haskey = (mathtranslate.config.tencent_secret_id is not None) and (mathtranslate.config.tencent_secret_key is not None)
-        if not haskey:
-            print('Please save ID and key for tencent translation api first by')
-            print('translate_tex --setkey')
-            sys.exit()
-        if options.l_from == 'zh-CN':
-            options.l_from = 'zh'
-        if options.l_to == 'zh-CN':
-            options.l_to = 'zh'
+    utils.process_options(options)
 
     print("Start")
     print('engine', options.engine)

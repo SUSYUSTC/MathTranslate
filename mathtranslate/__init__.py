@@ -9,5 +9,8 @@ from . import tencent
 from . import encoding
 from . import process_latex
 from . import process_text
-from . import translate_tex
 from . import update
+from . import translate_tex
+from .translate_tex import main
+from . import translate_arxiv
+from .translate_arxiv import arxiv

@@ -167,7 +167,7 @@ class LatexTranslator:
         paragraphs_latex = [process_latex.recover_latex_objects(paragraph_text, objs)[0] for paragraph_text in paragraphs_text]
         return paragraphs_latex
 
-    def translate_full_latex(self, latex_original):
+    def translate_full_latex(self, latex_original, make_complete=True):
         self.nbad = 0
         self.ntotal = 0
 
@@ -188,8 +188,12 @@ class LatexTranslator:
         else:
             print('It is not a full latex document')
             latex_original = process_text.connect_paragraphs(latex_original)
-            tex_begin = default_begin
-            tex_end = default_end
+            if make_complete:
+                tex_begin = default_begin
+                tex_end = default_end
+            else:
+                tex_begin = ''
+                tex_end = ''
 
         latex_original_paragraphs = self.split_latex_to_paragraphs(latex_original)
         latex_translated_paragraphs = []
