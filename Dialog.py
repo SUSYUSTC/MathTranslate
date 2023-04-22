@@ -8,9 +8,6 @@ from kivy.uix.popup import Popup
 
 
 class LoadDialog(FloatLayout):
-    '''
-    弹窗的加载和取消属性定义
-    '''
     load = ObjectProperty(None)
     cancel = ObjectProperty(None)
     cwdir = ObjectProperty(None)
@@ -30,6 +27,7 @@ class LanguageDialog(FloatLayout):
 
 class TranslationDialog(FloatLayout):
     file = ObjectProperty(None)
+    cwdir = ObjectProperty(None)
     load = ObjectProperty(None)
     cancel = ObjectProperty(None)
 
@@ -39,7 +37,6 @@ class WaitingDialog(FloatLayout):
 
 
 class DownloadDialog(BoxLayout):
-
     load = ObjectProperty(None)
     cancel = ObjectProperty(None)
 
@@ -47,13 +44,19 @@ class DownloadDialog(BoxLayout):
         os.system(f'pip install --upgrade mathtranslate')
         self.success_load()
 
+    def success_load(self):
+        content = SuccessDialog(confrim=self.download_dismiss_popup)
+        self.success_popup = Popup(title="Upload the MathTranslate", content=content, size_hint=(.4, .5))
+        self.success_popup.open()
 
     def success_load(self):
         content = SuccessDialog(cancel=self.success_dismiss_popup)
         self.success_popup = Popup(title="Upload the MathTranslate", content=content, size_hint=(.4, .5))
         self.success_popup.open()
+
     def success_dismiss_popup(self):
         self.success_popup.dismiss()
+
 
 class SuccessDialog(BoxLayout):
     cancel = ObjectProperty(None)

@@ -4,7 +4,7 @@ from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.popup import Popup
 
-from Dialog import LoadDialog, TranslationDialog, DownloadDialog, SuccessDialog
+from Dialog import LoadDialog, TranslationDialog, DownloadDialog
 
 
 class IndexPage(FloatLayout):
@@ -33,7 +33,8 @@ class IndexPage(FloatLayout):
         self._popup.dismiss()
 
     def translate_load(self):
-        content = TranslationDialog(load=self.trans_load, cancel=self.dismiss_popup, file=self.config.file_path)
+        content = TranslationDialog(load=self.trans_load, cancel=self.dismiss_popup, cwdir='./',
+                                    file=self.config.file_path)
         self._popup = Popup(title="Output File Path Setting", content=content, size_hint=(.9, .9))
         self._popup.open()
 
@@ -49,32 +50,33 @@ class IndexPage(FloatLayout):
                 self.config.language_from = 'zh'
             if self.config.language_to == 'zh-CN':
                 self.config.anguage_to = 'zh'
-
         try:
             import mathtranslate
             latest = mathtranslate.update.get_latest_version()
             updated = mathtranslate.__version__ == latest
 
-        except ImportError:
-            updated = True
 
-        if updated:
+        except ImportError:
+            updated = False
+
+        if not updated:
+            print('not updated')
             self.download_load()
+
         else:
             from Translate import translate
             translate(self.config)
 
     def download_load(self):
+        print("11111")
         content = DownloadDialog(load=self.down_load, cancel=self.download_dismiss_popup)
         self.down_popup = Popup(title="Upload the MathTranslate", content=content, size_hint=(.4, .5))
         self.down_popup.open()
 
     def down_load(self):
         self.down_popup()
+
     def download_dismiss_popup(self):
         self.down_popup.dismiss()
 
-    def success_load(self):
-        content = SuccessDialog(confrim=self.download_dismiss_popup)
-        self.success_popup = Popup(title="Upload the MathTranslate", content=content, size_hint=(.4, .5))
-        self.success_popup.open()
+

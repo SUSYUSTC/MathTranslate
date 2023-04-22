@@ -32,6 +32,7 @@ class PreferencesPage(BoxLayout):
         print(id, key)
         self.config.tencent_secret_id = id
         self.config.tencent_secret_key = key
+        print(self.config.tencent_secret_id, self.config.tencent_secret_key)
         self.dismiss_popup()
 
     def language_load(self, language_from, language_to):

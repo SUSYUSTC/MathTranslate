@@ -56,7 +56,7 @@
         FileChooserIconView:
             id: filechooser
             rootpath: root.cwdir
-            filters: ['*.jpg',"*.png","*.tex","*.jpeg"]
+            filters: ['*.tex']
             on_selection: text_input.text = self.selection and self.selection[0] or ''
 
         TextInput:
@@ -83,24 +83,27 @@
         size: root.size
         pos: root.pos
         orientation: "vertical"
+        spacing: 30
 
-        BoxLayout:
-            orientation: "vertical"
-            size_hint_y: .5
-            padding: 10,70
+        Label:
+            text: '[b]Choose Except Output File Path:[/b][/ref]'
+            color: kivy.utils.get_color_from_hex('#FFFFFF')
+            font_size: 20  # 24
+            markup: True
+            size_hint_y: .1
 
-            Label:
-                text: '[ref="click"][b]Output File Path:[/b][/ref]'
-                color: kivy.utils.get_color_from_hex('#FFFFFF')
-                font_size: 24  # 24
-                markup: True
-                size_hint_y: .2
+        FileChooserIconView:
+            size_hint_y: .6
+            id: filechooser
+            rootpath: root.cwdir
+            dirselect: True
+            filters: ['*.im']
+            on_selection: file_output.text = (self.selection and self.selection[0] or '') + '\\translate.tex'
 
-            TextInput:
-                id: output_path
-                text: root.file
-                size_hint_y: .03
-                multiline: False
+        TextInput:
+            id: file_output
+            size_hint_y: .1
+            multiline: False
 
 
         BoxLayout:
@@ -108,7 +111,7 @@
             spacing: 30
             Button:
                 text: "[b]Conform[/b]"
-                on_release: root.load(output_path.text)
+                on_release: root.load(file_output.text)
                 markup: True
 
             Button:
