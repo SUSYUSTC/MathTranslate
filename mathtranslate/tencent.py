@@ -1,6 +1,7 @@
-from tencentcloud.common import credential, exception
-from tencentcloud.tmt.v20180321 import tmt_client
 from .config import tencent_secret_id, tencent_secret_key, math_code
+from .tencentcloud.common import credential, exception
+from .tencentcloud.tmt.v20180321 import tmt_client
+
 
 
 class Translator:
