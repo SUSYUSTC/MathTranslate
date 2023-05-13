@@ -375,7 +375,7 @@ def replace_newcommand(newcommand, latex):
         assert re.match(command_name, name)
         for i in range(n_arguments):
             text = match.group(3 + i * 2)
-            this_content = this_content.replace(f'#{i+1}', text)
+            this_content = this_content.replace(f'#{i+1}', f' {text} ')
         return this_content
 
     return pattern.sub(replace_function, latex)
