@@ -3,7 +3,7 @@ example_old
 **egg**
 build
 **pycache**
-**TENCENT**
+TENCENT_ID
+TENCENT_KEY
 **DEFAULT**
 dist/*
-!tencentcloud
