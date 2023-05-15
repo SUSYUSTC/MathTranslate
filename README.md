@@ -36,6 +36,8 @@ Here's an example of what you get finally.
 </p>
 
 ## Releases
+### May 14, 2023
+We add the ability to directly translate the whole arxiv project with just one click.
 ### Mar 24, 2023
 We add the ability to directly translate arxiv papers.
 ### Mar 21, 2023
@@ -51,13 +53,15 @@ We are now supporting all operating systems! Now you can install simply by `pip 
 `pip install --upgrade mathtranslate`
 
 ## Usage
-1. Prepare or generate a tex file. You can get the tex file by the following two ways:
-     - For most [arxiv](https://arxiv.org/) papers, you can download the latex source code (Download - Other formats - Source). If the file you downloaded has no suffix, in most cases it is in .tar format, you may need to add the suffix manually. After decompression you can get a latex project, and then you can translate the .tex files in it.
-     - Use [mathpix](https://mathpix.com/) to convert the pdf you want to translate into latex code. mathpix can directly convert pdf page into latex code or convert screenshots into code. We can handle both of these methods. Unfortunately, mathpix charges after a certain amount of usage, here is the [price](https://mathpix.com/pricing).
-2. (Tencent Translate API users) run `translate_tex --setkey` to store the API secretID and secretKey.
-3. Translate the tex file by `translate_tex input.tex -o output.tex`.
-4. Compile your tex file. You can compile it with the  [texlive](https://www.tug.org/texlive/) command `xelatex output.tex`. For Chinese you need the xeCJK package. If it is a downloaded arxiv project, we recommend compressing all files into a zip file and uploading it to [overleaf](https://www.overleaf.com/project) for online compilation. **Note, you need to set the XeLatex compiler in `Menu - Compiler`, otherwise it cannot handle other languages.**
-5. You can change the default settings of the translation language and engine through the command line arguments `-engine`, `-from`, `-to`. For example `translate_tex -engine tencent input.tex -o output.tex`. You can also permanently change the setting via `translate_tex --setdefault`. You can see more details with `translate_tex --help`.
+1. Prepare or generate a tex file or project. You can obtain a tex file or project in the following ways:
+    - For most [arxiv](https://arxiv.org/) papers, the latex source code is public, and we provide a simple API to translate the entire project with just one click using an arxiv number.
+    - Use [mathpix](https://mathpix.com/) to convert the pdf you want to translate into latex code. Mathpix can directly convert pdf to latex code or convert a screenshot into code. Unfortunately, mathpix requires a fee after exceeding a certain amount of usage. Here is the [price list](https://mathpix.com/pricing).
+2. (For Tencent Translation API users) Run `translate_tex --setkey` to store the API secretID and secretKey.
+3. Translate the tex file or project in command line.
+   - To translate a single file: `translate_tex input.tex -o output.tex` will generate a translated tex file `output.tex`.
+   - To translate an arxiv project: `translate_arxiv 2205.15510` will generate a translated tex project `2205.15510.zip`.
+4. Compile your tex file. For a single file, you can use the command `xelatex output.tex` from [texlive](https://www.tug.org/texlive/). Chinese translation requires the xeCJK package. For arxiv projects, we recommend uploading the obtained .zip file to overleaf for online compilation (New Project - Upload Project). **Note that you need to set the compiler to XeLatex in `Menu - Compiler`.**
+5. You can change the default settings of translation language and engine through command line arguments `-engine`, `-from`, `-to`. For example, `translate_tex -engine tencent input.tex -o output.tex`. You can also permanently change the settings through `translate_tex --setdefault`. You can view more details through `translate_tex --help`. `translate_arxiv` also provides exactly the same command line arguments, which have the same effect.
 
 ## Examples
 In the example directory, you can see `main.txt` which is the mathpix output of a part of `paper.pdf`. Run `translate_tex main.txt` and you will get the `main.tex` and `main.pdf`. `translated.png` is what you should expect to see in the `main.pdf`.
