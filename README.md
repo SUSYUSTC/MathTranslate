@@ -75,3 +75,9 @@ In the example directory, you can see `main.txt` which is the mathpix output of 
 2. A more user-friendly interface.
 
 If you have any questions or have interests in making contributions, please contact me by susyustc@gmail.com or joining QQ group 288646946.
+
+## Donation
+If you think this project is helping you a lot, you can support us by the Wechat QR code below
+<p align="center">
+  <img width=30% src="https://github.com/SUSYUSTC/MathTranslate/assets/30529122/16f82637-e102-4330-82ad-bbcbdad1c19d">
+</p>
