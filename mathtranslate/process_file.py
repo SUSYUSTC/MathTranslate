@@ -38,7 +38,7 @@ def add_bbl(tex):
     content = open(path_tex, encoding=encoding).read()
     encoding = get_file_encoding(path_bbl)
     bbl = open(path_bbl, encoding=encoding).read()
-    pattern_input = re.compile(r'\\bibliography{(.*)}', re.DOTALL)
+    pattern_input = re.compile(r'\\bibliography\{(.*?)\}', re.DOTALL)
     while True:
         result = pattern_input.search(content)
         if result is None:

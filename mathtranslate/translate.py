@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from . import process_latex
 from . import process_text
+from .process_latex import environment_list, command_list, format_list
 from .process_text import char_limit
 from .encoding import get_file_encoding
 import time
@@ -16,11 +17,6 @@ default_begin = r'''
 default_end = r'''
 \end{document}
 '''
-
-# TODO: add more here
-environment_list = ['abstract', 'acknowledgments', 'itemize', 'enumerate', 'description', 'list', 'proof', 'quote']
-command_list = ['section', 'subsection', 'subsubsection', 'caption', 'subcaption', 'footnote', 'paragraph']
-format_list = ['textbf', 'textit', 'emph']
 
 
 class TextTranslator:
@@ -97,7 +93,7 @@ class LatexTranslator:
         text_translated = '\n'.join(parts_translated)
         return text_translated.replace("\u200b", "")
 
-    def translate_text_in_paragraph_latex(self, latex_original_paragraph):
+    def _translate_text_in_paragraph_latex(self, latex_original_paragraph):
         '''
         Translate a latex paragraph, which means that it could contain latex objects
         '''
@@ -130,6 +126,13 @@ class LatexTranslator:
         self.nbad += nbad
         self.ntotal += ntotal
         return latex_translated_paragraph
+
+    def translate_text_in_paragraph_latex(self, paragraph):
+        splited_paragraphs, seps = process_latex.split_by_command(paragraph)
+        result = ''
+        for split, sep in zip(splited_paragraphs, seps):
+            result += self._translate_text_in_paragraph_latex(split) + ' ' + sep + ' '
+        return result
 
     def translate_latex_all_objects(self, latex):
         '''
@@ -219,6 +222,7 @@ class LatexTranslator:
         self.num = 'title'
         latex_translated = process_latex.process_specific_command(latex_translated, self.translate_text_in_paragraph_latex, 'title')
 
+        latex_translated = latex_translated.replace('%', '\\%')
         latex_translated = process_latex.recover_special(latex_translated)
         latex_translated = process_latex.recover_accent(latex_translated)
 

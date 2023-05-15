@@ -66,6 +66,8 @@ def translate_dir(dir, options):
         os.remove(f'{basename}.tex')
     for basename in bbls:
         os.remove(f'{basename}.bbl')
+    if options.notranslate:
+        return True
     for filename in complete_texs:
         print(f'Processing {filename}')
         file_path = f'{filename}.tex'
@@ -93,6 +95,7 @@ def main(args=None, require_updated=True):
     parser = argparse.ArgumentParser()
     parser.add_argument("number", nargs='?', type=str, help='arxiv number')
     parser.add_argument("-o", type=str, help='output path')
+    parser.add_argument("--notranslate", action='store_true')  # debug option
     utils.add_arguments(parser)
     options = parser.parse_args(args)
     utils.process_options(options)
@@ -125,29 +128,29 @@ def main(args=None, require_updated=True):
         if is_pdf(number):
             # case 1
             success = False
-        content = gzip.decompress(open(number, "rb").read())
-        with open(number, "wb") as f:
-            f.write(content)
-        try:
-            # case 4
-            with tarfile.open(number, mode='r') as f:
-                f.extractall()
-            os.remove(number)
-        except tarfile.ReadError:
-            # case 2 or 3
-            print('This is a pure text file')
-            shutil.move(number, 'main.tex')
-        success = translate_dir('.', options)
-        if not success:
-            # case 2
-            success = False
-        os.chdir(cwd)
-        zipdir(temp_dir, output_path)
+        else:
+            content = gzip.decompress(open(number, "rb").read())
+            with open(number, "wb") as f:
+                f.write(content)
+            try:
+                # case 4
+                with tarfile.open(number, mode='r') as f:
+                    f.extractall()
+                os.remove(number)
+            except tarfile.ReadError:
+                # case 2 or 3
+                print('This is a pure text file')
+                shutil.move(number, 'main.tex')
+            success = translate_dir('.', options)
+            if success:
+                # case 3
+                os.chdir(cwd)
+                zipdir(temp_dir, output_path)
 
     if success:
         print('zip file is saved to', output_path)
         print('You can upload the zip file to overleaf to autocompile')
         return True
     else:
-        print('Source code is not available in arxiv', number)
+        print('Source code is not available for arxiv', number)
         return False

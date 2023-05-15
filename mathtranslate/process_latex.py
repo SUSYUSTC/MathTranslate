@@ -1,6 +1,7 @@
 import re
 import regex
 from .config import config
+
 math_code = config.math_code
 test_environment = config.test_environment
 
@@ -39,6 +40,8 @@ pattern_command_simple = rf'\\({match_command_name})'  # \xxx, group 1: name
 pattern_brace = get_pattern_brace(0)  # {xxx}, group 1: content
 pattern_newcommand = rf'\\(?:newcommand|def){spaces}(?:\{{\\([a-zA-Z]+)\}}|\\([a-zA-Z]+)){spaces}(?:\[(\d)\])?{spaces}({get_pattern_brace(4)})'  # \newcommand{name}[n_arguments]{content}, group 1/2: name, group 3: n_arguments, group 5: content
 
+pattern_set1 = rf'\\set[a-zA-Z]*{spaces}\\[a-zA-Z]+{spaces}\{{.*\}}'
+pattern_set2 = rf'\\set[a-zA-Z]*{spaces}\{{\\[a-zA-Z]+\}}{spaces}\{{.*\}}'
 pattern_theorem = r"\\newtheorem[ \t]*\{(.+?)\}"  # \newtheorem{xxx}, group 1: name
 pattern_accent = r"\\([`'\"^~=.])(?:\{([a-zA-Z])\}|([a-zA-Z]))"  # match special characters with accents, group 1: accent, group 2/3: normal character
 match_code_accent = rf'{math_code}([A-Z]{{2}})([a-zA-Z])'  # group 1: accent name, group 2: normal character, e.g. \"o or \"{o}
@@ -65,6 +68,11 @@ special_character_forward = {
 }
 special_character_backward = {special_character_forward[key]: key for key in special_character_forward}
 assert len(set(special_character_forward.values())) == len(special_character_forward)
+
+environment_list = ['abstract', 'acknowledgments', 'itemize', 'enumerate', 'description', 'list', 'proof', 'quote']
+command_list = ['section', 'subsection', 'subsubsection', 'caption', 'subcaption', 'footnote', 'paragraph']
+format_list = ['textbf', 'textit', 'emph']
+math_list = ['equation', 'array', 'displaymath', 'align', 'multiple', 'gather', 'theorem']
 
 
 def variable_code(count):
@@ -99,7 +107,7 @@ def modify_after(text):
     return text
 
 
-def replace_latex_objects(text, brace=True):
+def replace_latex_objects(text, brace=True, command_simple=True):
     r"""
     Replaces all LaTeX objects in a given text with the format "{math_code}_{digit1}_{digit2}_..._{digit_last}",
     applies a given function to the resulting text (excluding the "{math_code}_{digit1}_{digit2}_..._{digit_last}" parts),
@@ -117,11 +125,14 @@ def replace_latex_objects(text, brace=True):
         r"\\\[(.*?)\\\]",  # \[ xxx \]
         r"\\\((.*?)\\\)",  # \( xxx \)
         pattern_env,  # \begin{xxx} \end{xxx}
+        pattern_set1,
+        pattern_set2,
         pattern_command_full,  # \xxx[xxx]{xxx}
-        pattern_command_simple,  # \xxx
     ]
     if brace:
         latex_obj_regex.append(pattern_brace)
+    if command_simple:
+        latex_obj_regex.append(pattern_command_simple)  # \xxx
 
     # iterate through each LaTeX object and replace with "{math_code}_{digit1}_{digit2}_..._{digit_last}"
     count = 0
@@ -136,6 +147,9 @@ def replace_latex_objects(text, brace=True):
 
     text = modify_text(text, modify_before)
     return text, replaced_objs
+
+
+t = 0
 
 
 def recover_latex_objects(text, replaced_objs, tolerate_error=False):
@@ -235,16 +249,46 @@ def process_leading_level_brace(latex, function):
     # leading level means that the {xxx} is not inside other objects, i.e. \command{} or \begin{xxx} \end{xxx}
     # replace `{ content }` by `{ function(content) }`
     text, envs = replace_latex_objects(latex, brace=False)
+    braces_content = []
+    count = 0
 
     def process_function(match):
+        nonlocal braces_content, count
         content = match.group(1)
         # function here is translate_paragraph_latex, which cannot contain replaced environments
         processed_content = function(recover_latex_objects(content, envs)[0])
-        return rf'{{ {processed_content} }}'
+        result = rf'{{ {processed_content} }}'
+        braces_content.append(result)
+        placeholder = f'BRACE{count}BRACE'
+        count += 1
+        return placeholder
 
     text = regex.compile(pattern_brace, regex.DOTALL).sub(process_function, text)
     latex = recover_latex_objects(text, envs)[0]
+    for i in range(count):
+        latex = latex.replace(f'BRACE{i}BRACE', braces_content[i])
     return latex
+
+
+def split_by_command(latex):
+    # split by things like \item
+    text, envs = replace_latex_objects(latex, command_simple=False)
+
+    texts = [(text, '')]
+
+    for pattern, command in [(r'\\item\s+', '\item')]:
+        new_texts = []
+        for t, sep in texts:
+            splited_t = re.split(pattern, t)
+            seps = [command for _ in splited_t]
+            seps[-1] = sep
+            new_texts += list(zip(splited_t, seps))
+        texts = new_texts
+
+    seps = [t[1] for t in texts]
+    texts = [t[0] for t in texts]
+    latexs = [recover_latex_objects(t, envs)[0] for t in texts]
+    return latexs, seps
 
 
 def remove_blank_lines(text):
@@ -364,7 +408,7 @@ def combine_split_to_sentences(text):
 
 def delete_specific_format(latex, format_name):
     pattern = regex.compile(get_pattern_command_full(format_name), regex.DOTALL)
-    return pattern.sub(lambda m: m.group(4), latex)
+    return pattern.sub(lambda m: ' ' + m.group(4) + ' ', latex)
 
 
 def replace_newcommand(newcommand, latex):
@@ -387,10 +431,15 @@ def process_newcommands(latex):
     pattern = regex.compile(pattern_newcommand, regex.DOTALL)
     count = 0
     full_newcommands = []
-    while True:
-        match = pattern.search(latex)
-        if not match:
-            break
+    matches_all = list(regex.finditer(pattern, latex))
+    for match in matches_all:
+        need_replace = False
+        content_all = match.group(0)
+        for special in math_list:
+            if special in content_all:
+                need_replace = True
+        if not need_replace:
+            continue
         name1 = match.group(1)
         name2 = match.group(2)
         name = get_nonNone(name1, name2)
@@ -400,7 +449,7 @@ def process_newcommands(latex):
         else:
             n_arguments = int(n_arguments)
         content = match.group(5)
-        latex = pattern.sub(f'XMATH_REPLACE{count}_NEWCOMMAND', latex, 1)
+        latex = latex.replace(match.group(), f'XMATH_REPLACE{count}_NEWCOMMAND')
         full_newcommands.append(match.group(0))
         latex = replace_newcommand((name, n_arguments, content), latex)
         count += 1
