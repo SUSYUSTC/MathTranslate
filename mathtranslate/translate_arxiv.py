@@ -59,7 +59,6 @@ def translate_dir(dir, options):
             complete_texs.append(tex)
             print(path)
     if len(complete_texs) == 0:
-        print('Source code is not available')
         return False
     for basename in texs:
         if basename in complete_texs:
@@ -108,15 +107,22 @@ def main(args=None):
     else:
         output_path = options.o
 
+    success = True
     cwd = os.getcwd()
     with tempfile.TemporaryDirectory() as temp_dir:
         print('temporary directory', temp_dir)
         os.chdir(temp_dir)
-        download_source(number)
+        try:
+            download_source(number)
+        except urllib.error.HTTPError:
+            print(f'Specified arxiv {number} not found')
+            return False
+        except BaseException:
+            print('Cannot download source, maybe network issue')
+            return False
         if is_pdf(number):
             # case 1
-            print('Source code is not available')
-            return False
+            success = False
         content = gzip.decompress(open(number, "rb").read())
         with open(number, "wb") as f:
             f.write(content)
@@ -132,7 +138,14 @@ def main(args=None):
         success = translate_dir('.', options)
         if not success:
             # case 2
-            return False
+            success = False
         os.chdir(cwd)
         zipdir(temp_dir, output_path)
-    return True
+
+    if success:
+        print('zip file is saved to', output_path)
+        print('You can upload the zip file to overleaf to autocompile')
+        return True
+    else:
+        print('Source code is not available in arxiv', number)
+        return False
