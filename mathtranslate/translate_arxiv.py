@@ -73,7 +73,7 @@ def translate_dir(dir, options):
     return True
 
 
-def main(args=None):
+def main(args=None, require_updated=True):
     '''
     There are four types of a downdload arxiv project
     1. It is simply a PDF file (cannot translate)
@@ -87,7 +87,7 @@ def main(args=None):
     to call this function from python,
     you can do e.g `arxiv(['2205.15510', '-o', 'output.zip'])`
     '''
-    utils.check_update()
+    utils.check_update(require_updated=require_updated)
 
     import argparse
     parser = argparse.ArgumentParser()

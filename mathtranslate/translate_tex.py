@@ -5,12 +5,12 @@ from . import utils
 from .translate import translate_single_tex_file
 
 
-def main(args=None):
+def main(args=None, require_updated=True):
     '''
     to call this function from python,
     you can do e.g `main(['input.tex', '-o', 'output.tex'])`
     '''
-    utils.check_update()
+    utils.check_update(require_updated=require_updated)
 
     import argparse
     parser = argparse.ArgumentParser()
