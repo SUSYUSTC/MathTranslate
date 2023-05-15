@@ -26,10 +26,6 @@ def main(args=None, require_updated=True):
         parser.print_help()
         sys.exit()
 
-    print("Start")
-    print('engine', options.engine)
-    print('language from', options.l_from)
-    print('language to', options.l_to)
     input_path = options.file
     if options.o is None:
         input_path_base, input_path_ext = os.path.splitext(input_path)

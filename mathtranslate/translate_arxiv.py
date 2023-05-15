@@ -106,6 +106,8 @@ def main(args=None, require_updated=True):
         output_path = f'{number}.zip'
     else:
         output_path = options.o
+    print('arxiv number:', number)
+    print()
 
     success = True
     cwd = os.getcwd()

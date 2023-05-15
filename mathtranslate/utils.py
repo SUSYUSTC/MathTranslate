@@ -135,3 +135,9 @@ def process_options(options):
             options.l_from = 'zh'
         if options.l_to == 'zh-CN':
             options.l_to = 'zh'
+
+    print("Start")
+    print('engine', options.engine)
+    print('language from', options.l_from)
+    print('language to', options.l_to)
+    print()
