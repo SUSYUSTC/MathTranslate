@@ -11,6 +11,6 @@ from . import process_latex
 from . import process_text
 from . import update
 from . import translate_tex
-from .translate_tex import main
 from . import translate_arxiv
-from .translate_arxiv import arxiv
+from .translate_tex import main as tex_main
+from .translate_arxiv import main as arxiv_main

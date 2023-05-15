@@ -30,6 +30,7 @@ setuptools.setup(
     entry_points={
         'console_scripts': [
             'translate_tex=mathtranslate.translate_tex:main',
+            'translate_arxiv=mathtranslate.translate_arxiv:main',
         ]
     },
 )

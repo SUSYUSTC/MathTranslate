@@ -2,6 +2,7 @@
 from . import process_latex
 from . import process_text
 from .process_text import char_limit
+from .encoding import get_file_encoding
 import time
 import re
 import tqdm
@@ -226,3 +227,17 @@ class LatexTranslator:
         print(self.ntotal - self.nbad, '/',  self.ntotal, 'latex object are correctly translated')
 
         return latex_translated
+
+
+def translate_single_tex_file(input_path, output_path, engine, l_from, l_to, debug):
+    text_translator = TextTranslator(engine, l_to, l_from)
+    latex_translator = LatexTranslator(text_translator, debug)
+
+    input_encoding = get_file_encoding(input_path)
+    text_original = open(input_path, encoding=input_encoding).read()
+    text_final = latex_translator.translate_full_latex(text_original)
+    with open(output_path, "w", encoding='utf-8') as file:
+        print(text_final, file=file)
+    print('Number of translation called:', text_translator.number_of_calls)
+    print('Total characters translated:', text_translator.tot_char)
+    print('saved to', output_path)
