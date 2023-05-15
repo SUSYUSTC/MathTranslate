@@ -31,7 +31,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install build
         pip install mtranslate
-        pip install tencentcloud-sdk-python
         pip install chardet
         pip install requests
         pip install regex
