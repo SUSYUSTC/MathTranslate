@@ -75,3 +75,9 @@
 2. 简化用户界面。
 
 如果您有任何问题或有兴趣做出贡献，请通过 susyustc@gmail.com 与我联系或加入 QQ 群 288646946 。
+
+## 捐赠
+如果您觉得本软件对您非常有帮助，可以通过下面的二维码向我们捐赠
+<p align="center">
+  <img width=30% src="https://github.com/SUSYUSTC/MathTranslate/assets/30529122/16f82637-e102-4330-82ad-bbcbdad1c19d">
+</p>
