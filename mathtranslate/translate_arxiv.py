@@ -13,9 +13,10 @@ import tempfile
 import urllib.request
 
 
-def download_source(number):
+def download_source(number, path):
     url = f'https://arxiv.org/e-print/{number}'
-    urllib.request.urlretrieve(url, number)
+    print('trying to download from', url)
+    urllib.request.urlretrieve(url, path)
 
 
 def is_pdf(filename):
@@ -105,12 +106,13 @@ def main(args=None, require_updated=True):
         sys.exit()
 
     number = options.number
-    if options.o is None:
-        output_path = f'{number}.zip'
-    else:
-        output_path = options.o
     print('arxiv number:', number)
     print()
+    download_path = number.replace('/', '-')
+    if options.o is None:
+        output_path = f'{download_path}.zip'
+    else:
+        output_path = options.o
 
     success = True
     cwd = os.getcwd()
@@ -118,29 +120,26 @@ def main(args=None, require_updated=True):
         print('temporary directory', temp_dir)
         os.chdir(temp_dir)
         try:
-            download_source(number)
-        except urllib.error.HTTPError:
-            print(f'Specified arxiv {number} not found')
-            return False
+            download_source(number, download_path)
         except BaseException:
-            print('Cannot download source, maybe network issue')
+            print('Cannot download source, maybe network issue or wrong link')
             return False
-        if is_pdf(number):
+        if is_pdf(download_path):
             # case 1
             success = False
         else:
-            content = gzip.decompress(open(number, "rb").read())
-            with open(number, "wb") as f:
+            content = gzip.decompress(open(download_path, "rb").read())
+            with open(download_path, "wb") as f:
                 f.write(content)
             try:
                 # case 4
-                with tarfile.open(number, mode='r') as f:
+                with tarfile.open(download_path, mode='r') as f:
                     f.extractall()
-                os.remove(number)
+                os.remove(download_path)
             except tarfile.ReadError:
                 # case 2 or 3
                 print('This is a pure text file')
-                shutil.move(number, 'main.tex')
+                shutil.move(download_path, 'main.tex')
             success = translate_dir('.', options)
             if success:
                 # case 3
