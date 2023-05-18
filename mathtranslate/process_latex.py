@@ -190,8 +190,12 @@ def remove_tex_comments(text):
     If "%" is at the beginning of a line then delete this line.
     Returns the processed string.
     """
-    text = re.sub(r"\n\s*(?<!\\)%.*?(?=\n)", "", text)
-    text = re.sub(r"(?<!\\)%.*?(?=\n)", "", text)
+    text = text.replace(r'\\', f'{math_code}_BLACKSLASH')
+    text = text.replace(r'\%', f'{math_code}_PERCENT')
+    text = re.sub(r"\n\s*%.*?(?=\n)", "", text)
+    text = re.sub(r"%.*?(?=\n)", "", text)
+    text = text.replace(f'{math_code}_PERCENT', r'\%')
+    text = text.replace(f'{math_code}_BLACKSLASH', r'\\')
 
     return text
 
@@ -449,10 +453,10 @@ def process_newcommands(latex):
         else:
             n_arguments = int(n_arguments)
         content = match.group(5)
-        latex = latex.replace(match.group(), f'XMATH_REPLACE{count}_NEWCOMMAND')
+        latex = latex.replace(match.group(), f'{math_code}_REPLACE{count}_NEWCOMMAND')
         full_newcommands.append(match.group(0))
         latex = replace_newcommand((name, n_arguments, content), latex)
         count += 1
     for i in range(count):
-        latex = latex.replace(f'XMATH_REPLACE{i}_NEWCOMMAND', full_newcommands[i])
+        latex = latex.replace(f'{math_code}_REPLACE{i}_NEWCOMMAND', full_newcommands[i])
     return latex
