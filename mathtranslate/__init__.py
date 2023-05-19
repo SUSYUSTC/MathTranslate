@@ -3,6 +3,7 @@ __author__ = "MathTranslate developers"
 
 import os
 ROOT = os.path.dirname(os.path.abspath(__file__))
+from . import cache
 from . import config
 from . import translate
 from . import tencentcloud

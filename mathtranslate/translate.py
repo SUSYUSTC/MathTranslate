@@ -1,6 +1,8 @@
 #!/usr/bin/env python
+from . import __version__
 from . import process_latex
 from . import process_text
+from . import cache
 from .process_latex import environment_list, command_list, format_list
 from .process_text import char_limit
 from .encoding import get_file_encoding
@@ -21,6 +23,7 @@ default_end = r'''
 
 class TextTranslator:
     def __init__(self, engine, language_to, language_from):
+        self.engine = engine
         if engine == 'google':
             import mtranslate as translator
         elif engine == 'tencent':
@@ -173,6 +176,12 @@ class LatexTranslator:
         return paragraphs_latex
 
     def translate_full_latex(self, latex_original, make_complete=True):
+        cache.remove_extra()
+        hash_key = cache.deterministic_hash((latex_original, __version__, self.translator.engine, self.translator.language_from, self.translator.language_to))
+        if cache.is_cached(hash_key):
+            print('Cache is found')
+        cache.create_cache(hash_key)
+
         self.nbad = 0
         self.ntotal = 0
 
@@ -205,7 +214,11 @@ class LatexTranslator:
         self.num = 0
         for latex_original_paragraph in tqdm.tqdm(latex_original_paragraphs):
             try:
-                latex_translated_paragraph = self.translate_paragraph_latex(latex_original_paragraph)
+                hash_key_paragraph = cache.deterministic_hash(latex_original_paragraph)
+                latex_translated_paragraph = cache.load_paragraph(hash_key, hash_key_paragraph)
+                if latex_translated_paragraph is None:
+                    latex_translated_paragraph = self.translate_paragraph_latex(latex_original_paragraph)
+                    cache.write_paragraph(hash_key, hash_key_paragraph, latex_translated_paragraph)
                 latex_translated_paragraphs.append(latex_translated_paragraph)
             except BaseException as e:
                 print('Error found in Parapragh', self.num)
