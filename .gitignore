@@ -7,3 +7,6 @@ TENCENT_ID
 TENCENT_KEY
 **DEFAULT**
 dist/*
+translate_log
+TEST
+mathtranslate/cache/*
