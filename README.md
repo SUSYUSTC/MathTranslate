@@ -66,10 +66,6 @@ We are now supporting all operating systems! Now you can install simply by `pip 
 ## Examples
 In the example directory, you can see `main.txt` which is the mathpix output of a part of `paper.pdf`. Run `translate_tex main.txt` and you will get the `main.tex` and `main.pdf`. `translated.png` is what you should expect to see in the `main.pdf`.
 
-## Known Issues
-1. If `\begin{env} \end{env}` is reset with `\newcommand` in latex, it will not be translated correctly.
-2. There is a small probability to get something like "XMATHX_1_2" or wrong formula during translation. The accuracy rate of Tencent translation is slightly lower than that of Google translation.
-
 ## Further developments
 1. Fix bugs in the latex translations.
 2. A more user-friendly interface.
