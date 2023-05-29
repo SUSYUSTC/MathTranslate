@@ -22,14 +22,14 @@ def get_dirs():
 
 def get_time(dir):
     timefile = os.path.join(dir, time_filename)
-    t = float(open(timefile).read())
+    t = float(open(timefile, encoding='utf-8').read())
     return t
 
 
 def write_time(dir):
     timefile = os.path.join(dir, time_filename)
     t = time.time()
-    print(t, file=open(timefile, "w"), end='')
+    print(t, file=open(timefile, "w", encoding='utf-8'), end='')
 
 
 def argmin(iterable):
@@ -68,11 +68,11 @@ def create_cache(hash_key):
 def load_paragraph(hash_key, hash_key_paragraph):
     filename = os.path.join(ROOT_CACHE, hash_key, hash_key_paragraph)
     if os.path.exists(filename):
-        return open(filename).read()
+        return open(filename, encoding='utf-8').read()
     else:
         return None
 
 
 def write_paragraph(hash_key, hash_key_paragraph, paragraph):
     filename = os.path.join(ROOT_CACHE, hash_key, hash_key_paragraph)
-    print(paragraph, file=open(filename, "w"), end='')
+    print(paragraph, file=open(filename, "w", encoding='utf-8'), end='')
