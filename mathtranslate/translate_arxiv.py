@@ -120,31 +120,36 @@ def main(args=None, require_updated=True):
         print('temporary directory', temp_dir)
         os.chdir(temp_dir)
         try:
-            download_source(number, download_path)
-        except BaseException:
-            print('Cannot download source, maybe network issue or wrong link')
-            return False
-        if is_pdf(download_path):
-            # case 1
-            success = False
-        else:
-            content = gzip.decompress(open(download_path, "rb").read())
-            with open(download_path, "wb") as f:
-                f.write(content)
             try:
-                # case 4
-                with tarfile.open(download_path, mode='r') as f:
-                    f.extractall()
-                os.remove(download_path)
-            except tarfile.ReadError:
-                # case 2 or 3
-                print('This is a pure text file')
-                shutil.move(download_path, 'main.tex')
-            success = translate_dir('.', options)
-            if success:
-                # case 3
-                os.chdir(cwd)
-                zipdir(temp_dir, output_path)
+                download_source(number, download_path)
+            except BaseException:
+                print('Cannot download source, maybe network issue or wrong link')
+                return False
+            if is_pdf(download_path):
+                # case 1
+                success = False
+            else:
+                content = gzip.decompress(open(download_path, "rb").read())
+                with open(download_path, "wb") as f:
+                    f.write(content)
+                try:
+                    # case 4
+                    with tarfile.open(download_path, mode='r') as f:
+                        f.extractall()
+                    os.remove(download_path)
+                except tarfile.ReadError:
+                    # case 2 or 3
+                    print('This is a pure text file')
+                    shutil.move(download_path, 'main.tex')
+                success = translate_dir('.', options)
+                if success:
+                    # case 3
+                    os.chdir(cwd)
+                    zipdir(temp_dir, output_path)
+        except BaseException as e:
+            # first go back otherwise tempfile trying to delete the current directory that python is running in
+            os.chdir(cwd)
+            raise e
 
     if success:
         print('zip file is saved to', output_path)
