@@ -54,11 +54,11 @@ def translate_dir(dir, options):
         content = process_latex.remove_tex_comments(content)
         complete = process_latex.is_complete(content)
         if complete:
+            print(path)
             process_file.merge_complete(tex)
             if no_bib and (tex in bbls):
                 process_file.add_bbl(tex)
             complete_texs.append(tex)
-            print(path)
     if len(complete_texs) == 0:
         return False
     for basename in texs:
@@ -119,11 +119,13 @@ def main(args=None, require_updated=True):
     with tempfile.TemporaryDirectory() as temp_dir:
         print('temporary directory', temp_dir)
         os.chdir(temp_dir)
+        # must os.chdir(cwd) whenever released!
         try:
             try:
                 download_source(number, download_path)
             except BaseException:
                 print('Cannot download source, maybe network issue or wrong link')
+                os.chdir(cwd)
                 return False
             if is_pdf(download_path):
                 # case 1

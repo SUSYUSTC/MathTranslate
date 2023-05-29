@@ -1,5 +1,6 @@
 import os
 import re
+from .process_latex import remove_tex_comments
 from .encoding import get_file_encoding
 
 
@@ -11,6 +12,7 @@ def merge_complete(tex):
     dirname = os.path.dirname(path)
     encoding = get_file_encoding(path)
     content = open(path, encoding=encoding).read()
+    content = remove_tex_comments(content)
     pattern_input = re.compile(r'\\input{(.*)}')
     while True:
         result = pattern_input.search(content)
@@ -21,6 +23,7 @@ def merge_complete(tex):
         filename = os.path.join(dirname, match)
         if os.path.exists(f'{filename}.tex'):
             filename = f'{filename}.tex'
+        print('filename', filename)
         assert os.path.exists(filename)
         encoding = get_file_encoding(filename)
         new_content = open(filename, encoding=encoding).read()
