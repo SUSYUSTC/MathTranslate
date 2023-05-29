@@ -22,7 +22,7 @@
 
 This is a project to provide translation of scientific papers with heavy math symbols from any language to any language while keeping the math symbols unchanged. In most translation softwares you wouldn't be able to keep equations and it would annoy you.
 
-The main work of this project is to translate LaTex files based on Google Translate in plain text, and finally realize the translation of pdf.
+The main work of this project is to translate LaTeX files based on Google Translate in plain text, and finally realize the translation of pdf.
 
 Here's an example of what you get finally.
 
