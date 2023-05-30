@@ -23,10 +23,11 @@ def merge_complete(tex):
         filename = os.path.join(dirname, match)
         if os.path.exists(f'{filename}.tex'):
             filename = f'{filename}.tex'
-        print('filename', filename)
+        print('merging', filename)
         assert os.path.exists(filename)
         encoding = get_file_encoding(filename)
         new_content = open(filename, encoding=encoding).read()
+        new_content = remove_tex_comments(new_content)
         content = content[:begin] + new_content + content[end:]
     print(content, file=open(path, "w", encoding='utf-8'))
 
