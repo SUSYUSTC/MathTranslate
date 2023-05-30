@@ -53,6 +53,7 @@
 `pip install --upgrade mathtranslate`
 
 ## 使用
+**所有操作均由命令行完成。 对于 Windows 用户，您可能需要以管理员身份运行 cmd 或 powershell 。**
 1. 准备或生成一个 tex 文件或项目。你可以用如下方式得到 tex 文件或项目：
     - 对于大多数 [arxiv](https://arxiv.org/) 论文， latex 源代码是公开的。对于 arxiv 论文，我们提供了一个简单 API 从 arxiv number 一键翻译整个项目。
     - 使用 [mathpix](https://mathpix.com/) 把你想翻译的 pdf 转成 latex 代码。mathpix 可以直接把 pdf 转换成 latex 代码或者截图后把图片转成代码，这两种方式我们都可以处理。不幸的是，mathpix 在使用超过一定数量之后需要收费，这里是[价格表](https://mathpix.com/pricing)。

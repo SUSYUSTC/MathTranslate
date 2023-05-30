@@ -53,6 +53,7 @@ We are now supporting all operating systems! Now you can install simply by `pip 
 `pip install --upgrade mathtranslate`
 
 ## Usage
+**All operations are done by command line. For Windows User you may need to run cmd or powershell as administrator.**
 1. Prepare or generate a tex file or project. You can obtain a tex file or project in the following ways:
     - For most [arxiv](https://arxiv.org/) papers, the latex source code is public, and we provide a simple API to translate the entire project with just one click using an arxiv number.
     - Use [mathpix](https://mathpix.com/) to convert the pdf you want to translate into latex code. Mathpix can directly convert pdf to latex code or convert a screenshot into code. Unfortunately, mathpix requires a fee after exceeding a certain amount of usage. Here is the [price list](https://mathpix.com/pricing).
