@@ -13,7 +13,7 @@ def merge_complete(tex):
     encoding = get_file_encoding(path)
     content = open(path, encoding=encoding).read()
     content = remove_tex_comments(content)
-    pattern_input = re.compile(r'\\input{(.*)}')
+    pattern_input = re.compile(r'\\input{(.*?)}')
     while True:
         result = pattern_input.search(content)
         if result is None:
