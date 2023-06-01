@@ -12,7 +12,7 @@ match_code_replace = math_code + r"_(\d+(?:_\d+)*)*"
 options = r"\[.*?\]"
 spaces = r"[ \t]*"
 
-get_pattern_brace = lambda index: rf"\{{((?:[^{{}}]++|(?{index}))++)\}}"
+get_pattern_brace = lambda index: rf"\{{((?:[^{{}}]*+|(?{index}))*+)\}}"
 get_pattern_env = lambda name: rf"\\begin{spaces}\{{({name})\}}{spaces}({options})?(.*?)\\end{spaces}\{{\1\}}"
 
 
