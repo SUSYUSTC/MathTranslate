@@ -75,7 +75,86 @@ def translate_dir(dir, options):
         translate_single_tex_file(file_path, file_path, options.engine, options.l_from, options.l_to, options.debug)
     return True
 
+def translate_dir_4ui(dir, config):
+    files = loop_files(dir)
+    texs = [f[0:-4] for f in files if f[-4:] == '.tex']
+    bibs = [f[0:-4] for f in files if f[-4:] == '.bib']
+    bbls = [f[0:-4] for f in files if f[-4:] == '.bbl']
+    no_bib = len(bibs) == 0
+    print('main tex files found:')
+    complete_texs = []
+    for tex in texs:
+        path = f'{tex}.tex'
+        input_encoding = get_file_encoding(path)
+        content = open(path, encoding=input_encoding).read()
+        content = process_latex.remove_tex_comments(content)
+        complete = process_latex.is_complete(content)
+        if complete:
+            print(path)
+            process_file.merge_complete(tex)
+            if no_bib and (tex in bbls):
+                process_file.add_bbl(tex)
+            complete_texs.append(tex)
+    if len(complete_texs) == 0:
+        return False
+    for basename in texs:
+        if basename in complete_texs:
+            continue
+        os.remove(f'{basename}.tex')
+    for basename in bbls:
+        os.remove(f'{basename}.bbl')
+    for filename in complete_texs:
+        print(f'Processing {filename}')
+        file_path = f'{filename}.tex'
+        translate_single_tex_file(file_path, file_path, config.default_engine_default, config.default_language_from_default, config.default_language_to_default, True)
+    return True
+def translate_arxiv_4ui(number,download_path,output_path, config):
+    success = True
+    cwd = os.getcwd()
+    with tempfile.TemporaryDirectory() as temp_dir:
+        print('temporary directory', temp_dir)
+        os.chdir(temp_dir)
+        # must os.chdir(cwd) whenever released!
+        try:
+            try:
+                download_source(number, download_path)
+            except BaseException:
+                print('Cannot download source, maybe network issue or wrong link')
+                os.chdir(cwd)
+                return False
+            if is_pdf(download_path):
+                # case 1
+                success = False
+            else:
+                content = gzip.decompress(open(download_path, "rb").read())
+                with open(download_path, "wb") as f:
+                    f.write(content)
+                try:
+                    # case 4
+                    with tarfile.open(download_path, mode='r') as f:
+                        f.extractall()
+                    os.remove(download_path)
+                except tarfile.ReadError:
+                    # case 2 or 3
+                    print('This is a pure text file')
+                    shutil.move(download_path, 'main.tex')
+                success = translate_dir_4ui('.', config)
+                if success:
+                    # case 3
+                    os.chdir(cwd)
+                    zipdir(temp_dir, output_path)
+        except BaseException as e:
+            # first go back otherwise tempfile trying to delete the current directory that python is running in
+            os.chdir(cwd)
+            raise e
 
+    if success:
+        print('zip file is saved to', output_path)
+        print('You can upload the zip file to overleaf to autocompile')
+        return True
+    else:
+        print('Source code is not available for arxiv', number)
+        return False
 def main(args=None, require_updated=True):
     '''
     There are four types of a downdload arxiv project

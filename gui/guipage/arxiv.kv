@@ -1,0 +1,106 @@
+<ArxivPage>:
+    canvas.before:
+        Color:
+            rgba: [1,1,1,1]
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    FloatLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            size_hint: (0.8,.1)
+            pos_hint: {"center_x":0.5,"y":0.75}
+            orientation: 'horizontal'
+            Label:
+                id: 'number'
+                text: '[ref="click"][b]Arxiv Number:[/b][/ref]'
+                color: kivy.utils.get_color_from_hex('#0081CF')
+                font_size: 30  # 24
+                markup: True
+            TextInput:
+                # size_hint: 0.2, 0.08
+                id: number_input
+                multiline: False
+                on_text: root.number_input()
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: (1,.1)
+            spacing: 50
+            padding: 50,0
+            pos_hint: {"center_x":0.5,"y":0.6}
+
+            Button:
+                text: "[b]Output Path Setting[/b]"
+                markup: True
+                on_press:root.arxiv_load()
+        Label:
+            id: prompt
+            text: 'No file loaded'
+            color: kivy.utils.get_color_from_hex('#000000')
+            font_size: 18  #18
+            pos_hint: {"center_x":0.5,"y":-0.1}
+            markup: True
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: (1,.1)
+            spacing: 50
+            padding: 50,0
+            pos_hint: {"center_x":0.5,"y":0.2}
+
+            Button:
+                text: "[b]Translate[/b]"
+                markup: True
+                on_press:root.translate()
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: (1,.1)
+            spacing: 50
+            padding: 50,0
+            pos_hint: {"center_x":0.5,"y":0.1}
+
+            Button:
+                text: "[b]Back to Index[/b]"
+                markup: True
+                on_press:root.back_index()
+
+<SavePathDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        spacing: 30
+
+        Label:
+            text: '[b]Choose Output File Path:[/b][/ref]'
+            color: kivy.utils.get_color_from_hex('#FFFFFF')
+            font_size: 20  # 24
+            markup: True
+            size_hint_y: .1
+
+        FileChooserListView:
+            size_hint_y: .6
+            id: filechooser
+            path: root.dirname
+            dirselect: True
+            filters: ['*', '.']
+            on_selection: file_output.text = root.get_translate_output(self.selection)
+
+        TextInput:
+            id: file_output
+            size_hint_y: .1
+            multiline: False
+            text: root.file
+
+        BoxLayout:
+            size_hint_y: .1
+            spacing: 30
+            Button:
+                text: "[b]Confirm[/b]"
+                on_release: root.load(file_output.text)
+                markup: True
+
+            Button:
+                text: "[b]Cancel[/b]"
+                on_release: root.cancel()
+                markup: True
