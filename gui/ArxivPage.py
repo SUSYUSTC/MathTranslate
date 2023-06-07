@@ -11,7 +11,7 @@ from Dialog import SavePathDialog, TranslationDialog
 class ArxivPage(BoxLayout):
     def __init__(self, **kwargs):
         self.output_path = None
-        self.number = None
+        self.number = ''
         try:
             importlib.import_module('mathtranslate')
             self.updated = True
@@ -34,10 +34,11 @@ class ArxivPage(BoxLayout):
 
     def arxiv_load(self):
         # dirname = os.path.dirname(self.file_path)
-        if self.number is None:
+        if self.number == '':
             return
-        filename = os.path.join(self.config.default_saving_dir, 'arxiv.zip')
-        content = SavePathDialog(load=self.arx_load, cancel=self.dismiss_popup, file=filename, dirname=self.config.default_saving_dir, default_filename='arxiv.zip')
+        default_filename = self.number
+        filename = os.path.join(self.config.default_saving_dir, default_filename)
+        content = SavePathDialog(load=self.arx_load, cancel=self.dismiss_popup, file=filename, dirname=self.config.default_saving_dir, default_filename=default_filename)
         self._popup = Popup(title="Output File Path Setting", content=content, size_hint=(.9, .9))
         self._popup.open()
 
