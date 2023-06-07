@@ -264,6 +264,7 @@ def process_mularg_command(latex, function, command_tuple):
             if i in args_to_translate:
                 content = function(content)
             contents.append(content)
+            group_index += 2
         return rf'\{command_name}' + ''.join([rf'{{{content}}}' for content in contents])
     return pattern.sub(process_function, latex)
 
