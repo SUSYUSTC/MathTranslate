@@ -1,19 +1,12 @@
 import importlib
 import os
 import re
-import sys
 
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
-from mathtranslate.translate_arxiv import translate_arxiv_4ui
-
 from Dialog import LoadDialog, SavePathDialog, TranslationDialog
-
-from mathtranslate.translate_tex import main
-
-from Translate import translate_4arxiv
 
 
 class ArxivPage(BoxLayout):
@@ -42,7 +35,7 @@ class ArxivPage(BoxLayout):
 
     def arxiv_load(self):
         # dirname = os.path.dirname(self.file_path)
-        filename = os.path.join(self.config.default_loading_dir_path, 'translate.tex')
+        filename = os.path.join(self.config.default_loading_dir_path, 'arxiv.zip')
         content = SavePathDialog(load=self.arx_load, cancel=self.dismiss_popup, file=filename, dirname=self.config.default_loading_dir_path)
         self._popup = Popup(title="Output File Path Setting", content=content, size_hint=(.9, .9))
         self._popup.open()
@@ -60,7 +53,7 @@ class ArxivPage(BoxLayout):
         if selection:
             selected = selection[0]
             if os.path.isdir(selected):
-                return os.path.join(selected, 'translate.tex')
+                return os.path.join(selected, 'arxiv.zip')
             else:
                 return selected
 
@@ -71,17 +64,16 @@ class ArxivPage(BoxLayout):
         else:
             self.ids.prompt.text = f'The Number of Arxiv is: {self.ids.number_input.text}\n Output File Path: {self.output_path}'
 
-
     def translate(self):
         # self.dismiss_popup()
         if not self.updated:
             self.dde.download_load()
             self.updated = True
         else:
-            from Translate import translate
+            from Translate import translate_arxiv
             import threading
             download_path = self.number.replace('/', '-')
-            thread = threading.Thread(target=translate_4arxiv, args=(self.number, download_path,self.output_path,self.config))
+            thread = threading.Thread(target=translate_arxiv, args=(self.number, self.output_path))
             thread.start()
 
             content = TranslationDialog(cancel=self.dismiss_popup)
@@ -104,5 +96,3 @@ class ArxivPage(BoxLayout):
             Clock.schedule_interval(check_finish, 0.1)
 
         print(download_path)
-
-
