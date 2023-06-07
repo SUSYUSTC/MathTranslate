@@ -23,11 +23,6 @@ def download_source(number, path):
 def download_source_with_cache(number, path):
     cache_dir = os.path.join(ROOT, 'cache_arxiv')
     os.makedirs(cache_dir, exist_ok=True)
-    '''
-    in cache_dir I have a last_downloaded_source and last_arxiv_number
-    I want to check if they exist and match the current number
-    if match I copy the last_download_source to path
-    '''
     cache_path = os.path.join(cache_dir, 'last_downloaded_source')
     cache_number_path = os.path.join(cache_dir, 'last_arxiv_number')
     if os.path.exists(cache_path) and os.path.exists(cache_number_path):
