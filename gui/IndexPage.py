@@ -24,8 +24,9 @@ class IndexPage(FloatLayout):
         if self.updated:
             import mathtranslate
             from mathtranslate.config import config
-            latest = mathtranslate.update.get_latest_version()
-            self.updated = mathtranslate.__version__ == latest
+            latest_version = mathtranslate.update.get_latest_version()
+            self.current_version = mathtranslate.__version__
+            self.updated = self.current_version == latest_version
             self.config = config
         super().__init__(**kwargs)
 
@@ -62,7 +63,7 @@ class IndexPage(FloatLayout):
             return
         dirname = os.path.dirname(self.file_path)
         filename = os.path.join(dirname, 'translate.tex')
-        content = SavePathDialog(load=self.trans_load, cancel=self.dismiss_popup, file=filename, dirname=dirname)
+        content = SavePathDialog(load=self.trans_load, cancel=self.dismiss_popup, file=filename, dirname=dirname, default_filename='translate.tex')
         self._popup = Popup(title="Output File Path Setting", content=content, size_hint=(.9, .9))
         self._popup.open()
 

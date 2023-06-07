@@ -33,13 +33,13 @@ class SavePathDialog(FloatLayout):
     load = ObjectProperty(None)
     cancel = ObjectProperty(None)
     dirname = ObjectProperty(None)
+    default_filename = ObjectProperty(None)
 
-    @staticmethod
-    def get_translate_output(selection):
+    def get_translate_output(self, selection):
         if selection:
             selected = selection[0]
             if os.path.isdir(selected):
-                return os.path.join(selected, 'translate.tex')
+                return os.path.join(selected, self.default_filename)
             else:
                 return selected
 

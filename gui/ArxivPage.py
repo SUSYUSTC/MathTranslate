@@ -1,12 +1,11 @@
 import importlib
 import os
 import re
-
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
-from Dialog import LoadDialog, SavePathDialog, TranslationDialog
+from Dialog import SavePathDialog, TranslationDialog
 
 
 class ArxivPage(BoxLayout):
@@ -35,18 +34,19 @@ class ArxivPage(BoxLayout):
 
     def arxiv_load(self):
         # dirname = os.path.dirname(self.file_path)
-        filename = os.path.join(self.config.default_loading_dir_path, 'arxiv.zip')
-        content = SavePathDialog(load=self.arx_load, cancel=self.dismiss_popup, file=filename, dirname=self.config.default_loading_dir_path)
+        if self.number is None:
+            return
+        filename = os.path.join(self.config.default_saving_dir, 'arxiv.zip')
+        content = SavePathDialog(load=self.arx_load, cancel=self.dismiss_popup, file=filename, dirname=self.config.default_saving_dir, default_filename='arxiv.zip')
         self._popup = Popup(title="Output File Path Setting", content=content, size_hint=(.9, .9))
         self._popup.open()
 
     def arx_load(self, output_path):
         self.dismiss_popup()
         self.output_path = output_path
-        if self.ids.number_input.text == '':
-            self.ids.prompt.text = f'Output File Path: {output_path}'
-        else:
-            self.ids.prompt.text = f'The Number of Arxiv is: {self.ids.number_input.text}\n Output File Path: {output_path}'
+        dirname = os.path.basename(output_path)
+        self.config.set_variable_4ui(self.config.default_saving_dir_path, dirname)
+        self.ids.prompt.text = f'The Number of Arxiv is: {self.ids.number_input.text}\n Output File Path: {output_path}'
 
     @staticmethod
     def get_translate_output(selection):
@@ -59,10 +59,10 @@ class ArxivPage(BoxLayout):
 
     def number_input(self):
         self.number = self.ids.number_input.text
-        if self.output_path == '':
-            self.ids.prompt.text = f'The Number of Arxiv is: {self.ids.number_input.text}'
+        if self.output_path is None:
+            self.ids.prompt.text = f'The Arxiv number is: {self.number}\n Output File not specified'
         else:
-            self.ids.prompt.text = f'The Number of Arxiv is: {self.ids.number_input.text}\n Output File Path: {self.output_path}'
+            self.ids.prompt.text = f'The Arxiv number is: {self.number}\n Output File Path: {self.output_path}'
 
     def translate(self):
         # self.dismiss_popup()
@@ -72,7 +72,6 @@ class ArxivPage(BoxLayout):
         else:
             from Translate import translate_arxiv
             import threading
-            download_path = self.number.replace('/', '-')
             thread = threading.Thread(target=translate_arxiv, args=(self.number, self.output_path))
             thread.start()
 

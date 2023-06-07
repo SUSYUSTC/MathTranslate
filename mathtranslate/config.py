@@ -7,6 +7,7 @@ class Config:
     default_language_from_path = 'DEFAULT_LANGUAGE_FROM'
     default_language_to_path = 'DEFAULT_LANGUAGE_TO'
     default_loading_dir_path = 'DEFAULT_LOADING_DIR'
+    default_saving_dir_path = 'DEFAULT_SAVING_DIR'
     tencent_secret_id_path = 'TENCENT_ID'
     tencent_secret_key_path = 'TENCENT_KEY'
 
@@ -14,6 +15,7 @@ class Config:
     default_language_from_default = 'en'
     default_language_to_default = 'zh-CN'
     default_loading_dir_default = os.path.expanduser("~")
+    default_saving_dir_default = os.path.expanduser("~")
     tencent_secret_id_default = None
     tencent_secret_key_default = None
 
@@ -50,6 +52,7 @@ class Config:
         self.default_language_from = self.read_variable(self.default_language_from_path, self.default_language_from_default)
         self.default_language_to = self.read_variable(self.default_language_to_path, self.default_language_to_default)
         self.default_loading_dir = self.read_variable(self.default_loading_dir_path, self.default_loading_dir_default)
+        self.default_saving_dir = self.read_variable(self.default_saving_dir_path, self.default_saving_dir_default)
         self.tencent_secret_id = self.read_variable(self.tencent_secret_id_path, self.tencent_secret_id_default)
         self.tencent_secret_key = self.read_variable(self.tencent_secret_key_path, self.tencent_secret_key_default)
 
