@@ -72,7 +72,7 @@ def translate_dir(dir, options):
     for filename in complete_texs:
         print(f'Processing {filename}')
         file_path = f'{filename}.tex'
-        translate_single_tex_file(file_path, file_path, options.engine, options.l_from, options.l_to, options.debug)
+        translate_single_tex_file(file_path, file_path, options.engine, options.l_from, options.l_to, options.debug, options.nocache)
     return True
 
 

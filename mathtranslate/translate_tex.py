@@ -39,7 +39,7 @@ def main(args=None, require_updated=True):
     else:
         output_path = options.o
 
-    translate_single_tex_file(input_path, output_path, options.engine, options.l_from, options.l_to, options.debug)
+    translate_single_tex_file(input_path, output_path, options.engine, options.l_from, options.l_to, options.debug, options.nocache)
     if options.compile:
         os.system(f'xelatex {output_path}')
     else:

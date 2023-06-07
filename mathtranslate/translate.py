@@ -175,12 +175,14 @@ class LatexTranslator:
         paragraphs_latex = [process_latex.recover_latex_objects(paragraph_text, objs)[0] for paragraph_text in paragraphs_text]
         return paragraphs_latex
 
-    def translate_full_latex(self, latex_original, make_complete=True):
-        cache.remove_extra()
-        hash_key = cache.deterministic_hash((latex_original, __version__, self.translator.engine, self.translator.language_from, self.translator.language_to))
-        if cache.is_cached(hash_key):
-            print('Cache is found')
-        cache.create_cache(hash_key)
+    def translate_full_latex(self, latex_original, make_complete=True, nocache=False):
+        add_cache = (not nocache)
+        if add_cache:
+            cache.remove_extra()
+            hash_key = cache.deterministic_hash((latex_original, __version__, self.translator.engine, self.translator.language_from, self.translator.language_to))
+            if cache.is_cached(hash_key):
+                print('Cache is found')
+            cache.create_cache(hash_key)
 
         self.nbad = 0
         self.ntotal = 0
@@ -214,11 +216,14 @@ class LatexTranslator:
         self.num = 0
         for latex_original_paragraph in tqdm.tqdm(latex_original_paragraphs):
             try:
-                hash_key_paragraph = cache.deterministic_hash(latex_original_paragraph)
-                latex_translated_paragraph = cache.load_paragraph(hash_key, hash_key_paragraph)
-                if latex_translated_paragraph is None:
+                if add_cache:
+                    hash_key_paragraph = cache.deterministic_hash(latex_original_paragraph)
+                    latex_translated_paragraph = cache.load_paragraph(hash_key, hash_key_paragraph)
+                    if latex_translated_paragraph is None:
+                        latex_translated_paragraph = self.translate_paragraph_latex(latex_original_paragraph)
+                        cache.write_paragraph(hash_key, hash_key_paragraph, latex_translated_paragraph)
+                else:
                     latex_translated_paragraph = self.translate_paragraph_latex(latex_original_paragraph)
-                    cache.write_paragraph(hash_key, hash_key_paragraph, latex_translated_paragraph)
                 latex_translated_paragraphs.append(latex_translated_paragraph)
             except BaseException as e:
                 print('Error found in Parapragh', self.num)
@@ -246,13 +251,13 @@ class LatexTranslator:
         return latex_translated
 
 
-def translate_single_tex_file(input_path, output_path, engine, l_from, l_to, debug):
+def translate_single_tex_file(input_path, output_path, engine, l_from, l_to, debug, nocache):
     text_translator = TextTranslator(engine, l_to, l_from)
     latex_translator = LatexTranslator(text_translator, debug)
 
     input_encoding = get_file_encoding(input_path)
     text_original = open(input_path, encoding=input_encoding).read()
-    text_final = latex_translator.translate_full_latex(text_original)
+    text_final = latex_translator.translate_full_latex(text_original, nocache=nocache)
     with open(output_path, "w", encoding='utf-8') as file:
         print(text_final, file=file)
     print('Number of translation called:', text_translator.number_of_calls)
