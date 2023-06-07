@@ -3,6 +3,7 @@ from . import process_latex
 from . import process_file
 from .translate import translate_single_tex_file
 from .encoding import get_file_encoding
+from . import ROOT
 import os
 import sys
 import shutil
@@ -17,6 +18,26 @@ def download_source(number, path):
     url = f'https://arxiv.org/e-print/{number}'
     print('trying to download from', url)
     urllib.request.urlretrieve(url, path)
+
+
+def download_source_with_cache(number, path):
+    cache_dir = os.path.join(ROOT, 'cache_arxiv')
+    os.makedirs(cache_dir, exist_ok=True)
+    '''
+    in cache_dir I have a last_downloaded_source and last_arxiv_number
+    I want to check if they exist and match the current number
+    if match I copy the last_download_source to path
+    '''
+    cache_path = os.path.join(cache_dir, 'last_downloaded_source')
+    cache_number_path = os.path.join(cache_dir, 'last_arxiv_number')
+    if os.path.exists(cache_path) and os.path.exists(cache_number_path):
+        last_number = open(cache_number_path).read()
+        if last_number == number:
+            shutil.copyfile(cache_path, path)
+            return
+    download_source(number, path)
+    shutil.copyfile(path, cache_path)
+    open(cache_number_path, 'w').write(number)
 
 
 def is_pdf(filename):
@@ -122,7 +143,7 @@ def main(args=None, require_updated=True):
         # must os.chdir(cwd) whenever released!
         try:
             try:
-                download_source(number, download_path)
+                download_source_with_cache(number, download_path)
             except BaseException:
                 print('Cannot download source, maybe network issue or wrong link')
                 os.chdir(cwd)
