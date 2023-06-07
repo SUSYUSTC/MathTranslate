@@ -1,5 +1,5 @@
 #!/bin/bash
-for filename in be caption brace accent
+for filename in be caption brace accent mularg
 do
     translate_tex ./input_${filename}.tex -o ./output_${filename}.tex --nocache
     diff ./output_${filename}.tex ./ref_${filename}.tex

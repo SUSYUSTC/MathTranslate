@@ -3,7 +3,7 @@ from . import __version__
 from . import process_latex
 from . import process_text
 from . import cache
-from .process_latex import environment_list, command_list, format_list
+from .process_latex import environment_list, command_list, format_list, mularg_command_list
 from .process_text import char_limit
 from .encoding import get_file_encoding
 import time
@@ -151,6 +151,8 @@ class LatexTranslator:
         for command_name in command_list:
             latex = process_latex.process_specific_command(latex, translate_function, command_name)
             latex = process_latex.process_specific_command(latex, translate_function, command_name + r'\*')
+        for command_group in mularg_command_list:
+            latex = process_latex.process_mularg_command(latex, translate_function, command_group)
         return latex
 
     def translate_text_in_paragraph_latex_and_leading_brace(self, latex_original_paragraph):

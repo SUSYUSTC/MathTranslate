@@ -71,8 +71,11 @@ assert len(set(special_character_forward.values())) == len(special_character_for
 
 environment_list = ['abstract', 'acknowledgments', 'itemize', 'enumerate', 'description', 'list', 'proof', 'quote']
 command_list = ['section', 'subsection', 'subsubsection', 'caption', 'subcaption', 'footnote', 'paragraph']
+mularg_command_list = [('textcolor', 2, (1, ))]
 format_list = ['textbf', 'textit', 'emph']
-math_list = ['equation', 'array', 'displaymath', 'align', 'multiple', 'gather', 'theorem']
+replace_newcommand_list = ['equation', 'array', 'displaymath', 'align', 'multiple', 'gather', 'theorem', 'textcolor'] + environment_list + command_list
+
+patterns_mularg_command = [get_pattern_command_full(name, n) for name, n, index in mularg_command_list]
 
 
 def variable_code(count):
@@ -127,8 +130,7 @@ def replace_latex_objects(text, brace=True, command_simple=True):
         pattern_env,  # \begin{xxx} \end{xxx}
         pattern_set1,
         pattern_set2,
-        pattern_command_full,  # \xxx[xxx]{xxx}
-    ]
+    ] + patterns_mularg_command + [pattern_command_full]  # \xxx[xxx]{xxx}
     if brace:
         latex_obj_regex.append(pattern_brace)
     if command_simple:
@@ -147,9 +149,6 @@ def replace_latex_objects(text, brace=True, command_simple=True):
 
     text = modify_text(text, modify_before)
     return text, replaced_objs
-
-
-t = 0
 
 
 def recover_latex_objects(text, replaced_objs, tolerate_error=False):
@@ -246,6 +245,26 @@ def process_specific_command(latex, function, command_name):
         content = match.group(4)
         processed_content = function(content)
         return rf'\{command_name}{options}{{{processed_content}}}'
+    return pattern.sub(process_function, latex)
+
+
+def process_mularg_command(latex, function, command_tuple):
+    # find all patterns of # \{command_name}[options]{content}
+    # then replace `content` by `function(content)`
+    command_name, nargs, args_to_translate = command_tuple
+    pattern = regex.compile(get_pattern_command_full(command_name, n=nargs), regex.DOTALL)
+
+    def process_function(match):
+        name = match.group(1)
+        assert re.match(command_name, name)
+        group_index = 2
+        contents = []
+        for i in range(nargs):
+            content = match.group(group_index + 1)
+            if i in args_to_translate:
+                content = function(content)
+            contents.append(content)
+        return rf'\{command_name}' + ''.join([rf'{{{content}}}' for content in contents])
     return pattern.sub(process_function, latex)
 
 
@@ -439,7 +458,7 @@ def process_newcommands(latex):
     for match in matches_all:
         need_replace = False
         content_all = match.group(0)
-        for special in math_list:
+        for special in replace_newcommand_list:
             if special in content_all:
                 need_replace = True
         if not need_replace:
