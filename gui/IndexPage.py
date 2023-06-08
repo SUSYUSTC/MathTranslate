@@ -1,13 +1,14 @@
-import importlib
 import os
-
+import re
+import threading
+import mathtranslate
+from mathtranslate.config import config
+from Translate import translate_texfile
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.popup import Popup
-
 from Dialog import LoadDialog, SavePathDialog, TranslationDialog
-import re
 
 
 class IndexPage(FloatLayout):
@@ -16,18 +17,10 @@ class IndexPage(FloatLayout):
         self.file_path = None
         self.output_path = None
         #self.dde = DownloadDialogEncapsulation()
-        try:
-            importlib.import_module('mathtranslate')
-            self.updated = True
-        except ImportError:
-            self.updated = False
-        if self.updated:
-            import mathtranslate
-            from mathtranslate.config import config
-            latest_version = mathtranslate.update.get_latest_version()
-            self.current_version = mathtranslate.__version__
-            self.updated = self.current_version == latest_version
-            self.config = config
+        latest_version = mathtranslate.update.get_latest_version()
+        self.current_version = mathtranslate.__version__
+        self.updated = self.current_version == latest_version
+        self.config = config
         super().__init__(**kwargs)
 
     def dismiss_popup(self):
@@ -79,9 +72,6 @@ class IndexPage(FloatLayout):
         #    self.dde.download_load()
         #    self.updated = True
         #else:
-        from Translate import translate_texfile
-        import threading
-
         thread = threading.Thread(target=translate_texfile, args=(self.file_path, self.output_path))
         thread.start()
 

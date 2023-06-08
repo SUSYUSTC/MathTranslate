@@ -1,6 +1,9 @@
-import importlib
 import os
 import re
+import threading
+import mathtranslate
+from Translate import translate_arxiv
+from mathtranslate.config import config
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.boxlayout import BoxLayout
@@ -12,17 +15,9 @@ class ArxivPage(BoxLayout):
     def __init__(self, **kwargs):
         self.output_path = None
         self.number = ''
-        try:
-            importlib.import_module('mathtranslate')
-            self.updated = True
-        except ImportError:
-            self.updated = False
-        if self.updated:
-            import mathtranslate
-            from mathtranslate.config import config
-            latest = mathtranslate.update.get_latest_version()
-            self.updated = mathtranslate.__version__ == latest
-            self.config = config
+        latest = mathtranslate.update.get_latest_version()
+        self.updated = mathtranslate.__version__ == latest
+        self.config = config
         super().__init__(**kwargs)
 
     def back_index(*args):
@@ -61,8 +56,6 @@ class ArxivPage(BoxLayout):
         #    self.dde.download_load()
         #    self.updated = True
         #else:
-        from Translate import translate_arxiv
-        import threading
         thread = threading.Thread(target=translate_arxiv, args=(self.number, self.output_path))
         thread.start()
 

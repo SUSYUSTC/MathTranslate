@@ -1,3 +1,4 @@
+from mathtranslate.config import config
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
@@ -76,7 +77,6 @@ class PreferencesPage(BoxLayout):
 
     def __init__(self, **kwargs):
         #Clock.schedule_interval(self.update_language_format, 1)
-        from mathtranslate.config import config
         self.config = config
         super().__init__(**kwargs)
         self.ids.language_setting.text = self.config.default_language_from + "=>" + self.config.default_language_to
