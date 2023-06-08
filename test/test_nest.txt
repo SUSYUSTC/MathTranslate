@@ -1,5 +1,0 @@
-translate1
-
-\caption{translate2 {translate3} $not translate$ \paragraph{translate4 $not translate$} }
-
-{ translate5 \caption{translate6 {translate7 {translate8 {translate9} } } $not translate$ \paragraph{translate10 $not translate$} }

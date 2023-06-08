@@ -10,3 +10,4 @@ dist/*
 translate_log
 TEST
 mathtranslate/cache/*
+mathtranslate/cache_arxiv/*
