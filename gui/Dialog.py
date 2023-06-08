@@ -19,6 +19,10 @@ class EngineDialog(FloatLayout):
     key = ObjectProperty(None)
 
 
+class TranslationDialog(FloatLayout):
+    cancel = ObjectProperty(None)
+
+
 class LanguageDialog(FloatLayout):
     language = ObjectProperty(None)
     load = ObjectProperty(None)
@@ -35,7 +39,7 @@ class SavePathDialog(FloatLayout):
     dirname = ObjectProperty(None)
     default_filename = ObjectProperty(None)
 
-    def get_translate_output(self, selection):
+    def action_choose_file(self, selection):
         if selection:
             selected = selection[0]
             if os.path.isdir(selected):
@@ -44,20 +48,14 @@ class SavePathDialog(FloatLayout):
                 return selected
 
 
-class TranslationDialog(FloatLayout):
-    cancel = ObjectProperty(None)
+Factory.register("LoadDialog", cls=LoadDialog)
+Factory.register("SavePathDialog", cls=SavePathDialog)
+Factory.register("LanguageDialog", cls=LanguageDialog)
+Factory.register("EngineDialog", cls=EngineDialog)
 
-
-class WaitingDialog(FloatLayout):
-    pass
-
-
+'''
 class DownloadDialog(BoxLayout):
     load = ObjectProperty(None)
-    cancel = ObjectProperty(None)
-
-
-class SuccessDialog(BoxLayout):
     cancel = ObjectProperty(None)
 
 
@@ -69,9 +67,6 @@ class DownloadDialogEncapsulation:
         content = DownloadDialog(load=self.download, cancel=self.download_dismiss_popup)
         self.down_popup = Popup(title="Update the MathTranslate", content=content, size_hint=(.4, .5))
         self.down_popup.open()
-
-    # def down_load(self):
-    #     self.down_popup()
 
     def download_dismiss_popup(self):
         self.down_popup.dismiss()
@@ -90,10 +85,5 @@ class DownloadDialogEncapsulation:
         self.success_popup.dismiss()
 
 
-Factory.register("SuccessDialog", cls=SuccessDialog)
 Factory.register("DownloadDialog", cls=DownloadDialog)
-Factory.register("WaitingDialog", cls=WaitingDialog)
-Factory.register("SavePathDialog", cls=SavePathDialog)
-Factory.register("LanguageDialog", cls=LanguageDialog)
-Factory.register("EngineDialog", cls=EngineDialog)
-Factory.register("LoadDialog", cls=LoadDialog)
+'''

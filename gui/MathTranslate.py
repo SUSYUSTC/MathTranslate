@@ -13,9 +13,9 @@ class MathTranslate(App):
     def build(self):
         self.title = "MathTranslate App"
 
-        self.load_kv("guipage/index.kv")
+        self.load_kv("guipage/page.kv")
         self.load_kv("guipage/preferencespage.kv")
-        self.load_kv("guipage/arxiv.kv")
+        self.load_kv("guipage/dialog.kv")
 
         self.screen_manager = ScreenManager()
         pages = {"Index_page": IndexPage(), "Preferences_page": PreferencesPage(), "Arxiv_page": ArxivPage()}

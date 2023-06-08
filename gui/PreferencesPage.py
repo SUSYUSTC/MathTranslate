@@ -2,7 +2,7 @@ from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 
-from Dialog import LanguageDialog, EngineDialog, DownloadDialogEncapsulation
+from Dialog import LanguageDialog, EngineDialog
 
 
 language_dict = {'Afrikaans': 'af',

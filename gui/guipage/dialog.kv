@@ -1,73 +1,3 @@
-
-<IndexPage>:
-    canvas.before:
-        Color:
-            rgba: [1,1,1,1]
-        Rectangle:
-            pos: self.pos
-            size: self.size
-
-    Label:
-        id: 'title_label'
-        text: '[ref="click"][b]MathTranslate[/b][/ref]'
-        color: kivy.utils.get_color_from_hex('#0081CF')
-        font_size: 72  # 24
-        pos_hint: {"center_x":0.5,"y":0.2}
-        markup: True
-        on_ref_press: root.page_go()
-
-    Label:
-        text: '[b]' + root.current_version + '[/b]'
-        color: kivy.utils.get_color_from_hex('#0081CF')
-        font_size: 45  #18
-        pos_hint: {"center_x":0.5,"y":0.0}
-        markup: True
-
-    Label:
-        id: loaded_filename
-        text: 'No file loaded'
-        color: kivy.utils.get_color_from_hex('#000000')
-        font_size: 18  #18
-        pos_hint: {"center_x":0.5,"y":-0.4}
-        markup: True
-
-    BoxLayout:
-        orientation: 'horizontal'
-        size_hint: (1,.1)
-        spacing: 50
-        padding: 100,0
-        pos_hint: {"center_x":0.5,"y":0.3}
-
-        Button:
-            id: load_button
-            text: "[b]Load Latex File[/b]"
-            markup: True
-            on_press: root.show_load()
-
-        Button:
-            id: preference_button
-            text: "[b]Preferences[/b]"
-            markup: True
-            on_release: root.page_preferences()
-    BoxLayout:
-        orientation: 'horizontal'
-        size_hint: (1,.1)
-        spacing: 50
-        padding: 100,0
-        pos_hint: {"center_x":0.5,"y":0.15}
-
-        Button:
-            id: translate_button
-            text: "[b]Translate[/b]"
-            markup: True
-            on_release: root.translate_load()
-
-        Button:
-            id: arxiv_translate_button
-            text: "[b]Arxiv Translate[/b]"
-            markup: True
-            on_release: root.page_arxiv()
-
 <LoadDialog>:
     BoxLayout:
         size: root.size
@@ -120,7 +50,7 @@
             path: root.dirname
             dirselect: True
             filters: ['*', '.']
-            on_selection: file_output.text = root.get_translate_output(self.selection)
+            on_selection: file_output.text = root.action_choose_file(self.selection)
 
         TextInput:
             id: file_output
@@ -180,23 +110,3 @@
             text: "[b]Cancel[/b]"
             on_release: root.cancel()
             markup: True
-
-<SuccessDialog>:
-    orientation: "vertical"
-    Label:
-        text: '[ref="click"][b]Successfully translated![/b][/ref]'
-        color: kivy.utils.get_color_from_hex('#FFFFFF')
-        font_size: 15 # 24
-        markup: True
-        size_hint_y: .2
-    Button:
-        size_hint_y: .05
-        text: "[b]Confirm[/b]"
-        on_release: root.cancel()
-        markup: True
-
-<WaitingDialog>
-    TextInput:
-        id: text_output
-        size_hint_y: .8
-        multiline: True

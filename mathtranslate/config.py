@@ -51,10 +51,14 @@ class Config:
         self.default_engine = self.read_variable(self.default_engine_path, self.default_engine_default)
         self.default_language_from = self.read_variable(self.default_language_from_path, self.default_language_from_default)
         self.default_language_to = self.read_variable(self.default_language_to_path, self.default_language_to_default)
-        self.default_loading_dir = self.read_variable(self.default_loading_dir_path, self.default_loading_dir_default)
-        self.default_saving_dir = self.read_variable(self.default_saving_dir_path, self.default_saving_dir_default)
         self.tencent_secret_id = self.read_variable(self.tencent_secret_id_path, self.tencent_secret_id_default)
         self.tencent_secret_key = self.read_variable(self.tencent_secret_key_path, self.tencent_secret_key_default)
+        self.default_loading_dir = self.read_variable(self.default_loading_dir_path, self.default_loading_dir_default)
+        self.default_saving_dir = self.read_variable(self.default_saving_dir_path, self.default_saving_dir_default)
+        if not os.path.exists(self.default_loading_dir):
+            self.default_loading_dir = self.default_loading_dir_default
+        if not os.path.exists(self.default_saving_dir):
+            self.default_saving_dir = self.default_saving_dir_default
 
 
 config = Config()

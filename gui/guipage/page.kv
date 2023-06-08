@@ -1,0 +1,135 @@
+<IndexPage>:
+    canvas.before:
+        Color:
+            rgba: [1,1,1,1]
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    Label:
+        id: 'title_label'
+        text: '[ref="click"][b]MathTranslate[/b][/ref]'
+        color: kivy.utils.get_color_from_hex('#0081CF')
+        font_size: 72  # 24
+        pos_hint: {"center_x":0.5,"y":0.2}
+        markup: True
+        # on_ref_press: root.page_go()
+
+    Label:
+        text: '[b]' + root.current_version + '[/b]'
+        color: kivy.utils.get_color_from_hex('#0081CF')
+        font_size: 45  #18
+        pos_hint: {"center_x":0.5,"y":0.0}
+        markup: True
+
+    Label:
+        id: loaded_filename
+        text: 'No file loaded'
+        color: kivy.utils.get_color_from_hex('#000000')
+        font_size: 18  #18
+        pos_hint: {"center_x":0.5,"y":-0.4}
+        markup: True
+
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: (1,.1)
+        spacing: 50
+        padding: 100,0
+        pos_hint: {"center_x":0.5,"y":0.3}
+
+        Button:
+            id: load_button
+            text: "[b]Load Latex File[/b]"
+            markup: True
+            on_press: root.open_dialog_select_texfile()
+
+        Button:
+            id: preference_button
+            text: "[b]Preferences[/b]"
+            markup: True
+            on_release: root.go_to_preference_page()
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: (1,.1)
+        spacing: 50
+        padding: 100,0
+        pos_hint: {"center_x":0.5,"y":0.15}
+
+        Button:
+            id: translate_button
+            text: "[b]Translate[/b]"
+            markup: True
+            on_release: root.open_dialog_select_savepath()
+
+        Button:
+            id: arxiv_translate_button
+            text: "[b]Arxiv Translate[/b]"
+            markup: True
+            on_release: root.go_to_arxiv_page()
+
+<ArxivPage>:
+    canvas.before:
+        Color:
+            rgba: [1,1,1,1]
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    FloatLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            size_hint: (0.8,.1)
+            pos_hint: {"center_x":0.5,"y":0.75}
+            orientation: 'horizontal'
+            Label:
+                id: 'number'
+                text: '[ref="click"][b]Arxiv Number:[/b][/ref]'
+                color: kivy.utils.get_color_from_hex('#0081CF')
+                font_size: 24  # 24
+                markup: True
+            TextInput:
+                id: set_number
+                multiline: False
+                on_text: root.set_number()
+                size_hint_y: 0.8
+                font_size: 24  # 24
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: (1,.1)
+            spacing: 50
+            padding: 50,0
+            pos_hint: {"center_x":0.5,"y":0.6}
+
+            Button:
+                text: "[b]Output Path Setting[/b]"
+                markup: True
+                on_press: root.open_dialog_select_savepath()
+        Label:
+            id: prompt
+            text: 'The Arxiv number is: \n Output File not specified'
+            color: kivy.utils.get_color_from_hex('#000000')
+            font_size: 18  #18
+            pos_hint: {"center_x":0.5,"y":-0.1}
+            markup: True
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: (1,.1)
+            spacing: 50
+            padding: 50,0
+            pos_hint: {"center_x":0.5,"y":0.2}
+
+            Button:
+                text: "[b]Translate[/b]"
+                markup: True
+                on_press:root.translate()
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: (1,.1)
+            spacing: 50
+            padding: 50,0
+            pos_hint: {"center_x":0.5,"y":0.1}
+
+            Button:
+                text: "[b]Back to Index[/b]"
+                markup: True
+                on_press:root.back_index()
