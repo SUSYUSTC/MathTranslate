@@ -160,10 +160,10 @@ def main(args=None, require_updated=True):
                     print('This is a pure text file')
                     shutil.move(download_path, 'main.tex')
                 success = translate_dir('.', options)
-                if success:
-                    # case 3
-                    os.chdir(cwd)
-                    zipdir(temp_dir, output_path)
+            os.chdir(cwd)
+            if success:
+                # case 3 or 4
+                zipdir(temp_dir, output_path)
         except BaseException as e:
             # first go back otherwise tempfile trying to delete the current directory that python is running in
             os.chdir(cwd)
