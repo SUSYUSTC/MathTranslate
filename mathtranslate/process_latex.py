@@ -69,7 +69,7 @@ special_character_forward = {
 special_character_backward = {special_character_forward[key]: key for key in special_character_forward}
 assert len(set(special_character_forward.values())) == len(special_character_forward)
 
-environment_list = ['abstract', 'acknowledgments', 'itemize', 'enumerate', 'description', 'list', 'proof', 'quote']
+environment_list = ['abstract', 'acknowledgments', 'itemize', 'enumerate', 'description', 'list', 'proof', 'quote', 'spacing']
 command_list = ['section', 'subsection', 'subsubsection', 'caption', 'subcaption', 'footnote', 'paragraph']
 mularg_command_list = [('textcolor', 2, (1, ))]
 format_list = ['textbf', 'textit', 'emph']
