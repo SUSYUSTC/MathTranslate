@@ -42,11 +42,13 @@ def add_bbl(tex):
     content = open(path_tex, encoding=encoding).read()
     encoding = get_file_encoding(path_bbl)
     bbl = open(path_bbl, encoding=encoding).read()
-    pattern_input = re.compile(r'\\bibliography\{(.*?)\}', re.DOTALL)
-    while True:
-        result = pattern_input.search(content)
-        if result is None:
-            break
-        begin, end = result.span()
-        content = content[:begin] + bbl + content[end:]
-    print(content, file=open(path_tex, "w", encoding='utf-8'))
+    patterns = [r'\\bibliography\{(.*?)\}', r'\\thebibliography\{(.*?)\}']
+    for pattern in patterns:
+        pattern_input = re.compile(pattern, re.DOTALL)
+        while True:
+            result = pattern_input.search(content)
+            if result is None:
+                break
+            begin, end = result.span()
+            content = content[:begin] + bbl + content[end:]
+        print(content, file=open(path_tex, "w", encoding='utf-8'))

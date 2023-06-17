@@ -190,6 +190,7 @@ class LatexTranslator:
         self.ntotal = 0
 
         latex_original = process_latex.remove_tex_comments(latex_original)
+        latex_original = latex_original.replace(r'\mathbf', r'\boldsymbol')
         latex_original = process_latex.process_newcommands(latex_original)
 
         latex_original = process_latex.replace_accent(latex_original)
@@ -201,7 +202,7 @@ class LatexTranslator:
             print('It is a full latex document')
             latex_original, tex_begin, tex_end = process_latex.split_latex_document(latex_original, r'\begin{document}', r'\end{document}')
             tex_begin = process_latex.remove_blank_lines(tex_begin)
-            tex_begin = process_latex.insert_macro(tex_begin, r'\usepackage{xeCJK}')
+            tex_begin = process_latex.insert_macro(tex_begin, '\\usepackage{xeCJK}\n\\usepackage{amsmath}')
         else:
             print('It is not a full latex document')
             latex_original = process_text.connect_paragraphs(latex_original)
