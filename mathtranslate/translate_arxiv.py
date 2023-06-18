@@ -112,6 +112,7 @@ def main(args=None, require_updated=True):
     parser = argparse.ArgumentParser()
     parser.add_argument("number", nargs='?', type=str, help='arxiv number')
     parser.add_argument("-o", type=str, help='output path')
+    parser.add_argument("--from_dir", action='store_true')
     parser.add_argument("--notranslate", action='store_true')  # debug option
     utils.add_arguments(parser)
     options = parser.parse_args(args)
@@ -134,31 +135,36 @@ def main(args=None, require_updated=True):
     cwd = os.getcwd()
     with tempfile.TemporaryDirectory() as temp_dir:
         print('temporary directory', temp_dir)
+        if options.from_dir:
+            shutil.copytree(number, temp_dir, dirs_exist_ok=True)
         os.chdir(temp_dir)
         # must os.chdir(cwd) whenever released!
         try:
-            try:
-                download_source_with_cache(number, download_path)
-            except BaseException:
-                print('Cannot download source, maybe network issue or wrong link')
-                os.chdir(cwd)
-                return False
-            if is_pdf(download_path):
-                # case 1
-                success = False
-            else:
-                content = gzip.decompress(open(download_path, "rb").read())
-                with open(download_path, "wb") as f:
-                    f.write(content)
+            if not options.from_dir:
                 try:
-                    # case 4
-                    with tarfile.open(download_path, mode='r') as f:
-                        f.extractall()
-                    os.remove(download_path)
-                except tarfile.ReadError:
-                    # case 2 or 3
-                    print('This is a pure text file')
-                    shutil.move(download_path, 'main.tex')
+                    download_source_with_cache(number, download_path)
+                except BaseException:
+                    print('Cannot download source, maybe network issue or wrong link')
+                    os.chdir(cwd)
+                    return False
+                if is_pdf(download_path):
+                    # case 1
+                    success = False
+                else:
+                    content = gzip.decompress(open(download_path, "rb").read())
+                    with open(download_path, "wb") as f:
+                        f.write(content)
+                    try:
+                        # case 4
+                        with tarfile.open(download_path, mode='r') as f:
+                            f.extractall()
+                        os.remove(download_path)
+                    except tarfile.ReadError:
+                        # case 2 or 3
+                        print('This is a pure text file')
+                        shutil.move(download_path, 'main.tex')
+                    success = translate_dir('.', options)
+            else:
                 success = translate_dir('.', options)
             os.chdir(cwd)
             if success:

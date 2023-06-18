@@ -191,6 +191,8 @@ class LatexTranslator:
 
         latex_original = process_latex.remove_tex_comments(latex_original)
         latex_original = latex_original.replace(r'\mathbf', r'\boldsymbol')
+        # \bibinfo {note} is not working in xelatex
+        latex_original = process_latex.remove_bibnote(latex_original)
         latex_original = process_latex.process_newcommands(latex_original)
 
         latex_original = process_latex.replace_accent(latex_original)

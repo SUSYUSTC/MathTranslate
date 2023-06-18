@@ -480,3 +480,15 @@ def process_newcommands(latex):
     for i in range(count):
         latex = latex.replace(f'{math_code}_REPLACE{i}_NEWCOMMAND', full_newcommands[i])
     return latex
+
+
+def remove_bibnote(latex):
+    pattern = regex.compile(get_pattern_command_full('bibinfo', 2), regex.DOTALL)
+
+    def replace_function(match):
+        assert match.group(1) == 'bibinfo'
+        if match.group(3) == 'note':
+            return ''
+        else:
+            return match.group(0)
+    return pattern.sub(replace_function, latex)
