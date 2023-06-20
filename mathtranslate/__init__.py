@@ -1,8 +1,11 @@
 __version__ = "2.4.4"
 __author__ = "MathTranslate developers"
-
 import os
-ROOT = os.path.dirname(os.path.abspath(__file__))
+from appdata import AppDataPaths
+app_paths = AppDataPaths('mathtranslate')
+app_dir = app_paths.app_data_path
+os.makedirs(app_dir, exist_ok=True)
+
 from . import cache
 from . import config
 from . import translate

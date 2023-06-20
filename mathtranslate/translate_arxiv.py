@@ -3,7 +3,7 @@ from . import process_latex
 from . import process_file
 from .translate import translate_single_tex_file
 from .encoding import get_file_encoding
-from . import ROOT
+from . import app_dir
 import os
 import sys
 import shutil
@@ -21,7 +21,7 @@ def download_source(number, path):
 
 
 def download_source_with_cache(number, path):
-    cache_dir = os.path.join(ROOT, 'cache_arxiv')
+    cache_dir = os.path.join(app_dir, 'cache_arxiv')
     os.makedirs(cache_dir, exist_ok=True)
     cache_path = os.path.join(cache_dir, 'last_downloaded_source')
     cache_number_path = os.path.join(cache_dir, 'last_arxiv_number')

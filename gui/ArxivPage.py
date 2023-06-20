@@ -29,6 +29,7 @@ class ArxivPage(BoxLayout):
             return
         default_filename = 'arxiv.zip'
         filename = os.path.join(self.config.default_saving_dir, default_filename)
+        print(self.config.default_saving_dir)
         content = SavePathDialog(load=self.select_savepath, cancel=self.dismiss_popup, file=filename, dirname=self.config.default_saving_dir, default_filename=default_filename)
         self._popup = Popup(title="Output File Path Setting", content=content, size_hint=(.9, .9))
         self._popup.open()
@@ -38,6 +39,7 @@ class ArxivPage(BoxLayout):
         self.output_path = output_path
         dirname = os.path.dirname(output_path)
         self.config.set_variable_4ui(self.config.default_saving_dir_path, dirname)
+        self.config.load()
         self.ids.prompt.text = f'The Number of Arxiv is: {self.ids.set_number.text}\n Output File Path: {output_path}'
 
     def set_number(self):

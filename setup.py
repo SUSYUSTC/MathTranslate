@@ -22,6 +22,7 @@ setuptools.setup(
                       "requests",
                       "regex",
                       "tqdm",
+                      "appdata"
                       ],
     classifiers=[
         "Programming Language :: Python :: 3",

@@ -1,5 +1,7 @@
 import os
-from . import ROOT
+from . import app_dir
+default_dir = os.path.join(app_dir, 'default')
+os.makedirs(default_dir, exist_ok=True)
 
 
 class Config:
@@ -20,11 +22,11 @@ class Config:
     tencent_secret_key_default = None
 
     math_code = 'XMATHX'
-    log_file = f'{ROOT}/translate_log'
+    log_file = f'{app_dir}/translate_log'
 
     def __init__(self):
         self.load()
-        if os.path.exists(f'{ROOT}/TEST'):
+        if os.path.exists(f'{app_dir}/TEST'):
             self.test_environment = True
             print('This is a test environment!')
         else:
@@ -32,8 +34,8 @@ class Config:
 
     @staticmethod
     def read_variable(path, default):
-        if os.path.exists(f'{ROOT}/{path}'):
-            return open(f'{ROOT}/{path}').read().replace(' ', '').replace('\n', '')
+        if os.path.exists(f'{default_dir}/{path}'):
+            return open(f'{default_dir}/{path}').read().replace(' ', '').replace('\n', '')
         else:
             return default
 
@@ -41,11 +43,11 @@ class Config:
     def set_variable(path, default):
         var = input().replace(' ', '').replace('\n', '')
         if var != '':
-            print(var, file=open(f'{ROOT}/{path}', 'w'))
+            print(var, file=open(f'{default_dir}/{path}', 'w'))
 
     @staticmethod
     def set_variable_4ui(path, var):
-        print(var, file=open(f'{ROOT}/{path}', 'w'))
+        print(var, file=open(f'{default_dir}/{path}', 'w'))
 
     def load(self):
         self.default_engine = self.read_variable(self.default_engine_path, self.default_engine_default)

@@ -35,6 +35,7 @@ jobs:
         pip install requests
         pip install regex
         pip install tqdm
+        pip install appdata
         pip install wheel
     - name: Build package
       run: python -m build -n

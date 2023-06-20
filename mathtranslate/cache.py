@@ -1,10 +1,10 @@
-from . import ROOT
+from . import app_dir
 import os
 import time
 import hashlib
 import shutil
-ROOT_CACHE = os.path.join(ROOT, 'cache')
-os.makedirs(ROOT_CACHE, exist_ok=True)
+cache_dir = os.path.join(app_dir, 'cache')
+os.makedirs(cache_dir, exist_ok=True)
 time_filename = 'update_time'
 max_cache = 5
 
@@ -16,7 +16,7 @@ def deterministic_hash(obj):
 
 
 def get_dirs():
-    dirs = [os.path.join(ROOT_CACHE, dir) for dir in os.listdir(ROOT_CACHE)]
+    dirs = [os.path.join(cache_dir, dir) for dir in os.listdir(cache_dir)]
     return dirs
 
 
@@ -55,18 +55,18 @@ def remove_extra():
 
 
 def is_cached(hash_key):
-    dir = os.path.join(ROOT_CACHE, hash_key)
+    dir = os.path.join(cache_dir, hash_key)
     return os.path.exists(dir)
 
 
 def create_cache(hash_key):
-    dir = os.path.join(ROOT_CACHE, hash_key)
+    dir = os.path.join(cache_dir, hash_key)
     os.makedirs(dir, exist_ok=True)
     write_time(dir)
 
 
 def load_paragraph(hash_key, hash_key_paragraph):
-    filename = os.path.join(ROOT_CACHE, hash_key, hash_key_paragraph)
+    filename = os.path.join(cache_dir, hash_key, hash_key_paragraph)
     if os.path.exists(filename):
         return open(filename, encoding='utf-8').read()
     else:
@@ -74,5 +74,5 @@ def load_paragraph(hash_key, hash_key_paragraph):
 
 
 def write_paragraph(hash_key, hash_key_paragraph, paragraph):
-    filename = os.path.join(ROOT_CACHE, hash_key, hash_key_paragraph)
+    filename = os.path.join(cache_dir, hash_key, hash_key_paragraph)
     print(paragraph, file=open(filename, "w", encoding='utf-8'), end='')
