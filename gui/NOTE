@@ -1,0 +1,9 @@
+Only works for some python + kivy versions
+Successful test on python 3.9 and kivy 2.2.0
+
+in kivy source code, comment line 609-611
+```
+console = ConsoleHandler()
+console.setFormatter(formatter)
+logger.addHandler(console)
+```
