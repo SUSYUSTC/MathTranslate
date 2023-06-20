@@ -5,8 +5,7 @@ from PreferencesPage import PreferencesPage
 from ArxivPage import ArxivPage
 from FilePage import FilePage
 import sys
-
-
+from kivy.resources import resource_add_path
 
 
 class MathTranslate(App):
@@ -36,5 +35,7 @@ class MathTranslate(App):
 
 
 if __name__ == "__main__":
+    if hasattr(sys, '_MEIPASS'):
+        resource_add_path(sys._MEIPASS)
     sys.setrecursionlimit(50000)
     MathTranslate().run()
