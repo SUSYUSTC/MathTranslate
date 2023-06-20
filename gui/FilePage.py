@@ -8,8 +8,8 @@ from kivy.uix.popup import Popup
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 
-from gui.Dialog import LoadDialog, SavePathDialog, TranslationDialog
-from gui.Translate import translate_texfile
+from Dialog import LoadDialog, SavePathDialog, TranslationDialog
+from Translate import translate_texfile
 from mathtranslate.config import config
 
 
