@@ -1,3 +1,5 @@
+Upgrade mathtranslate to latest before compilation
+
 Only works for some python + kivy versions
 Successful test on python 3.9 and kivy 2.2.0
 
