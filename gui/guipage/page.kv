@@ -16,10 +16,19 @@
         # on_ref_press: root.page_go()
 
     Label:
-        text: '[b]' + root.current_version + '[/b]'
+        id: 'current_version'
+        text: root.current_version_text
         color: kivy.utils.get_color_from_hex('#0081CF')
         font_size: 45  #18
         pos_hint: {"center_x":0.5,"y":0.0}
+        markup: True
+
+    Label:
+        id: 'latest_version'
+        text: root.latest_version_text
+        color: kivy.utils.get_color_from_hex('#0081CF')
+        font_size: 45  #18
+        pos_hint: {"center_x":0.5,"y":-0.1}
         markup: True
 
     BoxLayout:
@@ -130,7 +139,7 @@
                 id: loaded_filename
                 text: 'No file loaded'
                 color: kivy.utils.get_color_from_hex('#000000')
-                font_size: 30  #18
+                font_size: 18  #18
                 # pos_hint: {"center_x":0.5,"y":0.85}
                 markup: True
             Label:

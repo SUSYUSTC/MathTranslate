@@ -5,7 +5,6 @@ import threading
 from kivy.clock import Clock
 from kivy.uix.popup import Popup
 
-import mathtranslate
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 
@@ -18,10 +17,6 @@ class FilePage(BoxLayout):
     def __init__(self, **kwargs):
         self.file_path = None
         self.output_path = None
-        #self.dde = DownloadDialogEncapsulation()
-        latest_version = mathtranslate.update.get_latest_version()
-        self.current_version = mathtranslate.__version__
-        self.updated = self.current_version == latest_version
         self.config = config
         super().__init__(**kwargs)
 
@@ -56,20 +51,13 @@ class FilePage(BoxLayout):
     def select_savepath(self, output_path):
         self.dismiss_popup()
         self.output_path = output_path
-        self.translate()
-        # popup_wait.dismiss()
+        self.ids.output_path.text = f'Output file: {self.output_path}'
 
     def translate(self):
-        #self.dismiss_popup()
-        #if not self.updated:
-        #    self.dde.download_load()
-        #    self.updated = True
-        #else:
         thread = threading.Thread(target=translate_texfile, args=(self.file_path, self.output_path))
         thread.start()
 
         content = TranslationDialog(cancel=self.dismiss_popup)
-        self.ids.output_path.text = f'Output file: {self.output_path}'
         self._popup = Popup(title="Translation output", content=content, size_hint=(.9, .9))
         self._popup.open()
 
