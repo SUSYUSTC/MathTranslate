@@ -13,3 +13,4 @@ mathtranslate/cache/*
 mathtranslate/cache_arxiv/*
 test_latex/output*
 .idea/
+gui/*.spec
