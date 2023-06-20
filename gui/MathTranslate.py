@@ -6,6 +6,7 @@ from ArxivPage import ArxivPage
 from FilePage import FilePage
 import sys
 from kivy.resources import resource_add_path
+import win32timezone
 
 
 class MathTranslate(App):
