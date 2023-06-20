@@ -54,6 +54,9 @@ class FilePage(BoxLayout):
         self.ids.output_path.text = f'Output file: {self.output_path}'
 
     def translate(self):
+        # do not translate if input or output file not specified
+        if (self.file_path is None) or (self.output_path is None):
+            return
         thread = threading.Thread(target=translate_texfile, args=(self.file_path, self.output_path))
         thread.start()
 
@@ -64,6 +67,7 @@ class FilePage(BoxLayout):
         def update_progress(dt):
             # replace \r to original
             text = open(self.config.log_file, 'rb').read().decode('utf-8')
+            text = text.replace('\r\n', '\n')
             normal_text = re.sub('.*\r', '', text)
             content.ids.translation_output.text = normal_text
 

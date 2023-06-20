@@ -36,7 +36,7 @@ class ArxivPage(BoxLayout):
     def select_savepath(self, output_path):
         self.dismiss_popup()
         self.output_path = output_path
-        dirname = os.path.basename(output_path)
+        dirname = os.path.dirname(output_path)
         self.config.set_variable_4ui(self.config.default_saving_dir_path, dirname)
         self.ids.prompt.text = f'The Number of Arxiv is: {self.ids.set_number.text}\n Output File Path: {output_path}'
 
@@ -48,6 +48,9 @@ class ArxivPage(BoxLayout):
             self.ids.prompt.text = f'The Arxiv number is: {self.number}\n Output File Path: {self.output_path}'
 
     def translate(self):
+        # do not translate if arxiv number or output path not specified
+        if (self.number == '') or (self.output_path is None):
+            return
         thread = threading.Thread(target=translate_arxiv, args=(self.number, self.output_path))
         thread.start()
 
@@ -58,6 +61,7 @@ class ArxivPage(BoxLayout):
         def update_progress(dt):
             # replace \r to original
             text = open(self.config.log_file, 'rb').read().decode('utf-8')
+            text = text.replace('\r\n', '\n')
             normal_text = re.sub('.*\r', '', text)
             content.ids.translation_output.text = normal_text
 
