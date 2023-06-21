@@ -81,6 +81,7 @@ def main(args=None):
     parser.add_argument("-o", type=str, help='output path')
     utils.add_arguments(parser)
     parser.add_argument("--compile", action='store_true')
+    parser.add_argument("--overwrite", action='store_true')
     if args is None:
         options = parser.parse_args()
     else:
@@ -100,10 +101,11 @@ def main(args=None):
     if options.o is None:
         input_path_base, input_path_ext = os.path.splitext(input_path)
         if input_path_ext == '.tex':
-            print("The input file ends with .tex, it will be overwritten.")
-            print("If you confirm this action, please press enter, otherwise ctrl+C to cancel")
-            input()
-            print('OK I will continue')
+            if not options.overwrite:
+                print("The input file ends with .tex, it will be overwritten.")
+                print("If you confirm this action, please press enter, otherwise ctrl+C to cancel")
+                input()
+                print('OK I will continue')
         output_path = input_path_base + '.tex'
     else:
         output_path = options.o

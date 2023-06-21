@@ -1,6 +1,8 @@
 import re
 import regex
-from .config import math_code, test_environment
+from .config import config
+math_code = config.math_code
+test_environment = config.test_environment
 
 match_code = r"(" + math_code + r"_\d+(?:_\d+)*)"
 match_code_replace = math_code + r"_(\d+(?:_\d+)*)*"
@@ -252,7 +254,7 @@ def remove_blank_lines(text):
 
 
 def insert_macro(text, macro):
-    pattern = re.compile(r"\\documentclass(\[.*?\])?\{(.*?)\}", re.DOTALL)
+    pattern = re.compile(r"\\document(class|style)(\[.*?\])?\{(.*?)\}", re.DOTALL)
     match = pattern.search(text)
     assert match is not None
     start, end = match.span()
@@ -262,7 +264,7 @@ def insert_macro(text, macro):
 
 def is_complete(latex_code):
     # Define regular expressions for \documentclass, \begin{document}, and \end{document}
-    documentclass_pattern = re.compile(r"\\documentclass(\[.*?\])?\{.*?\}", re.DOTALL)
+    documentclass_pattern = re.compile(r"\\document(class|style)(\[.*?\])?\{.*?\}", re.DOTALL)
     begin_pattern = re.compile(r"\\begin\{document\}")
     end_pattern = re.compile(r"\\end\{document\}")
 

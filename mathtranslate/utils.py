@@ -1,6 +1,8 @@
-from . import config, __version__
+from . import __version__
+from .config import config
 from .update import get_latest_version
 import sys
+import re
 language_list = '''
 Afrikaans            af
 Irish                ga
@@ -67,6 +69,8 @@ Welsh                cy
 Indonesian           id
 Yiddish              yi
 '''
+
+split = lambda s: re.split(r'\s+', s)
 
 
 def check_update():

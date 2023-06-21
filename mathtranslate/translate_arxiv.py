@@ -1,14 +1,10 @@
-from . import main
+from . import main, utils
 import os
 import subprocess
 import sys
-import re
 import gzip
 import tarfile
 import urllib.request
-
-
-split = lambda s: re.split(r'\s+', s)
 
 
 def download_source(number):
@@ -32,9 +28,9 @@ def translate_dir():
     for filename in texs:
         print(f'Processing {filename}')
         if no_bib and (filename in bbls):
-            args = split(f'{filename}.tex -insertbbl {filename.bbl} --overwrite')
+            args = utils.split(f'{filename}.tex -insertbbl {filename.bbl} --overwrite')
         else:
-            args = split(f'{filename}.tex --overwrite')
+            args = utils.split(f'{filename}.tex --overwrite')
         main(args)
 
 

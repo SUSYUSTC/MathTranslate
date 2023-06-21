@@ -1,11 +1,11 @@
-from tencentcloud.common import credential, exception
-from tencentcloud.tmt.v20180321 import tmt_client
-from .config import tencent_secret_id, tencent_secret_key, math_code
+from .tencentcloud.common import credential, exception
+from .tencentcloud.tmt.v20180321 import tmt_client
+from .config import config
 
 
 class Translator:
     def __init__(self):
-        self.cred = credential.Credential(tencent_secret_id, tencent_secret_key)
+        self.cred = credential.Credential(config.tencent_secret_id, config.tencent_secret_key)
         self.client = tmt_client.TmtClient(self.cred, 'ap-shanghai')
 
     def is_error_request_frequency(self, e: exception.TencentCloudSDKException):
@@ -21,6 +21,6 @@ class Translator:
         request.Target = language_to
         request.SourceText = text
         request.ProjectId = 0
-        request.UntranslatedText = math_code
+        request.UntranslatedText = config.math_code
         result = self.client.TextTranslate(request)
         return result.TargetText

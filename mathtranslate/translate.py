@@ -17,9 +17,10 @@ default_end = r'''
 '''
 
 # TODO: add more here
-environment_list = ['abstract', 'acknowledgments', 'itemize', 'enumerate', 'description', 'list', 'proof']
+environment_list = ['abstract', 'acknowledgments', 'itemize', 'enumerate', 'description', 'list', 'proof', 'quote']
 command_list = ['section', 'subsection', 'subsubsection', 'caption', 'subcaption', 'footnote', 'paragraph']
 format_list = ['textbf', 'textit', 'emph']
+
 
 class TextTranslator:
     def __init__(self, engine, language_to, language_from):
@@ -183,7 +184,6 @@ class LatexTranslator:
             print('It is a full latex document')
             latex_original, tex_begin, tex_end = process_latex.split_latex_document(latex_original, r'\begin{document}', r'\end{document}')
             tex_begin = process_latex.remove_blank_lines(tex_begin)
-            # TODO: change xeCJK to be compatible with other compiler & languages
             tex_begin = process_latex.insert_macro(tex_begin, r'\usepackage{xeCJK}')
         else:
             print('It is not a full latex document')
