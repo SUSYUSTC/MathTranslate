@@ -1,5 +1,5 @@
 __version__ = "2.1.12"
-__author__ = "Jiace Sun"
+__author__ = "MathTranslate developers"
 
 import os
 ROOT = os.path.dirname(os.path.abspath(__file__))

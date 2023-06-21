@@ -1,6 +1,8 @@
 import re
 import regex
-from .config import math_code, test_environment
+from .config import config
+math_code = config.math_code
+test_environment = config.test_environment
 
 match_code = r"(" + math_code + r"_\d+(?:_\d+)*)"
 match_code_replace = math_code + r"_(\d+(?:_\d+)*)*"

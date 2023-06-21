@@ -71,8 +71,7 @@ Yiddish              yi
 
 def main():
     import mathtranslate
-    from mathtranslate import config
-    from mathtranslate.config import default_engine, default_language_from, default_language_to
+    from mathtranslate.config import config
     from mathtranslate.encoding import get_file_encoding
     from mathtranslate.translate import TextTranslator, LatexTranslator
     from mathtranslate.update import get_latest_version
@@ -89,9 +88,9 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("file", nargs='?', type=str, help='input file')
     parser.add_argument("-o", type=str, help='output path')
-    parser.add_argument("-engine", default=default_engine, help=f'translation engine, avaiable options include google and tencent. default is {default_engine}')
-    parser.add_argument("-from", default=default_language_from, dest='l_from', help=f'language from, default is {default_language_from}')
-    parser.add_argument("-to", default=default_language_to, dest='l_to', help=f'language to, default is {default_language_to}')
+    parser.add_argument("-engine", default=config.default_engine, help=f'translation engine, avaiable options include google and tencent. default is {config.default_engine}')
+    parser.add_argument("-from", default=config.default_language_from, dest='l_from', help=f'language from, default is {config.default_language_from}')
+    parser.add_argument("-to", default=config.default_language_to, dest='l_to', help=f'language to, default is {config.default_language_to}')
     parser.add_argument("--list", action='store_true', help='list codes for languages')
     parser.add_argument("--setkey", action='store_true', help='set id and key of tencent translator')
     parser.add_argument("--setdefault", action='store_true', help='set default translation engine and languages')
@@ -134,7 +133,7 @@ def main():
         sys.exit()
 
     if options.engine == 'tencent':
-        haskey = (mathtranslate.config.tencent_secret_id is not None) and (mathtranslate.config.tencent_secret_key is not None)
+        haskey = (config.tencent_secret_id is not None) and (config.tencent_secret_key is not None)
         if not haskey:
             print('Please save ID and key for tencent translation api first by')
             print('translate_tex --setkey')
