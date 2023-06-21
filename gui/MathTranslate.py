@@ -3,7 +3,10 @@ from kivy.uix.screenmanager import Screen, ScreenManager
 from IndexPage import IndexPage
 from PreferencesPage import PreferencesPage
 from ArxivPage import ArxivPage
+from FilePage import FilePage
 import sys
+
+
 
 
 class MathTranslate(App):
@@ -16,9 +19,11 @@ class MathTranslate(App):
         self.load_kv("guipage/page.kv")
         self.load_kv("guipage/preferencespage.kv")
         self.load_kv("guipage/dialog.kv")
+        self.load_kv("guipage/file.kv")
 
         self.screen_manager = ScreenManager()
-        pages = {"Index_page": IndexPage(), "Preferences_page": PreferencesPage(), "Arxiv_page": ArxivPage()}
+        pages = {"Index_page": IndexPage(), "Preferences_page": PreferencesPage(), "Arxiv_page": ArxivPage(),
+                 "File_page": FilePage()}
 
         for item, page in pages.items():
             self.default_page = page

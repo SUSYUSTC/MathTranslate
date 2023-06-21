@@ -16,38 +16,21 @@
         # on_ref_press: root.page_go()
 
     Label:
-        text: '[b]' + root.current_version + '[/b]'
+        id: 'current_version'
+        text: root.current_version_text
         color: kivy.utils.get_color_from_hex('#0081CF')
         font_size: 45  #18
         pos_hint: {"center_x":0.5,"y":0.0}
         markup: True
 
     Label:
-        id: loaded_filename
-        text: 'No file loaded'
-        color: kivy.utils.get_color_from_hex('#000000')
-        font_size: 18  #18
-        pos_hint: {"center_x":0.5,"y":-0.4}
+        id: 'latest_version'
+        text: root.latest_version_text
+        color: kivy.utils.get_color_from_hex('#0081CF')
+        font_size: 45  #18
+        pos_hint: {"center_x":0.5,"y":-0.1}
         markup: True
 
-    BoxLayout:
-        orientation: 'horizontal'
-        size_hint: (1,.1)
-        spacing: 50
-        padding: 100,0
-        pos_hint: {"center_x":0.5,"y":0.3}
-
-        Button:
-            id: load_button
-            text: "[b]Load Latex File[/b]"
-            markup: True
-            on_press: root.open_dialog_select_texfile()
-
-        Button:
-            id: preference_button
-            text: "[b]Preferences[/b]"
-            markup: True
-            on_release: root.go_to_preference_page()
     BoxLayout:
         orientation: 'horizontal'
         size_hint: (1,.1)
@@ -56,16 +39,22 @@
         pos_hint: {"center_x":0.5,"y":0.15}
 
         Button:
-            id: translate_button
-            text: "[b]Translate[/b]"
+            id: file_translate_button
+            text: "[b]File Translate[/b]"
             markup: True
-            on_release: root.open_dialog_select_savepath()
+            on_release: root.go_to_file_page()
 
         Button:
             id: arxiv_translate_button
             text: "[b]Arxiv Translate[/b]"
             markup: True
             on_release: root.go_to_arxiv_page()
+
+        Button:
+            id: preference_button
+            text: "[b]Preferences[/b]"
+            markup: True
+            on_release: root.go_to_preference_page()
 
 <ArxivPage>:
     canvas.before:
@@ -122,6 +111,69 @@
                 text: "[b]Translate[/b]"
                 markup: True
                 on_press:root.translate()
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: (1,.1)
+            spacing: 50
+            padding: 50,0
+            pos_hint: {"center_x":0.5,"y":0.1}
+
+            Button:
+                text: "[b]Back to Index[/b]"
+                markup: True
+                on_press:root.back_index()
+<FilePage>:
+    canvas.before:
+        Color:
+            rgba: [1,1,1,1]
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    FloatLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            size_hint: (0.8,.1)
+            pos_hint: {"center_x":0.5,"y":0.75}
+            orientation: 'vertical'
+            Label:
+                id: loaded_filename
+                text: 'No file loaded'
+                color: kivy.utils.get_color_from_hex('#000000')
+                font_size: 18  #18
+                # pos_hint: {"center_x":0.5,"y":0.85}
+                markup: True
+            Label:
+                id: output_path
+                text: '\n Output File not specified'
+                color: kivy.utils.get_color_from_hex('#000000')
+                font_size: 18  #18
+                # pos_hint: {"center_x":0.5,"y":0.75}
+                markup: True
+
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: (1,.1)
+            spacing: 50
+            padding: 50,0
+            pos_hint: {"center_x":0.5,"y":0.3}
+
+            Button:
+                text: "[b]Load Latex File[/b]"
+                markup: True
+                on_press: root.open_dialog_select_texfile()
+
+            Button:
+                text: "[b]Output Path Setting[/b]"
+                markup: True
+                on_press: root.open_dialog_select_savepath()
+
+            Button:
+                text: "[b]Translate[/b]"
+                markup: True
+                on_press:root.translate()
+
+
         BoxLayout:
             orientation: 'horizontal'
             size_hint: (1,.1)

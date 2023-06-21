@@ -1,19 +1,22 @@
 import os
 import re
 import threading
-from Translate import translate_arxiv
-from mathtranslate.config import config
-from kivy.app import App
+
 from kivy.clock import Clock
-from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
-from Dialog import SavePathDialog, TranslationDialog
+
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+
+from gui.Dialog import LoadDialog, SavePathDialog, TranslationDialog
+from gui.Translate import translate_texfile
+from mathtranslate.config import config
 
 
-class ArxivPage(BoxLayout):
+class FilePage(BoxLayout):
     def __init__(self, **kwargs):
+        self.file_path = None
         self.output_path = None
-        self.number = ''
         self.config = config
         super().__init__(**kwargs)
 
@@ -21,34 +24,37 @@ class ArxivPage(BoxLayout):
         App.get_running_app().screen_manager.current = "Index_page"
         App.get_running_app().screen_manager.transition.direction = 'right'
 
-    def dismiss_popup(self):
-        self._popup.dismiss()
+    def open_dialog_select_texfile(self):
+        cwdir = self.config.default_loading_dir
+        content = LoadDialog(load=self.select_texfile, cancel=self.dismiss_popup, cwdir=cwdir)
+        self._popup = Popup(title="Load Latex File", content=content, size_hint=(.9, .9))
+        self._popup.open()
+
+    def select_texfile(self, path, filename):
+        self.file_path = filename
+        basename = os.path.basename(filename)
+        dirname = os.path.dirname(filename)
+        self.ids.loaded_filename.text = f'Loaded file: {basename}'
+        self.config.set_variable_4ui(self.config.default_loading_dir_path, dirname)
+        self.config.load()
+        self.dismiss_popup()
 
     def open_dialog_select_savepath(self):
-        if self.number == '':
+        if self.file_path is None:
             return
-        default_filename = 'arxiv.zip'
-        filename = os.path.join(self.config.default_saving_dir, default_filename)
-        content = SavePathDialog(load=self.select_savepath, cancel=self.dismiss_popup, file=filename, dirname=self.config.default_saving_dir, default_filename=default_filename)
+        dirname = os.path.dirname(self.file_path)
+        filename = os.path.join(dirname, 'translate.tex')
+        content = SavePathDialog(load=self.select_savepath, cancel=self.dismiss_popup, file=filename, dirname=dirname, default_filename='translate.tex')
         self._popup = Popup(title="Output File Path Setting", content=content, size_hint=(.9, .9))
         self._popup.open()
 
     def select_savepath(self, output_path):
         self.dismiss_popup()
         self.output_path = output_path
-        dirname = os.path.basename(output_path)
-        self.config.set_variable_4ui(self.config.default_saving_dir_path, dirname)
-        self.ids.prompt.text = f'The Number of Arxiv is: {self.ids.set_number.text}\n Output File Path: {output_path}'
-
-    def set_number(self):
-        self.number = self.ids.set_number.text
-        if self.output_path is None:
-            self.ids.prompt.text = f'The Arxiv number is: {self.number}\n Output File not specified'
-        else:
-            self.ids.prompt.text = f'The Arxiv number is: {self.number}\n Output File Path: {self.output_path}'
+        self.ids.output_path.text = f'Output file: {self.output_path}'
 
     def translate(self):
-        thread = threading.Thread(target=translate_arxiv, args=(self.number, self.output_path))
+        thread = threading.Thread(target=translate_texfile, args=(self.file_path, self.output_path))
         thread.start()
 
         content = TranslationDialog(cancel=self.dismiss_popup)
@@ -69,3 +75,6 @@ class ArxivPage(BoxLayout):
                 content.ids.translation_button_close.text = 'Close'
 
         Clock.schedule_interval(check_finish, 0.1)
+
+    def dismiss_popup(self):
+        self._popup.dismiss()
