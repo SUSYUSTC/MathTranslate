@@ -36,7 +36,7 @@ Here's an example of what you get finally.
 </p>
 
 ## Releases
-### June 24, 2023
+### Jun 24, 2023
 We release the [GUI](https://github.com/SUSYUSTC/MathTranslate/releases) for MathTranslate. You can open it directly without installing anything!
 ### May 14, 2023
 We add the ability to directly translate the whole arxiv project with just one click.
@@ -55,7 +55,7 @@ To use the tencent engine, you need to register the [Tencent Translation API](ht
 Simply [download](https://github.com/SUSYUSTC/MathTranslate/releases) the corresponding executable file and you are done!
 
 ## GUI usage
-You can set the translation engine and language in the **Preference** page.
+You can set the translation engine and language in the **Preference** page. If you plan to use the tencent engine, you need to set the secret ID and secret Key.
 1. If you want to translate a paper on [arxiv](https://arxiv.org/), you can use the **Arxiv Translate** function. After the translation you will get a `.zip` file, which contains the latex source code of the arxiv project.
 2. If you want to translate a paper only with pdf version, you can first convert the pdf to latex by [mathpix](https://mathpix.com/) and then use the **File Translate** function. Unfortunately, mathpix requires a fee after exceeding a certain amount of usage. Here is the [price list](https://mathpix.com/pricing). After the translation you will get a `.tex` file which contains the corresponding latex file.
 
