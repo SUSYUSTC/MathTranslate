@@ -23,7 +23,7 @@ def translate_texfile(file_path, output_path):
     # redirect standard output to log file
     with Redirect(config.log_file):
         args = [file_path, '-o', output_path]
-        main_texfile(args=args)
+        main_texfile(args=args, require_updated=False)
         print()
         print('finished')
         print('file saved to', output_path)
@@ -33,7 +33,7 @@ def translate_arxiv(number, output_path):
     # redirect standard output to log file
     with Redirect(config.log_file):
         args = [number, '-o', output_path]
-        main_arxiv(args=args)
+        main_arxiv(args=args, require_updated=False)
         print()
         print('finished')
         print('file saved to', output_path)
