@@ -20,6 +20,8 @@
 
 <p align="center"> <a href="README.md">English</a> |  简体中文 </p>
 
+[GUI 下载地址](https://github.com/SUSYUSTC/MathTranslate/releases)
+
 大多数翻译软件无法很好地处理论文中的数学公式，许多科研工作者为此饱受困扰。本项目可以将含有大量数学公式的科研论文在任何语言之间翻译。
 
 该项目的主要工作是基于纯文字的谷歌翻译实现 LaTeX 文件的翻译，从而最终实现 pdf 的翻译。
