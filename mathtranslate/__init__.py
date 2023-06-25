@@ -1,4 +1,4 @@
-__version__ = "2.4.4"
+__version__ = "3.0.0"
 __author__ = "MathTranslate developers"
 import os
 from appdata import AppDataPaths
