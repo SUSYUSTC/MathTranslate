@@ -55,6 +55,10 @@ To use the tencent engine, you need to register the [Tencent Translation API](ht
 Simply [download](https://github.com/SUSYUSTC/MathTranslate/releases) the corresponding executable file and you are done!
 
 ## GUI usage
+<p float="left">
+<img src="https://github.com/SUSYUSTC/MathTranslate/assets/30529122/c086c830-28cd-4c09-86ff-c00a9bd906f3" width="600">
+</p>
+
 You can set the translation engine and language in the **Preference** page. If you plan to use the tencent engine, you need to set the secret ID and secret Key.
 1. If you want to translate a paper on [arxiv](https://arxiv.org/), you can use the **Arxiv Translate** function. You just need to enter the arxiv number of the paper you want to translate (for example 2205.15510). After the translation you will get a `.zip` file, which contains the latex source code of the arxiv project.
 2. If you want to translate a paper only with pdf version, you can first convert the pdf to latex by [mathpix](https://mathpix.com/) and then use the **File Translate** function. Unfortunately, mathpix requires a fee after exceeding a certain amount of usage. Here is the [price list](https://mathpix.com/pricing). After the translation you will get a `.tex` file which contains the corresponding latex file.
