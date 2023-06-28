@@ -1,3 +1,5 @@
+from kivy.config import Config
+Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 import setkivyfont
 from kivy.app import App
 from kivy.uix.screenmanager import Screen, ScreenManager

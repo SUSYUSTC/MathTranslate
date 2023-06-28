@@ -91,6 +91,10 @@ class PreferencesPage(BoxLayout):
         if text == 'tencent':
             id = self.config.tencent_secret_id
             key = self.config.tencent_secret_key
+            if id is None:
+                id = ''
+            if key is None:
+                key = ''
             content = EngineDialog(load=self.engine_load, cancel=self.dismiss_popup, id=id, key=key)
             self._popup = Popup(title="Engine API Setting", content=content, size_hint=(.9, .9))
             self._popup.open()
