@@ -53,10 +53,10 @@
 默认引擎是google翻译，中国大陆IP无法访问。 对于中国大陆IP的用户，我们提供腾讯引擎，虽然其准确性不如google引擎。
 使用腾讯引擎需要注册 [腾讯翻译API](https://cloud.tencent.com/product/tmt)账号。 注册后，您可以在[腾讯控制台](https://console.cloud.tencent.com/cam/capi)中获取secret ID（不是APP ID！）和secret Key。 腾讯翻译是据我们所知除谷歌翻译外免费额度最高的翻译API，每月有500万字符免费额度，且不手动充值情况下不会扣费（即不用担心误操作）。
 
-## GUI 安装
+## GUI 安装 （目前尚不稳定）
 只需[下载](https://github.com/SUSYUSTC/MathTranslate/releases)相应的可执行文件即可完成！
 
-## GUI 使用
+## GUI 使用 （目前尚不稳定）
 <p float="left">
 <img src="https://github.com/SUSYUSTC/MathTranslate/assets/30529122/c086c830-28cd-4c09-86ff-c00a9bd906f3" width="600">
 </p>
