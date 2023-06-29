@@ -21,8 +21,6 @@ default_begin = r'''
 default_end = r'''
 \end{document}
 '''
-
-THREADS=8
 class TextTranslator:
     def __init__(self, engine, language_to, language_from):
         self.engine = engine
@@ -62,7 +60,7 @@ class TextTranslator:
 
 
 class LatexTranslator:
-    def __init__(self, translator: TextTranslator, debug=False):
+    def __init__(self, translator: TextTranslator, debug=False, threads=8):
         self.translator = translator
         self.debug = debug
         if self.debug:
@@ -70,6 +68,7 @@ class LatexTranslator:
             self.f_new = open("text_new", "w", encoding='utf-8')
             self.f_obj = open("objs", "w", encoding='utf-8')
         self.q = queue.Queue()
+        self.threads = threads
 
     def close(self):
         if self.debug:
@@ -87,7 +86,7 @@ class LatexTranslator:
         part = ''
         
         #Starting threadpool, producer consumer model of 8 workers, using Queue
-        for _ in range(THREADS):
+        for _ in range(self.threads):
             t = threading.Thread(target=self.worker)
             t.daemon = True
             t.start()
@@ -275,9 +274,9 @@ class LatexTranslator:
         return latex_translated
 
 
-def translate_single_tex_file(input_path, output_path, engine, l_from, l_to, debug, nocache):
+def translate_single_tex_file(input_path, output_path, engine, l_from, l_to, debug, nocache, threads):
     text_translator = TextTranslator(engine, l_to, l_from)
-    latex_translator = LatexTranslator(text_translator, debug)
+    latex_translator = LatexTranslator(text_translator, debug, threads)
 
     input_encoding = get_file_encoding(input_path)
     text_original = open(input_path, encoding=input_encoding).read()
