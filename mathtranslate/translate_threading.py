@@ -1,12 +1,8 @@
 #!/usr/bin/env python
 import queue
-from . import __version__
 from . import process_latex
 from . import process_text
-from . import cache
-from .process_latex import environment_list, command_list, format_list, mularg_command_list
 from .process_text import char_limit
-from .encoding import get_file_encoding
 import time
 import re
 import tqdm
@@ -21,11 +17,14 @@ default_begin = r'''
 default_end = r'''
 \end{document}
 '''
-
 THREADS=8
+# TODO: add more here
+environment_list = ['abstract', 'acknowledgments', 'itemize', 'enumerate', 'description', 'list', 'proof']
+command_list = ['section', 'subsection', 'subsubsection', 'caption', 'subcaption', 'footnote', 'paragraph']
+format_list = ['textbf', 'textit', 'emph']
+
 class TextTranslator:
     def __init__(self, engine, language_to, language_from):
-        self.engine = engine
         if engine == 'google':
             import mtranslate as translator
         elif engine == 'tencent':
@@ -82,7 +81,7 @@ class LatexTranslator:
         So here we split translation by '\n' if it's going to exceed limit
         '''
         lines = text.split('\n')
-        parts_translated = []
+        self.parts_translated = []
         part = ''
         
         #Starting threadpool, producer consumer model of 8 workers, using Queue
@@ -90,7 +89,7 @@ class LatexTranslator:
             t = threading.Thread(target=self.worker)
             t.daemon = True
             t.start()
-        
+            
         for line in lines:
             if len(line) >= char_limit:
                 assert False, "one line is too long"
@@ -102,9 +101,10 @@ class LatexTranslator:
         self.q.put(part)
         
         self.q.join()
-        text_translated = '\n'.join(parts_translated)
+    
+        text_translated = '\n'.join(self.parts_translated)
         return text_translated.replace("\u200b", "")
-
+    
     def worker(self):
         while True:
             part = self.q.get()
@@ -113,8 +113,7 @@ class LatexTranslator:
             self.parts_translated.append(self.translator.translate(part))
             self.q.task_done()
 
-
-    def _translate_text_in_paragraph_latex(self, latex_original_paragraph):
+    def translate_text_in_paragraph_latex(self, latex_original_paragraph):
         '''
         Translate a latex paragraph, which means that it could contain latex objects
         '''
@@ -148,13 +147,6 @@ class LatexTranslator:
         self.ntotal += ntotal
         return latex_translated_paragraph
 
-    def translate_text_in_paragraph_latex(self, paragraph):
-        splited_paragraphs, seps = process_latex.split_by_command(paragraph)
-        result = ''
-        for split, sep in zip(splited_paragraphs, seps):
-            result += self._translate_text_in_paragraph_latex(split) + ' ' + sep + ' '
-        return result
-
     def translate_latex_all_objects(self, latex):
         '''
         Terminology:
@@ -169,8 +161,6 @@ class LatexTranslator:
         for command_name in command_list:
             latex = process_latex.process_specific_command(latex, translate_function, command_name)
             latex = process_latex.process_specific_command(latex, translate_function, command_name + r'\*')
-        for command_group in mularg_command_list:
-            latex = process_latex.process_mularg_command(latex, translate_function, command_group)
         return latex
 
     def translate_text_in_paragraph_latex_and_leading_brace(self, latex_original_paragraph):
@@ -195,22 +185,11 @@ class LatexTranslator:
         paragraphs_latex = [process_latex.recover_latex_objects(paragraph_text, objs)[0] for paragraph_text in paragraphs_text]
         return paragraphs_latex
 
-    def translate_full_latex(self, latex_original, make_complete=True, nocache=False):
-        add_cache = (not nocache)
-        if add_cache:
-            cache.remove_extra()
-            hash_key = cache.deterministic_hash((latex_original, __version__, self.translator.engine, self.translator.language_from, self.translator.language_to))
-            if cache.is_cached(hash_key):
-                print('Cache is found')
-            cache.create_cache(hash_key)
-
+    def translate_full_latex(self, latex_original):
         self.nbad = 0
         self.ntotal = 0
 
         latex_original = process_latex.remove_tex_comments(latex_original)
-        latex_original = latex_original.replace(r'\mathbf', r'\boldsymbol')
-        # \bibinfo {note} is not working in xelatex
-        latex_original = process_latex.remove_bibnote(latex_original)
         latex_original = process_latex.process_newcommands(latex_original)
 
         latex_original = process_latex.replace_accent(latex_original)
@@ -222,16 +201,13 @@ class LatexTranslator:
             print('It is a full latex document')
             latex_original, tex_begin, tex_end = process_latex.split_latex_document(latex_original, r'\begin{document}', r'\end{document}')
             tex_begin = process_latex.remove_blank_lines(tex_begin)
-            tex_begin = process_latex.insert_macro(tex_begin, '\\usepackage{xeCJK}\n\\usepackage{amsmath}')
+            # TODO: change xeCJK to be compatible with other compiler & languages
+            tex_begin = process_latex.insert_macro(tex_begin, r'\usepackage{xeCJK}')
         else:
             print('It is not a full latex document')
             latex_original = process_text.connect_paragraphs(latex_original)
-            if make_complete:
-                tex_begin = default_begin
-                tex_end = default_end
-            else:
-                tex_begin = ''
-                tex_end = ''
+            tex_begin = default_begin
+            tex_end = default_end
 
         latex_original_paragraphs = self.split_latex_to_paragraphs(latex_original)
         latex_translated_paragraphs = []
@@ -239,14 +215,7 @@ class LatexTranslator:
         self.num = 0
         for latex_original_paragraph in tqdm.tqdm(latex_original_paragraphs):
             try:
-                if add_cache:
-                    hash_key_paragraph = cache.deterministic_hash(latex_original_paragraph)
-                    latex_translated_paragraph = cache.load_paragraph(hash_key, hash_key_paragraph)
-                    if latex_translated_paragraph is None:
-                        latex_translated_paragraph = self.translate_paragraph_latex(latex_original_paragraph)
-                        cache.write_paragraph(hash_key, hash_key_paragraph, latex_translated_paragraph)
-                else:
-                    latex_translated_paragraph = self.translate_paragraph_latex(latex_original_paragraph)
+                latex_translated_paragraph = self.translate_paragraph_latex(latex_original_paragraph)
                 latex_translated_paragraphs.append(latex_translated_paragraph)
             except BaseException as e:
                 print('Error found in Parapragh', self.num)
@@ -263,7 +232,6 @@ class LatexTranslator:
         self.num = 'title'
         latex_translated = process_latex.process_specific_command(latex_translated, self.translate_text_in_paragraph_latex, 'title')
 
-        latex_translated = latex_translated.replace('%', '\\%')
         latex_translated = process_latex.recover_special(latex_translated)
         latex_translated = process_latex.recover_accent(latex_translated)
 
@@ -272,17 +240,3 @@ class LatexTranslator:
         print(self.ntotal - self.nbad, '/',  self.ntotal, 'latex object are correctly translated')
 
         return latex_translated
-
-
-def translate_single_tex_file(input_path, output_path, engine, l_from, l_to, debug, nocache):
-    text_translator = TextTranslator(engine, l_to, l_from)
-    latex_translator = LatexTranslator(text_translator, debug)
-
-    input_encoding = get_file_encoding(input_path)
-    text_original = open(input_path, encoding=input_encoding).read()
-    text_final = latex_translator.translate_full_latex(text_original, nocache=nocache)
-    with open(output_path, "w", encoding='utf-8') as file:
-        print(text_final, file=file)
-    print('Number of translation called:', text_translator.number_of_calls)
-    print('Total characters translated:', text_translator.tot_char)
-    print('saved to', output_path)
