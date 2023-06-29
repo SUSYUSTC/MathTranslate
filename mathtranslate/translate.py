@@ -56,6 +56,7 @@ class TextTranslator:
                 else:
                     raise e
         self.number_of_calls += 1
+        print(self.number_of_calls)
         self.tot_char += len(text)
         return result
 
@@ -82,7 +83,7 @@ class LatexTranslator:
         So here we split translation by '\n' if it's going to exceed limit
         '''
         lines = text.split('\n')
-        parts_translated = []
+        self.parts_translated = []
         part = ''
         
         #Starting threadpool, producer consumer model of 8 workers, using Queue
@@ -102,7 +103,7 @@ class LatexTranslator:
         self.q.put(part)
         
         self.q.join()
-        text_translated = '\n'.join(parts_translated)
+        text_translated = '\n'.join(self.parts_translated)
         return text_translated.replace("\u200b", "")
 
     def worker(self):
