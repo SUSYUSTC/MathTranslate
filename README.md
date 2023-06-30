@@ -9,8 +9,11 @@
   <a href="./LICENSE">
     <img src="https://img.shields.io/badge/license-Apache%202.0-yellow.svg?logo=apache"/>
   </a>
+  <!-- GUI -->
+  <a href="https://github.com/SUSYUSTC/MathTranslate/releases">
+    <img src="https://img.shields.io/badge/GUI-v3.0.2-red.svg?logo=apache"/>
+  </a>
 </p>
-
 
 <p align="center">
   <a href="https://github.com/SUSYUSTC/MathTranslate">
@@ -20,7 +23,7 @@
 
 <p align="center"> English | <a href="README.zh.md"> 简体中文 </a></p>
 
-[GUI download address](https://github.com/SUSYUSTC/MathTranslate/releases)
+<p align="center"> [GUI download address](https://github.com/SUSYUSTC/MathTranslate/releases) </a></p>
 
 This is a project to provide translation of scientific papers with heavy math symbols from any language to any language while keeping the math symbols unchanged. In most translation softwares you wouldn't be able to keep equations and it would annoy you.
 
@@ -55,10 +58,10 @@ We are now supporting all operating systems! Now you can install simply by `pip 
 The default engine is google translate, which can not be accessed with IP in mainland China. For users with IP in mainland China we provide the tencent engine, although its accuracy is not as good as the google engine. 
 To use the tencent engine, you need to register the [Tencent Translation API](https://cloud.tencent.com/product/tmt) account. After registration, you can get the secret ID (not the APP ID!) and secret Key in [Tencent Console](https://console.cloud.tencent.com/cam/capi). Tencent Translate is the translation API with the highest free quota to our knowledge besides Google Translate, with a free quota of 5 million characters per month, and no fee will be deducted if there is no manual recharge (that is, there is no need to worry about misuse).
 
-## GUI Installation (not stable now)
+## GUI Installation
 Simply [download](https://github.com/SUSYUSTC/MathTranslate/releases) the corresponding executable file and you are done!
 
-## GUI usage (not stable now)
+## GUI usage
 <p float="left">
 <img src="https://github.com/SUSYUSTC/MathTranslate/assets/30529122/c086c830-28cd-4c09-86ff-c00a9bd906f3" width="600">
 </p>
