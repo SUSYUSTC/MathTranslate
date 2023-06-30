@@ -23,7 +23,7 @@
 
 <p align="center"> English | <a href="README.zh.md"> 简体中文 </a></p>
 
-<p align="center"> [GUI download address](https://github.com/SUSYUSTC/MathTranslate/releases) </a></p>
+<p align="center"> <a href="https://github.com/SUSYUSTC/MathTranslate/releases"> GUI download address </a></p>
 
 This is a project to provide translation of scientific papers with heavy math symbols from any language to any language while keeping the math symbols unchanged. In most translation softwares you wouldn't be able to keep equations and it would annoy you.
 
