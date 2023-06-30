@@ -67,10 +67,10 @@
 </p>
 
 您可以在 **Preferences** 页面中设置翻译引擎和语言。如果您打算使用腾讯翻译引擎，您需要设置 secret ID 和secret Key。
-1. 如果您想翻译[arxiv](https://arxiv.org/)上的论文，可以使用 **Arxiv Translate** 功能。 您只需输入要翻译的论文的 arxiv 编号（例如2205.15510）。翻译后你会得到一个 `.zip` 文件，其中包含 arxiv 项目的 latex 源代码。
+1. 如果您想翻译 [arxiv](https://arxiv.org/) 上的论文，可以使用 **Arxiv Translate** 功能。 您只需输入要翻译的论文的 arxiv 编号（例如2205.15510）。翻译后你会得到一个 `.zip` 文件，其中包含 arxiv 项目的 latex 源代码。
 2. 如果您想翻译仅有 pdf 版本的论文，可以先通过 [mathpix](https://mathpix.com/) 将 pdf 转换为 latex ，然后使用**文件翻译**功能。 不幸的是， mathpix 在超过一定的使用量后需要付费。 这是[价格表](https://mathpix.com/pricing)。 翻译后您将得到一个 `.tex` 文件。
 
-翻译完成后，您可以将 `.zip`（New Project - Upload Project）或 `.tex`（New Project - Blank Project 然后复制粘贴）文件上传到 [overleaf](https://www.overleaf) .com/project）在线编译。
+翻译完成后，您可以将 `.zip`（New Project - Upload Project）或 `.tex`（New Project - Blank Project 然后复制粘贴）文件上传到 [overleaf](https://www.overleaf.com/project)在线编译。
 **注意：您必须在 `Menu - Compiler` 中将编译器设置为 XeLatex**。
 
 ## 命令行安装
