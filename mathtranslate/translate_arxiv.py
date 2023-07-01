@@ -1,9 +1,9 @@
-from . import utils
-from . import process_latex
-from . import process_file
-from .translate import translate_single_tex_file
-from .encoding import get_file_encoding
-from . import app_dir
+from mathtranslate import utils
+from mathtranslate import process_latex
+from mathtranslate import process_file
+from mathtranslate.translate import translate_single_tex_file
+from mathtranslate.encoding import get_file_encoding
+from mathtranslate import app_dir
 import os
 import sys
 import shutil
@@ -88,7 +88,7 @@ def translate_dir(dir, options):
     for filename in complete_texs:
         print(f'Processing {filename}')
         file_path = f'{filename}.tex'
-        translate_single_tex_file(file_path, file_path, options.engine, options.l_from, options.l_to, options.debug, options.nocache)
+        translate_single_tex_file(file_path, file_path, options.engine, options.l_from, options.l_to, options.debug, options.nocache, options.threads)
     return True
 
 
@@ -104,7 +104,7 @@ def main(args=None, require_updated=True):
     return True if the translation is successful (last two cases)
 
     to call this function from python,
-    you can do e.g `arxiv(['2205.15510', '-o', 'output.zip'])`
+    you can do e.g `main(['2205.15510', '-o', 'output.zip'])`
     '''
     utils.check_update(require_updated=require_updated)
 

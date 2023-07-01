@@ -91,7 +91,7 @@ def add_arguments(parser):
     parser.add_argument("--list", action='store_true', help='list codes for languages')
     parser.add_argument("--setkey", action='store_true', help='set id and key of tencent translator')
     parser.add_argument("--setdefault", action='store_true', help='set default translation engine and languages')
-    parser.add_argument("--threads", default=config.default_threads, type=int, help=f'threads for tencent translation, default is {config.default_threads}')
+    parser.add_argument("--threads", default=config.default_threads, type=int, help='threads for tencent translation, default is auto')
     parser.add_argument("--debug", action='store_true', help='Debug options for developers')
     parser.add_argument("--nocache", action='store_true', help='Debug options for developers')
     
@@ -139,13 +139,14 @@ def process_options(options):
         if options.l_to == 'zh-CN':
             options.l_to = 'zh'
 
-    if options.threads < 1:
-        print('threads must be a natural number (>=1)')
+    if options.threads < 0:
+        print('threads must be a non-zero integer number (>=0 where 0 means auto)')
         sys.exit()
 
     print("Start")
     print('engine', options.engine)
     print('language from', options.l_from)
     print('language to', options.l_to)
-    print('threads', options.threads)
+    
+    print('threads', options.threads if options.threads > 0 else 'auto')
     print()

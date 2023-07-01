@@ -21,7 +21,7 @@ class Config:
     tencent_secret_id_default = None
     tencent_secret_key_default = None
 
-    default_threads = 8
+    default_threads = 0
 
     math_code = 'XMATHX'
     log_file = f'{app_dir}/translate_log'

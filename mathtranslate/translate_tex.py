@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import os
 import sys
-from . import utils
-from .translate import translate_single_tex_file
+from mathtranslate import utils
+from mathtranslate.translate import translate_single_tex_file
 
 
 def main(args=None, require_updated=True):
