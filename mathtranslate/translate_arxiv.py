@@ -1,9 +1,9 @@
-from mathtranslate import utils
-from mathtranslate import process_latex
-from mathtranslate import process_file
-from mathtranslate.translate import translate_single_tex_file
-from mathtranslate.encoding import get_file_encoding
-from mathtranslate import app_dir
+from . import utils
+from . import process_latex
+from . import process_file
+from .translate import translate_single_tex_file
+from .encoding import get_file_encoding
+from . import app_dir
 import os
 import sys
 import shutil
