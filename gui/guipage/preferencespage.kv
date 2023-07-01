@@ -1,4 +1,9 @@
-
+<CLabel@Label>:
+    color: kivy.utils.get_color_from_hex('#0081CF')
+    font_size: 30  # 24
+    size_hint: 0.6, 0.08
+    markup: True
+    text_size: self.size
 
 <PreferencesPage>:
     canvas.before:
@@ -10,42 +15,57 @@
 
     FloatLayout:
 
-        Label:
+
+        CLabel:
             id: 'engine'
             text: '[ref="click"][b]Translation Engine:[/b][/ref]'
-            color: kivy.utils.get_color_from_hex('#0081CF')
-            font_size: 30  # 24
-            pos_hint: {"y":0.35,"x":-0.2}
-            markup: True
-
-        Label:
+            pos_hint: {'x':0.15,'y': 0.8}
+        CLabel:
             id: 'language'
             text: '[ref="click"][b]Language Setting:[/b][/ref]'
-            color: kivy.utils.get_color_from_hex('#0081CF')
-            font_size: 30  # 24
-            pos_hint: {"y":0,"x":-0.2}
+            pos_hint: {'x':0.15,'y': 0.6}
+
+        CLabel:
+            text: '[ref="click"][b]Number of Threads:[/b][/ref]'
+            pos_hint: {'x':0.15,'y': 0.4}
+        Label:
+            text: 'Significantly increase translation speed but stability has not been fully tested.\nNote: Tencent Engine is incompatible with multithreading.\n0 means auto adjust\n显著提升翻译速度但尚未测试稳定性，与腾讯翻译不兼容\n0表示自动调整'
+            pos_hint: {'x':0.15,'y': 0.23}
+            color: kivy.utils.get_color_from_hex('#FF0000')
+            size_hint: 0.8,0.2
             markup: True
-
-
+            text_size: self.size
         Spinner:
+            id: 'engine_setting'
             size_hint: 0.2, 0.08
-
-            pos_hint: {'x':0.7, 'top': 0.9}
+            pos_hint: {'x':0.7, 'y': 0.8}
             text: root.config.default_engine
             values: 'google', 'tencent'
             on_text:
                 root.engine_show_load(self.text)
-
         BoxLayout:
             orientation: 'horizontal'
             size_hint: 0.2, 0.08
-            pos_hint: {'x':0.7, 'top': 0.55}
+            pos_hint: {'x':0.7, 'y': 0.6}
 
             Button:
                 id: language_setting
                 text: " "
                 markup: True
                 on_press:root.language_show_load()
+
+        TextInput:
+            id: 'thread_num'
+            size_hint: 0.2, 0.08
+            pos_hint: {'x':0.7, 'y': 0.4}
+            multiline: False
+            text: ""
+            readonly: True
+            input_filter: 'int'
+            on_text:
+                root.update_threads(self.text)   
+            text_size: self.size 
+            font_size: 30  # 24
 
         BoxLayout:
             orientation: 'horizontal'

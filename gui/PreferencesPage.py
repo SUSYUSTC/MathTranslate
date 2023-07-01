@@ -98,6 +98,13 @@ class PreferencesPage(BoxLayout):
             content = EngineDialog(load=self.engine_load, cancel=self.dismiss_popup, id=id, key=key)
             self._popup = Popup(title="Engine API Setting", content=content, size_hint=(.9, .9))
             self._popup.open()
+            
+            self.ids["'thread_num'"].text = '1'
+            self.ids["'thread_num'"].readonly = True
+        else:
+            self.ids["'thread_num'"].text = '0'
+            self.ids["'thread_num'"].readonly = False
+
 
     def language_show_load(self):
         lang_from_show = language_dict_inverse[self.config.default_language_from]
@@ -129,3 +136,8 @@ class PreferencesPage(BoxLayout):
 
     def dismiss_popup(self):
         self._popup.dismiss()
+
+    def update_threads(self, text):
+        self.config.set_variable_4ui(self.config.default_threads_path, self.ids["'thread_num'"].text)
+        self.config.load()
+        print(self.config.default_threads)

@@ -2,6 +2,7 @@ from mathtranslate.config import config
 from mathtranslate.translate_tex import main as main_texfile
 from mathtranslate.translate_arxiv import main as main_arxiv
 import sys
+from PreferencesPage import PreferencesPage
 
 
 class Redirect:
@@ -21,8 +22,8 @@ class Redirect:
 
 def translate_texfile(file_path, output_path):
     # redirect standard output to log file
-    with Redirect(config.log_file):
-        args = [file_path, '-o', output_path]
+        config.load()
+        args = [file_path, "--threads", config.default_threads, '-o', output_path]
         try:
             main_texfile(args=args, require_updated=False)
             print()
@@ -36,7 +37,8 @@ def translate_texfile(file_path, output_path):
 def translate_arxiv(number, output_path):
     # redirect standard output to log file
     with Redirect(config.log_file):
-        args = [number, '-o', output_path]
+        config.load()
+        args = [number, '--threads', config.default_threads, '-o', output_path]
         try:
             main_arxiv(args=args, require_updated=False)
             print()
