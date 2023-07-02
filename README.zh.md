@@ -62,9 +62,8 @@
 只需[下载](https://github.com/SUSYUSTC/MathTranslate/releases)相应的可执行文件即可完成！
 
 ## GUI 使用
-<p float="left">
-<img src="https://github.com/SUSYUSTC/MathTranslate/assets/30529122/c086c830-28cd-4c09-86ff-c00a9bd906f3" width="600">
-</p>
+
+https://github.com/SUSYUSTC/MathTranslate/assets/30529122/04c1971d-b094-41d8-bdbb-6dd65d4b81c4
 
 您可以在 **Preferences** 页面中设置翻译引擎和语言。如果您打算使用腾讯翻译引擎，您需要设置 secret ID 和secret Key。
 1. 如果您想翻译 [arxiv](https://arxiv.org/) 上的论文，可以使用 **Arxiv Translate** 功能。 您只需输入要翻译的论文的 arxiv 编号（例如2205.15510）。翻译后你会得到一个 `.zip` 文件，其中包含 arxiv 项目的 latex 源代码。
