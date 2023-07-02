@@ -26,7 +26,7 @@
             pos_hint: {'x':0.15,'y': 0.6}
 
         CLabel:
-            text: '[ref="click"][b]Number of Threads:[/b][/ref]'
+            text: '[ref="click"][b]Threads Setting:[/b][/ref]'
             pos_hint: {'x':0.15,'y': 0.4}
         Label:
             text: 'Significantly increase translation speed but stability has not been fully tested.\nNote: Tencent Engine is incompatible with multithreading.\n0 means auto adjust\n显著提升翻译速度但尚未测试稳定性，与腾讯翻译不兼容\n0表示自动调整'
@@ -54,18 +54,15 @@
                 markup: True
                 on_press:root.language_show_load()
 
-        TextInput:
-            id: 'thread_num'
+        Button:
+            id: EditThreadsButton
             size_hint: 0.2, 0.08
             pos_hint: {'x':0.7, 'y': 0.4}
-            multiline: False
-            text: ""
-            readonly: True
-            input_filter: 'int'
-            on_text:
-                root.update_threads(self.text)   
-            text_size: self.size 
-            font_size: 30  # 24
+            text: (str(root.config.default_threads) if root.config.default_threads != '0' else 'auto') + " Threads"
+            on_press:root.threads_show_load(root.config.default_threads)
+            markup: True
+            disabled: True if root.config.default_engine == 'tencent' else False
+
 
         BoxLayout:
             orientation: 'horizontal'
@@ -187,6 +184,60 @@
                 on_release: root.load(trans_from.text,trans_to.text)
                 markup: True
 
+            Button:
+                text: "[b]Cancel[/b]"
+                on_release: root.cancel()
+                markup: True
+
+<ThreadsDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        padding: 10
+        spacing: 100
+        BoxLayout:
+            size_hint: 0.9, 0.2
+            Label:
+                id: 'AutoAdjustLabel'
+                text: '[ref="click"][b]Automatically Adjust:[/b][/ref]'
+                color: kivy.utils.get_color_from_hex('#FFFFFF')
+                font_size: 24  # 24
+                markup: True
+                size_hint_y: .2
+            CheckBox:
+                id: AutoAdjustCheckBox
+                size_hint_y: .4
+                active: root.threads == '0'
+                on_state: root.checkbox_update(self.active, ThreadNumberInput)
+
+        BoxLayout:
+            pos_hint_y: 0
+            size_hint: 0.9, 0.2
+            Label:
+                id: 'ThreadNumberLabel'
+                text: '[ref="click"][b]Threads:[/b][/ref]'
+                color: kivy.utils.get_color_from_hex('#FFFFFF')
+                font_size: 24  # 24
+                markup: True
+                size_hint_y: .2
+
+            TextInput:
+                id: ThreadNumberInput
+                size_hint_y: .4
+                multiline: False
+                text: str(root.threads) if root.threads != '0' else 'auto'
+                input_filter: 'int'
+                readonly: root.threads == '0'
+                on_text: root.textinput_update(self.text)
+
+        BoxLayout:
+            spacing: 30
+            size_hint_y: .1
+            Button:
+                text: "[b]Confirm[/b]"
+                on_release: root.load()
+                markup: True
             Button:
                 text: "[b]Cancel[/b]"
                 on_release: root.cancel()

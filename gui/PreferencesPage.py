@@ -3,7 +3,7 @@ from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 
-from Dialog import LanguageDialog, EngineDialog
+from Dialog import LanguageDialog, EngineDialog, ThreadsDialog
 
 
 language_dict = {'Afrikaans': 'af',
@@ -78,6 +78,7 @@ class PreferencesPage(BoxLayout):
     def __init__(self, **kwargs):
         #Clock.schedule_interval(self.update_language_format, 1)
         self.config = config
+        print(self.config)
         super().__init__(**kwargs)
         self.ids.language_setting.text = self.config.default_language_from + "=>" + self.config.default_language_to
 
@@ -98,12 +99,11 @@ class PreferencesPage(BoxLayout):
             content = EngineDialog(load=self.engine_load, cancel=self.dismiss_popup, id=id, key=key)
             self._popup = Popup(title="Engine API Setting", content=content, size_hint=(.9, .9))
             self._popup.open()
-            
-            self.ids["'thread_num'"].text = '1'
-            self.ids["'thread_num'"].readonly = True
+            self.ids.EditThreadsButton.disabled = True
         else:
-            self.ids["'thread_num'"].text = '0'
-            self.ids["'thread_num'"].readonly = False
+            self.ids.EditThreadsButton.disabled = False
+            
+
 
 
     def language_show_load(self):
@@ -137,7 +137,36 @@ class PreferencesPage(BoxLayout):
     def dismiss_popup(self):
         self._popup.dismiss()
 
-    def update_threads(self, text):
-        self.config.set_variable_4ui(self.config.default_threads_path, self.ids["'thread_num'"].text)
+    def threads_show_load(self, text):
+        self.config.set_variable_4ui(self.config.default_threads_path, text)
         self.config.load()
-        print(self.config.default_threads)
+        self.threads = self.config.default_threads
+        content = ThreadsDialog(load=self.threads_load, cancel=self.dismiss_popup, checkbox_update=self.checkbox_update, textinput_update=self.textinput_update, threads=self.config.default_threads)
+        self._popup = Popup(title="Threads Setting", content=content, size_hint=(.9, .9))
+        self._popup.open()
+    
+
+    def threads_load(self):
+        print("saving: "+str(self.threads))
+        self.config.set_variable_4ui(self.config.default_threads_path, self.threads)
+        self.config.load()
+        self.dismiss_popup()
+        self.ids.EditThreadsButton.text = (str(self.config.default_threads) if self.config.default_threads != '0' else 'auto') + " Threads"
+
+    def checkbox_update(self, checkbox_state, ThreadNumberInput):
+        if checkbox_state:
+            ThreadNumberInput.text = 'auto'
+            ThreadNumberInput.readonly = True
+            self.threads = 0
+            print("disabled")
+        else:
+            ThreadNumberInput.text = '1'
+            ThreadNumberInput.readonly = False
+            self.threads = 1
+            print("enabled")
+    
+    def textinput_update(self, threads):
+        self.threads = threads
+        print(threads)
+            
+        
