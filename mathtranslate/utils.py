@@ -89,6 +89,7 @@ def add_arguments(parser):
     parser.add_argument("-from", default=config.default_language_from, dest='l_from', help=f'language from, default is {config.default_language_from}')
     parser.add_argument("-to", default=config.default_language_to, dest='l_to', help=f'language to, default is {config.default_language_to}')
     parser.add_argument("-threads", default=config.default_threads, type=int, help='threads for tencent translation, default is auto')
+    parser.add_argument("-proxy_host", default=config.default_proxy_host, help='optional proxy host, set to none to remove proxy')
     parser.add_argument("--list", action='store_true', help='list codes for languages')
     parser.add_argument("--setkey", action='store_true', help='set id and key of tencent translator')
     parser.add_argument("--setdefault", action='store_true', help='set default translation engine and languages')
@@ -147,11 +148,13 @@ def process_options(options):
         print('threads must be a non-zero integer number (>=0 where 0 means auto), set to auto')
         options.threads = 0
 
-
+    if options.proxy_host == 'none':
+        options.proxy_host = None
+        
     print("Start")
     print('engine', options.engine)
     print('language from', options.l_from)
     print('language to', options.l_to)
-
     print('threads', options.threads if options.threads > 0 else 'auto')
+    print('proxy host', options.proxy_host if options.proxy_host is not None else 'none')
     print()

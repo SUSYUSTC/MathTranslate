@@ -13,6 +13,7 @@ class Config:
     default_threads_path = 'DEFAULT_THREADS'
     tencent_secret_id_path = 'TENCENT_ID'
     tencent_secret_key_path = 'TENCENT_KEY'
+    default_proxy_host_path = 'DEFAULT_PROXY_HOST'
 
     default_engine_default = 'tencent'
     default_language_from_default = 'en'
@@ -20,8 +21,10 @@ class Config:
     default_loading_dir_default = os.path.expanduser("~")
     default_saving_dir_default = os.path.expanduser("~")
     default_threads_default = 0
+    default_proxy_host = None
     tencent_secret_id_default = None
     tencent_secret_key_default = None
+    
 
     math_code = 'XMATHX'
     log_file = f'{app_dir}/translate_log'
@@ -60,6 +63,7 @@ class Config:
         self.default_loading_dir = self.read_variable(self.default_loading_dir_path, self.default_loading_dir_default)
         self.default_saving_dir = self.read_variable(self.default_saving_dir_path, self.default_saving_dir_default)
         self.default_threads = self.read_variable(self.default_threads_path, self.default_threads_default)
+        self.default_proxy_host = self.read_variable(self.default_proxy_host_path, self.default_proxy_host)
         if not os.path.exists(self.default_loading_dir):
             self.default_loading_dir = self.default_loading_dir_default
         if not os.path.exists(self.default_saving_dir):

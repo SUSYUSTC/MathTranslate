@@ -14,13 +14,18 @@ import tempfile
 import urllib.request
 
 
-def download_source(number, path):
+def download_source(number, path, proxy_host):
     url = f'https://arxiv.org/e-print/{number}'
+    if proxy_host is not None:
+        print('using proxy', proxy_host)
+        proxy_handler = urllib.request.ProxyHandler({'http': proxy_host, 'https': proxy_host})
+        opener = urllib.request.build_opener(proxy_handler)
+        urllib.request.install_opener(opener)
     print('trying to download from', url)
     urllib.request.urlretrieve(url, path)
 
 
-def download_source_with_cache(number, path):
+def download_source_with_cache(number, path, proxy_host):
     cache_dir = os.path.join(app_dir, 'cache_arxiv')
     os.makedirs(cache_dir, exist_ok=True)
     cache_path = os.path.join(cache_dir, 'last_downloaded_source')
@@ -30,7 +35,7 @@ def download_source_with_cache(number, path):
         if last_number == number:
             shutil.copyfile(cache_path, path)
             return
-    download_source(number, path)
+    download_source(number, path, proxy_host)
     shutil.copyfile(path, cache_path)
     open(cache_number_path, 'w').write(number)
 
@@ -88,7 +93,7 @@ def translate_dir(dir, options):
     for filename in complete_texs:
         print(f'Processing {filename}')
         file_path = f'{filename}.tex'
-        translate_single_tex_file(file_path, file_path, options.engine, options.l_from, options.l_to, options.debug, options.nocache, options.threads)
+        translate_single_tex_file(file_path, file_path, options.engine, options.l_from, options.l_to, options.debug, options.nocache, options.threads, options.proxy_host)
     return True
 
 
@@ -142,7 +147,7 @@ def main(args=None, require_updated=True):
         try:
             if not options.from_dir:
                 try:
-                    download_source_with_cache(number, download_path)
+                    download_source_with_cache(number, download_path, options.proxy_host)
                 except BaseException:
                     print('Cannot download source, maybe network issue or wrong link')
                     os.chdir(cwd)
