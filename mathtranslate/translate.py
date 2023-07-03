@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import queue
 from . import __version__
 from . import process_latex
 from . import process_text
@@ -67,11 +66,11 @@ class LatexTranslator:
             self.f_old = open("text_old", "w", encoding='utf-8')
             self.f_new = open("text_new", "w", encoding='utf-8')
             self.f_obj = open("objs", "w", encoding='utf-8')
-        
         if threads == 0:
             self.threads = None
         else:
             self.threads = threads
+
     def close(self):
         if self.debug:
             self.f_old.close()
@@ -181,7 +180,7 @@ class LatexTranslator:
         paragraphs_text = re.split(r'\n\n+', text)
         paragraphs_latex = [process_latex.recover_latex_objects(paragraph_text, objs)[0] for paragraph_text in paragraphs_text]
         return paragraphs_latex
-    
+
     def worker(self, latex_original_paragraph):
         try:
             if self.add_cache:
@@ -199,7 +198,7 @@ class LatexTranslator:
             print('Content')
             print(latex_original_paragraph)
             raise e
-        
+
     def translate_full_latex(self, latex_original, make_complete=True, nocache=False):
         self.add_cache = (not nocache)
         if self.add_cache:
@@ -262,8 +261,7 @@ class LatexTranslator:
         print(self.ntotal - self.nbad, '/',  self.ntotal, 'latex object are correctly translated')
 
         return latex_translated
-    
-    
+
 
 def translate_single_tex_file(input_path, output_path, engine, l_from, l_to, debug, nocache, threads):
     text_translator = TextTranslator(engine, l_to, l_from)

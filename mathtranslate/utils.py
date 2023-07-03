@@ -88,13 +88,12 @@ def add_arguments(parser):
     parser.add_argument("-engine", default=config.default_engine, help=f'translation engine, avaiable options include google and tencent. default is {config.default_engine}')
     parser.add_argument("-from", default=config.default_language_from, dest='l_from', help=f'language from, default is {config.default_language_from}')
     parser.add_argument("-to", default=config.default_language_to, dest='l_to', help=f'language to, default is {config.default_language_to}')
+    parser.add_argument("-threads", default=config.default_threads, type=int, help='threads for tencent translation, default is auto')
     parser.add_argument("--list", action='store_true', help='list codes for languages')
     parser.add_argument("--setkey", action='store_true', help='set id and key of tencent translator')
     parser.add_argument("--setdefault", action='store_true', help='set default translation engine and languages')
-    parser.add_argument("--threads", default=config.default_threads, type=int, help='threads for tencent translation, default is auto')
     parser.add_argument("--debug", action='store_true', help='Debug options for developers')
     parser.add_argument("--nocache", action='store_true', help='Debug options for developers')
-    
 
 
 def process_options(options):
@@ -127,7 +126,7 @@ def process_options(options):
         print(language_list)
         print('tencent translator does not support some of them')
         sys.exit()
-    
+
     if options.engine == 'tencent':
         haskey = (config.tencent_secret_id is not None) and (config.tencent_secret_key is not None)
         if not haskey:
@@ -147,12 +146,12 @@ def process_options(options):
     if options.threads < 0:
         print('threads must be a non-zero integer number (>=0 where 0 means auto), set to auto')
         options.threads = 0
-    
+
 
     print("Start")
     print('engine', options.engine)
     print('language from', options.l_from)
     print('language to', options.l_to)
-    
+
     print('threads', options.threads if options.threads > 0 else 'auto')
     print()

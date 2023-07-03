@@ -102,9 +102,6 @@ class PreferencesPage(BoxLayout):
             self.ids.EditThreadsButton.disabled = True
         else:
             self.ids.EditThreadsButton.disabled = False
-            
-
-
 
     def language_show_load(self):
         lang_from_show = language_dict_inverse[self.config.default_language_from]
@@ -144,7 +141,6 @@ class PreferencesPage(BoxLayout):
         content = ThreadsDialog(load=self.threads_load, cancel=self.dismiss_popup, checkbox_update=self.checkbox_update, textinput_update=self.textinput_update, threads=self.config.default_threads)
         self._popup = Popup(title="Threads Setting", content=content, size_hint=(.9, .9))
         self._popup.open()
-    
 
     def threads_load(self):
         print("saving: "+str(self.threads))
@@ -157,16 +153,15 @@ class PreferencesPage(BoxLayout):
         if checkbox_state:
             ThreadNumberInput.text = 'auto'
             ThreadNumberInput.readonly = True
+            ThreadNumberInput.disabled = True
             self.threads = 0
             print("disabled")
         else:
             ThreadNumberInput.text = '1'
-            ThreadNumberInput.readonly = False
+            ThreadNumberInput.disabled = False
             self.threads = 1
             print("enabled")
-    
+
     def textinput_update(self, threads):
         self.threads = threads
         print(threads)
-            
-        
