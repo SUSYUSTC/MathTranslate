@@ -44,9 +44,17 @@ class SavePathDialog(FloatLayout):
                 return os.path.join(selected, self.default_filename)
             else:
                 return selected
-
+            
+class ThreadsDialog(FloatLayout):
+    load = ObjectProperty(None)
+    cancel = ObjectProperty(None)
+    threads = ObjectProperty(None)
+    checkbox_update = ObjectProperty(None)
+    textinput_update = ObjectProperty(None)
+        
 
 Factory.register("LoadDialog", cls=LoadDialog)
 Factory.register("SavePathDialog", cls=SavePathDialog)
 Factory.register("LanguageDialog", cls=LanguageDialog)
 Factory.register("EngineDialog", cls=EngineDialog)
+Factory.register("ThreadsDialog", cls=ThreadsDialog)

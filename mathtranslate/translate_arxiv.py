@@ -88,7 +88,7 @@ def translate_dir(dir, options):
     for filename in complete_texs:
         print(f'Processing {filename}')
         file_path = f'{filename}.tex'
-        translate_single_tex_file(file_path, file_path, options.engine, options.l_from, options.l_to, options.debug, options.nocache)
+        translate_single_tex_file(file_path, file_path, options.engine, options.l_from, options.l_to, options.debug, options.nocache, options.threads)
     return True
 
 
@@ -104,7 +104,7 @@ def main(args=None, require_updated=True):
     return True if the translation is successful (last two cases)
 
     to call this function from python,
-    you can do e.g `arxiv(['2205.15510', '-o', 'output.zip'])`
+    you can do e.g `main(['2205.15510', '-o', 'output.zip'])`
     '''
     utils.check_update(require_updated=require_updated)
 

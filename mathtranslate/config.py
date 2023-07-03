@@ -13,13 +13,16 @@ class Config:
     tencent_secret_id_path = 'TENCENT_ID'
     tencent_secret_key_path = 'TENCENT_KEY'
 
-    default_engine_default = 'google'
+    default_engine_default = 'tencent'
     default_language_from_default = 'en'
     default_language_to_default = 'zh-CN'
     default_loading_dir_default = os.path.expanduser("~")
     default_saving_dir_default = os.path.expanduser("~")
     tencent_secret_id_default = None
     tencent_secret_key_default = None
+    
+    default_threads_path = 'DEFAULT_THREADS'
+    default_threads = 1
 
     math_code = 'XMATHX'
     log_file = f'{app_dir}/translate_log'
@@ -57,6 +60,7 @@ class Config:
         self.tencent_secret_key = self.read_variable(self.tencent_secret_key_path, self.tencent_secret_key_default)
         self.default_loading_dir = self.read_variable(self.default_loading_dir_path, self.default_loading_dir_default)
         self.default_saving_dir = self.read_variable(self.default_saving_dir_path, self.default_saving_dir_default)
+        self.default_threads = self.read_variable(self.default_threads_path, self.default_threads)
         if not os.path.exists(self.default_loading_dir):
             self.default_loading_dir = self.default_loading_dir_default
         if not os.path.exists(self.default_saving_dir):
