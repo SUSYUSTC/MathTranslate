@@ -38,7 +38,7 @@ jobs:
         which python
         which pip
         python -c "import sys; print(sys.path)"
-        pip install -e .
+        pip install -e . --no-build-isolation
         pip install pyinstaller
         pip install kivy==2.2.0
         KIVYROOT=$(python -c "import kivy; print(kivy.__path__[0])")
