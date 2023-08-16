@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         #os: [ubuntu-20.04, windows-latest, macos-latest]
-        os: [macos-latest]
+        os: [ubuntu-20.04, macos-latest]
 
     steps:
     - name: Checkout code
@@ -73,7 +73,6 @@ jobs:
         pyi-makespec --onefile --noconsole --add-data ./guipage/page.kv:./guipage --add-data ./guipage/dialog.kv:./guipage --add-data ./guipage/preferencespage.kv:./guipage --add-data ./yahei.ttf:./ MathTranslate.py
         echo "build executable"
         pyinstaller MathTranslate.spec 2>&1 | awk '!/DEBUG/ && !/TRACE/'
-        rm -r dist/MathTranslate.app
 
         pyi-makespec --onefile update.py
         pyinstaller update.spec | awk '!/DEBUG/ && !/TRACE/'
