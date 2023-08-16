@@ -1,7 +1,12 @@
-import requests
+import json
+import urllib.request
 
 
 def get_latest_version():
-    response = requests.get('https://pypi.org/pypi/mathtranslate/json')
-    latest_version = response.json()['info']['version']
+    url = 'https://pypi.org/pypi/mathtranslate/json'
+
+    with urllib.request.urlopen(url) as response:
+        data = json.loads(response.read().decode('utf-8'))
+        latest_version = data['info']['version']
+
     return latest_version
