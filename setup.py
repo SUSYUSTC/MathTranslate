@@ -1,3 +1,5 @@
+import sys
+print(sys.path)
 import setuptools
 
 from mathtranslate import __version__, __author__

@@ -1,9 +1,7 @@
 name: PyInstaller Build
 
 on:
-  push:
-    branches:
-      - main  # adjust this if your primary branch is named differently
+    workflow_dispatch:
 
 jobs:
   build:
@@ -37,6 +35,9 @@ jobs:
         pip install tqdm
         pip install appdata
         python -c "import appdata; print(appdata.__path__)"
+        which python
+        which pip
+        python -c "import sys; print(sys.path)"
         pip install -e .
         pip install pyinstaller
         pip install kivy==2.2.0
