@@ -154,7 +154,7 @@ def process_options(options):
         var = {}
         exec(content, var)
         additional_commands = var['additional_commands']
-    config.mularg_command_list += additional_commands
+    config.mularg_command_list = config.raw_mularg_command_list + additional_commands
 
     print("Start")
     print('engine', options.engine)
