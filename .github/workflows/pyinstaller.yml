@@ -36,6 +36,7 @@ jobs:
         pip install regex
         pip install tqdm
         pip install appdata
+        python -c "import appdata; print(appdata.__path__)"
         pip install -e .
         pip install pyinstaller
         pip install kivy==2.2.0
