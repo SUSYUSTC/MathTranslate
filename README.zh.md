@@ -99,23 +99,23 @@ https://github.com/SUSYUSTC/MathTranslate/assets/30529122/04c1971d-b094-41d8-bdb
 如果您有任何问题或有兴趣做出贡献，请通过 susyustc@gmail.com 与我联系或加入 QQ 群 288646946 。
 
 ## 自定义命令
-在翻译过程中您可能会遇到一些内容没有被翻译出来，这一般是因为有一些自定义的命令没有被识别到导致的。在命令行模式中我们提供了自定义命令的功能，您只需创建一个文件（例如`MT_additional_commands.txt`），里面可以如下定义您需要翻译的命令:
+在翻译过程中您可能会遇到一些内容没有被翻译出来，这一般是因为有一些自定义的命令没有被识别到导致的。在命令行模式中我们提供了自定义命令的功能，您只需创建一个文件（例如`MT_additional_commands.txt`），里面定义需要翻译的命令，例如：
 ```
 # if you need more, just add lines with the same format (don't miss the ","!)
 # each line is in the format of (command_name, N, (n1, n2, ...)), 
 # N is the total number of arguments, 
 # n1, n2, ... are the index of arguments requiring translation (counting from 0)
 additional_commands = [
-  # example: \mycommand{translation needed}
-  # ('mycommand', 1, (0, )),
-  # example: \mycommand{translation not needed}{translation needed}
-  # ('mycommand', 2, (1, )),
-  # example: \mycommand{translation needed}{translation not needed}
-  # ('mycommand', 2, (0, )),
-  # example: \mycommand{translation needed}{translation not needed}{translation needed}{translation not needed}
-  # ('mycommand', 4, (0, 2)),
+  # latex: \mycommand1{translation needed}
+  ('mycommand1', 1, (0, )),
+  # latex: \mycommand2{translation not needed}{translation needed}
+  ('mycommand2', 2, (1, )),
+  # latex: \mycommand3{translation needed}{translation not needed}
+  ('mycommand3', 2, (0, )),
+  # latex: \mycommand4{translation needed}{translation not needed}{translation needed}{translation not needed}
+  ('mycommand4', 4, (0, 2)),
   # practical example: \textcolor{red}{Need translation here}
-  # ('textcolor', 2, (1, )),
+  ('textcolor', 2, (1, )),
 ]
 ```
 之后加上命令行参数 `-commands MT_additional_commands.txt` 即可翻译自定义的命令。
