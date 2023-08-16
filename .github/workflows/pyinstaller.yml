@@ -35,10 +35,10 @@ jobs:
         Copy-Item "gui\modified_logger.py" "$KIVYROOT\logger.py"
         cd gui
         echo "generate spec file"
-        pyi-makespec --onefile --noconsole --add-data ".\guipage\page.kv;.\guipage" --add-data ".\guipage\dialog.kv;.\guipage" --add-data ".\guipage\preferencespage.kv;.\guipage" --add-data ".\yahei.ttf;." --hidden-import win32timezone MathTranslate.py
+        pyi-makespec --noupx --debug=all --onefile --noconsole --add-data ".\guipage\page.kv;.\guipage" --add-data ".\guipage\dialog.kv;.\guipage" --add-data ".\guipage\preferencespage.kv;.\guipage" --add-data ".\yahei.ttf;." --hidden-import win32timezone MathTranslate.py
         echo "build executable"
         #pyinstaller MathTranslate.spec 2>&1 | findstr /V /C:"DEBUG" | findstr /V /C:"TRACE"
-        pyinstaller --noconfirm --noupx --debug=all MathTranslate.spec
+        pyinstaller --noconfirm MathTranslate.spec
 
     - name: Build with PyInstaller (Linux)
       if: runner.os == 'Linux'
