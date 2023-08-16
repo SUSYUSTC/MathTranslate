@@ -61,7 +61,7 @@ class Config:
         self.tencent_secret_key = self.read_variable(self.tencent_secret_key_path, self.tencent_secret_key_default)
         self.default_loading_dir = self.read_variable(self.default_loading_dir_path, self.default_loading_dir_default)
         self.default_saving_dir = self.read_variable(self.default_saving_dir_path, self.default_saving_dir_default)
-        self.default_threads = self.read_variable(self.default_threads_path, self.default_threads_default)
+        self.default_threads = int(self.read_variable(self.default_threads_path, self.default_threads_default))
         if not os.path.exists(self.default_loading_dir):
             self.default_loading_dir = self.default_loading_dir_default
         if not os.path.exists(self.default_saving_dir):

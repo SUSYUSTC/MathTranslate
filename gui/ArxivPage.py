@@ -29,7 +29,6 @@ class ArxivPage(BoxLayout):
             return
         default_filename = 'arxiv.zip'
         filename = os.path.join(self.config.default_saving_dir, default_filename)
-        print(self.config.default_saving_dir)
         content = SavePathDialog(load=self.select_savepath, cancel=self.dismiss_popup, file=filename, dirname=self.config.default_saving_dir, default_filename=default_filename)
         self._popup = Popup(title="Output File Path Setting", content=content, size_hint=(.9, .9))
         self._popup.open()

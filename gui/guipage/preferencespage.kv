@@ -57,7 +57,7 @@
             id: EditThreadsButton
             size_hint: 0.2, 0.08
             pos_hint: {'x':0.7, 'y': 0.4}
-            text: (str(root.config.default_threads) if root.config.default_threads != '0' else 'auto') + " Threads"
+            text: (str(root.config.default_threads) if root.config.default_threads != 0 else 'auto') + " Threads"
             on_press:root.threads_show_load(root.config.default_threads)
             markup: True
             disabled: True if root.config.default_engine == 'tencent' else False
@@ -207,7 +207,7 @@
             CheckBox:
                 id: AutoAdjustCheckBox
                 size_hint_y: .4
-                active: root.threads == '0'
+                active: root.threads == 0
                 on_state: root.checkbox_update(self.active, ThreadNumberInput)
 
         BoxLayout:
@@ -225,10 +225,10 @@
                 id: ThreadNumberInput
                 size_hint_y: .4
                 multiline: False
-                text: str(root.threads) if root.threads != '0' else 'auto'
+                text: str(root.threads) if root.threads != 0 else 'auto'
                 input_filter: 'int'
-                readonly: root.threads == '0'
-                disabled: root.threads == '0'
+                readonly: root.threads == 0
+                disabled: root.threads == 0
                 on_text: root.textinput_update(self.text)
 
         BoxLayout:

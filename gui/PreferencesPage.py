@@ -78,7 +78,6 @@ class PreferencesPage(BoxLayout):
     def __init__(self, **kwargs):
         #Clock.schedule_interval(self.update_language_format, 1)
         self.config = config
-        print(self.config)
         super().__init__(**kwargs)
         self.ids.language_setting.text = self.config.default_language_from + "=>" + self.config.default_language_to
 
@@ -113,21 +112,17 @@ class PreferencesPage(BoxLayout):
         self._popup.open()
 
     def engine_load(self, id, key):
-        print(id, key)
         self.config.set_variable_4ui(self.config.tencent_secret_id_path, id)
         self.config.set_variable_4ui(self.config.tencent_secret_key_path, key)
         self.config.load()
-        print(self.config.tencent_secret_id, self.config.tencent_secret_key)
         self.dismiss_popup()
 
     def language_load(self, lang_from_show, lang_to_show):
         language_from = language_dict[lang_from_show]
         language_to = language_dict[lang_to_show]
-        print(language_from, language_to)
         self.config.set_variable_4ui(self.config.default_language_from_path, language_from)
         self.config.set_variable_4ui(self.config.default_language_to_path, language_to)
         self.config.load()
-        print(self.config.default_language_from, self.config.default_language_to)
         self.dismiss_popup()
         self.ids.language_setting.text = self.config.default_language_from + "=>" + self.config.default_language_to
 
@@ -143,11 +138,10 @@ class PreferencesPage(BoxLayout):
         self._popup.open()
 
     def threads_load(self):
-        print("saving: "+str(self.threads))
         self.config.set_variable_4ui(self.config.default_threads_path, self.threads)
         self.config.load()
         self.dismiss_popup()
-        self.ids.EditThreadsButton.text = (str(self.config.default_threads) if self.config.default_threads != '0' else 'auto') + " Threads"
+        self.ids.EditThreadsButton.text = (str(self.config.default_threads) if self.config.default_threads != 0 else 'auto') + " Threads"
 
     def checkbox_update(self, checkbox_state, ThreadNumberInput):
         if checkbox_state:
@@ -155,13 +149,10 @@ class PreferencesPage(BoxLayout):
             ThreadNumberInput.readonly = True
             ThreadNumberInput.disabled = True
             self.threads = 0
-            print("disabled")
         else:
             ThreadNumberInput.text = '1'
             ThreadNumberInput.disabled = False
             self.threads = 1
-            print("enabled")
 
     def textinput_update(self, threads):
         self.threads = threads
-        print(threads)
