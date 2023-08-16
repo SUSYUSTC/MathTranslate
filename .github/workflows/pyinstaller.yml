@@ -40,6 +40,9 @@ jobs:
         #pyinstaller MathTranslate.spec 2>&1 | findstr /V /C:"DEBUG" | findstr /V /C:"TRACE"
         pyinstaller --noconfirm MathTranslate.spec
 
+        pyi-makespec --noupx --debug=all --onefile update.py
+        pyinstaller --noconfirm update.spec
+
     - name: Build with PyInstaller (Linux)
       if: runner.os == 'Linux'
       run: |
@@ -53,6 +56,9 @@ jobs:
         echo "build executable"
         xvfb-run pyinstaller MathTranslate.spec 2>&1 | awk '!/DEBUG/ && !/TRACE/'
 
+        pyi-makespec --onefile update.py
+        xvfb-run pyinstaller update.spec | awk '!/DEBUG/ && !/TRACE/'
+
     - name: Build with PyInstaller (macOS)
       if: runner.os == 'macOS'
       run: |
@@ -64,6 +70,10 @@ jobs:
         pyi-makespec --onefile --noconsole --add-data ./guipage/page.kv:./guipage --add-data ./guipage/dialog.kv:./guipage --add-data ./guipage/preferencespage.kv:./guipage --add-data ./yahei.ttf:./ MathTranslate.py
         echo "build executable"
         pyinstaller MathTranslate.spec 2>&1 | awk '!/DEBUG/ && !/TRACE/'
+        rm -r dist/MathTranslate.app
+
+        pyi-makespec --onefile update.py
+        pyinstaller update.spec | awk '!/DEBUG/ && !/TRACE/'
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
