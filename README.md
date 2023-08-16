@@ -98,6 +98,28 @@ After the translation is done you can upload either the `.zip` (New Project - Up
 
 If you have any questions or have interests in making contributions, please contact me by susyustc@gmail.com or joining QQ group 288646946.
 
+## Custom commands
+During the translation process, you may encounter that some content is not translated, which is generally caused by some custom commands that have not been recognized. In the command line mode, we provide the function of custom commands, you only need to create a file (such as `MT_additional_commands.txt`), in which you can define the commands you need to translate as follows:
+```
+# if you need more, just add lines with the same format (don't miss the ","!)
+# each line is in the format of (command_name, N, (n1, n2, ...)),
+# N is the total number of arguments,
+# n1, n2, ... are the index of arguments requiring translation (counting from 0)
+additional_commands = [
+   # example: \mycommand{translation needed}
+   # ('mycommand', 1, (0, )),
+   # example: \mycommand{translation not needed}{translation needed}
+   # ('mycommand', 2, (1, )),
+   # example: \mycommand{translation needed}{translation not needed}
+   # ('mycommand', 2, (0, )),
+   # example: \mycommand{translation needed}{translation not needed}{translation needed}{translation not needed}
+   # ('mycommand', 4, (0, 2)),
+   # practical example: \textcolor{red}{Need translation here}
+   # ('textcolor', 2, (1, )),
+]
+```
+Then add command line parameters `-commands MT_additional_commands.txt` to translate custom commands.
+
 ## Donation
 If you think this project is helping you a lot, you can support us by the Wechat QR code below
 <p align="center">
