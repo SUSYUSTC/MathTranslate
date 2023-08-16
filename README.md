@@ -11,7 +11,7 @@
   </a>
   <!-- GUI -->
   <a href="https://github.com/SUSYUSTC/MathTranslate/releases">
-    <img src="https://img.shields.io/badge/GUI-v3.0.2-red.svg?logo=apache"/>
+    <img src="https://img.shields.io/badge/GUI-v3.1.0-red.svg?logo=apache"/>
   </a>
 </p>
 
