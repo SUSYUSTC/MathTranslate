@@ -30,8 +30,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        pip install -e .
         pip install pyinstaller
-        pip install .
         pip install kivy==2.2.0
         KIVYROOT=$(python -c "import kivy; print(kivy.__path__[0])")
         cp gui/modifed_logger.py ${KIVYROOT}/logger.py
