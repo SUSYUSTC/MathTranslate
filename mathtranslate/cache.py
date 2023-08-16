@@ -16,14 +16,19 @@ def deterministic_hash(obj):
 
 
 def get_dirs():
-    dirs = [os.path.join(cache_dir, dir) for dir in os.listdir(cache_dir)]
+    dirs = [os.path.join(cache_dir, dir) for dir in os.listdir(cache_dir) if os.path.isdir(os.path.join(cache_dir, dir))]
     return dirs
 
 
 def get_time(dir):
-    timefile = os.path.join(dir, time_filename)
-    t = float(open(timefile, encoding='utf-8').read())
-    return t
+    try:
+        timefile = os.path.join(dir, time_filename)
+        t = float(open(timefile, encoding='utf-8').read())
+        return t
+    except FileNotFoundError:
+        # handle the error as needed, for now we'll just return a default value
+        return float('inf')  # This ensures that this directory will be the first to be removed if required
+
 
 
 def write_time(dir):
@@ -39,7 +44,7 @@ def argmin(iterable):
 def remove_extra():
     dirs = get_dirs()
     for dir in dirs:
-        if not os.path.isdir(dir):
+        if not os.path.isdir(dir):  # This line might be redundant now, as get_dirs() ensures only directories are returned
             os.remove(dir)
         try:
             get_time(dir)
