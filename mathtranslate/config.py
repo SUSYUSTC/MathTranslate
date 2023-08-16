@@ -25,6 +25,7 @@ class Config:
 
     math_code = 'XMATHX'
     log_file = f'{app_dir}/translate_log'
+    mularg_command_list = [('textcolor', 2, (1, ))]
 
     def __init__(self):
         self.load()

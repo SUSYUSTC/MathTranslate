@@ -71,11 +71,8 @@ assert len(set(special_character_forward.values())) == len(special_character_for
 
 environment_list = ['abstract', 'acknowledgments', 'itemize', 'enumerate', 'description', 'list', 'proof', 'quote', 'spacing']
 command_list = ['section', 'subsection', 'subsubsection', 'caption', 'subcaption', 'footnote', 'paragraph']
-mularg_command_list = [('textcolor', 2, (1, ))]
 format_list = ['textbf', 'textit', 'emph']
 replace_newcommand_list = ['equation', 'array', 'displaymath', 'align', 'multiple', 'gather', 'theorem', 'textcolor'] + environment_list + command_list
-
-patterns_mularg_command = [get_pattern_command_full(name, n) for name, n, index in mularg_command_list]
 
 
 def variable_code(count):
@@ -122,6 +119,7 @@ def replace_latex_objects(text, brace=True, command_simple=True):
 
     # You need to make sure that the input does not contain {math_code}
     # define regular expressions for each LaTeX object
+    patterns_mularg_command = [get_pattern_command_full(name, n) for name, n, index in config.mularg_command_list]
     latex_obj_regex = [
         r"\$\$(.*?)\$\$",  # $$ $$
         r"\$(.*?)\$",  # $ $

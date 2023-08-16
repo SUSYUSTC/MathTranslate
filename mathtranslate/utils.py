@@ -89,6 +89,7 @@ def add_arguments(parser):
     parser.add_argument("-from", default=config.default_language_from, dest='l_from', help=f'language from, default is {config.default_language_from}')
     parser.add_argument("-to", default=config.default_language_to, dest='l_to', help=f'language to, default is {config.default_language_to}')
     parser.add_argument("-threads", default=config.default_threads, type=int, help='threads for tencent translation, default is auto')
+    parser.add_argument("-commands", type=str, help='add commands for translation from a file')
     parser.add_argument("--list", action='store_true', help='list codes for languages')
     parser.add_argument("--setkey", action='store_true', help='set id and key of tencent translator')
     parser.add_argument("--setdefault", action='store_true', help='set default translation engine and languages')
@@ -147,6 +148,13 @@ def process_options(options):
         print('threads must be a non-zero integer number (>=0 where 0 means auto), set to auto')
         options.threads = 0
 
+    additional_commands = []
+    if options.commands:
+        content = open(options.commands, 'r').read()
+        var = {}
+        exec(content, var)
+        additional_commands = var['additional_commands']
+    config.mularg_command_list += additional_commands
 
     print("Start")
     print('engine', options.engine)

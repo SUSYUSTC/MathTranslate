@@ -3,7 +3,8 @@ from . import __version__
 from . import process_latex
 from . import process_text
 from . import cache
-from .process_latex import environment_list, command_list, format_list, mularg_command_list
+from .config import config
+from .process_latex import environment_list, command_list, format_list
 from .process_text import char_limit
 from .encoding import get_file_encoding
 import time
@@ -155,7 +156,7 @@ class LatexTranslator:
         for command_name in command_list:
             latex = process_latex.process_specific_command(latex, translate_function, command_name)
             latex = process_latex.process_specific_command(latex, translate_function, command_name + r'\*')
-        for command_group in mularg_command_list:
+        for command_group in config.mularg_command_list:
             latex = process_latex.process_mularg_command(latex, translate_function, command_group)
         return latex
 
@@ -203,7 +204,7 @@ class LatexTranslator:
         self.add_cache = (not nocache)
         if self.add_cache:
             cache.remove_extra()
-            self.hash_key = cache.deterministic_hash((latex_original, __version__, self.translator.engine, self.translator.language_from, self.translator.language_to))
+            self.hash_key = cache.deterministic_hash((latex_original, __version__, self.translator.engine, self.translator.language_from, self.translator.language_to, config.mularg_command_list))
             if cache.is_cached(self.hash_key):
                 print('Cache is found')
             cache.create_cache(self.hash_key)
