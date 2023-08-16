@@ -29,29 +29,38 @@ jobs:
     - name: Build with PyInstaller (Windows)
       if: runner.os == 'Windows'
       run: |
+        echo "replace kivy/logger.py"
         $KIVYROOT = python -c "import kivy; print(kivy.__path__[0])"
         Copy-Item "gui\modified_logger.py" "$KIVYROOT\logger.py"
         cd gui
+        echo "generate spec file"
         pyi-makespec --onefile --noconsole --add-data ".\guipage\page.kv;.\guipage" --add-data ".\guipage\dialog.kv;.\guipage" --add-data ".\guipage\preferencespage.kv;.\guipage" --add-data ".\yahei.ttf;." --hidden-import win32timezone MathTranslate.py
+        echo "build executable"
         pyinstaller MathTranslate.spec 2>&1 | findstr /V /C:"DEBUG" | findstr /V /C:"TRACE"
 
     - name: Build with PyInstaller (Linux)
       if: runner.os == 'Linux'
       run: |
+        echo "replace kivy/logger.py"
         KIVYROOT=$(python -c "import kivy; print(kivy.__path__[0])")
         cp gui/modified_logger.py ${KIVYROOT}/logger.py
         sudo apt-get install -y xvfb
         cd gui
+        echo "generate spec file"
         pyi-makespec --onefile --noconsole --add-data ./guipage/page.kv:./guipage --add-data ./guipage/dialog.kv:./guipage --add-data ./guipage/preferencespage.kv:./guipage --add-data ./yahei.ttf:./ MathTranslate.py
+        echo "build executable"
         xvfb-run pyinstaller MathTranslate.spec 2>&1 | awk '!/DEBUG/ && !/TRACE/'
 
     - name: Build with PyInstaller (macOS)
       if: runner.os == 'macOS'
       run: |
+        echo "replace kivy/logger.py"
         KIVYROOT=$(python -c "import kivy; print(kivy.__path__[0])")
         cp gui/modified_logger.py ${KIVYROOT}/logger.py
         cd gui
+        echo "generate spec file"
         pyi-makespec --onefile --noconsole --add-data ./guipage/page.kv:./guipage --add-data ./guipage/dialog.kv:./guipage --add-data ./guipage/preferencespage.kv:./guipage --add-data ./yahei.ttf:./ MathTranslate.py
+        echo "build executable"
         pyinstaller MathTranslate.spec 2>&1 | awk '!/DEBUG/ && !/TRACE/'
 
     - name: Upload artifact
