@@ -1,7 +1,7 @@
 name: PyInstaller Build
 
 on:
-    workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
   build:
@@ -9,8 +9,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        #os: [ubuntu-latest, windows-latest, macos-latest]
-        os: [ubuntu-20.04]
+        os: [ubuntu-20.04, windows-latest, macos-latest]
 
     steps:
     - name: Checkout code
@@ -21,38 +20,53 @@ jobs:
       with:
         python-version: 3.9  # e.g., 3.x, 3.8
 
-    - name: Install xvfb (Ubuntu)
+    - name: Install xvfb
       if: runner.os == 'Linux'
       run: sudo apt-get install -y xvfb
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install wheel
-        pip install mtranslate
-        pip install charset-normalizer
-        pip install requests
-        pip install regex
-        pip install tqdm
-        pip install appdata
+        pip install wheel mtranslate charset-normalizer requests regex tqdm appdata pyinstaller kivy==2.2.0
         pip install -e . --no-build-isolation
-        pip install pyinstaller
-        pip install kivy==2.2.0
+
+    - name: Patch Kivy logger
+      if: runner.os != 'Windows'
+      run: |
         KIVYROOT=$(python -c "import kivy; print(kivy.__path__[0])")
         cp gui/modified_logger.py ${KIVYROOT}/logger.py
 
-    - name: Build with PyInstaller
+    - name: Patch Kivy logger
+      if: runner.os == 'Windows'
+      run: |
+        $KIVYROOT = python -c "import kivy; print(kivy.__path__[0])"
+        Copy-Item "gui\modified_logger.py" "$KIVYROOT\logger.py"
+
+    - name: Create spec file
+      if: runner.os == 'Windows'
+      run: |
+        cd gui
+        pyi-makespec --onefile --noconsole --add-data ".\guipage\page.kv;.\guipage" --add-data ".\guipage\dialog.kv;.\guipage" --add-data ".\guipage\preferencespage.kv;.\guipage" --add-data ".\yahei.ttf;." --hidden-import win32timezone MathTranslate.py
+
+    - name: Create spec file
+      if: runner.os != 'Windows'
       run: |
         cd gui
         pyi-makespec --onefile --noconsole --add-data ./guipage/page.kv:./guipage --add-data ./guipage/dialog.kv:./guipage --add-data ./guipage/preferencespage.kv:./guipage --add-data ./yahei.ttf:./ MathTranslate.py
-        if [ "${{ runner.os }}" == "Linux" ]; then
-          xvfb-run pyinstaller MathTranslate.spec
-        else
-          pyinstaller MathTranslate.spec
-        fi
+
+    - name: Build with PyInstaller
+      if: runner.os == 'Linux'
+      run: |
+        xvfb-run pyinstaller MathTranslate.spec
+
+    - name: Build with PyInstaller
+      if: runner.os != 'Linux'
+      run: |
+        pyinstaller MathTranslate.spec
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
         name: MathTranslate-${{ matrix.os }}
         path: ./gui/dist/
+
