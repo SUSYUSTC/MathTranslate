@@ -1,0 +1,40 @@
+name: PyInstaller Build
+
+on:
+  push:
+    branches:
+      - main  # adjust this if your primary branch is named differently
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9  # e.g., 3.x, 3.8
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller
+
+    - name: Build with PyInstaller
+      run: |
+        cd gui
+        pyi-makespec --onefile --noconsole --add-data ./guipage/page.kv:./guipage --add-data ./guipage/dialog.kv:./guipage --add-data ./guipage/preferencespage.kv:./guipage --add-data ./yahei.ttf:./ MathTranslate.py
+        pyinstaller MathTranslate.spec
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: MathTranslate-${{ matrix.os }}
+        path: ./gui/dist/
