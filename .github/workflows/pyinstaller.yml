@@ -30,6 +30,10 @@ jobs:
         pip install wheel mtranslate charset-normalizer requests regex tqdm appdata pyinstaller kivy==2.2.0
         pip install -e . --no-build-isolation
 
+    - name: Install win32timezone
+      if: runner.os == 'Windows'
+      run: pip install win32timezone
+
     - name: Patch Kivy logger
       if: runner.os != 'Windows'
       run: |
