@@ -57,11 +57,13 @@ jobs:
     - name: Build with PyInstaller
       if: runner.os == 'Linux'
       run: |
+        cd gui
         xvfb-run pyinstaller MathTranslate.spec
 
     - name: Build with PyInstaller
       if: runner.os != 'Linux'
       run: |
+        cd gui
         pyinstaller MathTranslate.spec
 
     - name: Upload artifact
