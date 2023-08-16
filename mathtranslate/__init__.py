@@ -1,8 +1,8 @@
 __version__ = "3.0.2"
 __author__ = "MathTranslate developers"
 import os
-from appdata import AppDataPaths
-app_paths = AppDataPaths('mathtranslate')
+import appdata
+app_paths = appdata.AppDataPaths('mathtranslate')
 app_dir = app_paths.app_data_path
 os.makedirs(app_dir, exist_ok=True)
 
