@@ -35,15 +35,11 @@ jobs:
         pip install regex
         pip install tqdm
         pip install appdata
-        python -c "import appdata; print(appdata.__path__)"
-        which python
-        which pip
-        python -c "import sys; print(sys.path)"
         pip install -e . --no-build-isolation
         pip install pyinstaller
         pip install kivy==2.2.0
         KIVYROOT=$(python -c "import kivy; print(kivy.__path__[0])")
-        cp gui/modifed_logger.py ${KIVYROOT}/logger.py
+        cp gui/modified_logger.py ${KIVYROOT}/logger.py
 
     - name: Build with PyInstaller
       run: |
