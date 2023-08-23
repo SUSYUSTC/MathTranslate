@@ -90,6 +90,7 @@ def add_arguments(parser):
     parser.add_argument("-to", default=config.default_language_to, dest='l_to', help=f'language to, default is {config.default_language_to}')
     parser.add_argument("-threads", default=config.default_threads, type=int, help='threads for tencent translation, default is auto')
     parser.add_argument("-commands", type=str, help='add commands for translation from a file')
+    parser.add_argument("--force-utf8", action='store_true', help='force reading file by utf8')
     parser.add_argument("--list", action='store_true', help='list codes for languages')
     parser.add_argument("--setkey", action='store_true', help='set id and key of tencent translator')
     parser.add_argument("--setdefault", action='store_true', help='set default translation engine and languages')
@@ -127,6 +128,10 @@ def process_options(options):
         print(language_list)
         print('tencent translator does not support some of them')
         sys.exit()
+
+    if options.force_utf8:
+        from . import encoding
+        encoding.force_utf8 = True
 
     if options.engine == 'tencent':
         haskey = (config.tencent_secret_id is not None) and (config.tencent_secret_key is not None)
