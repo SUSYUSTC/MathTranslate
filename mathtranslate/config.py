@@ -14,7 +14,7 @@ class Config:
     tencent_secret_id_path = 'TENCENT_ID'
     tencent_secret_key_path = 'TENCENT_KEY'
 
-    default_engine_default = 'tencent'
+    default_engine_default = 'google'
     default_language_from_default = 'en'
     default_language_to_default = 'zh-CN'
     default_loading_dir_default = os.path.expanduser("~")

@@ -5,7 +5,7 @@ from . import utils
 from .translate import translate_single_tex_file
 
 
-def main(args=None, require_updated=True):
+def main(args=None, require_updated=False):
     '''
     to call this function from python,
     you can do e.g `main(['input.tex', '-o', 'output.tex'])`

@@ -92,7 +92,7 @@ def translate_dir(dir, options):
     return True
 
 
-def main(args=None, require_updated=True):
+def main(args=None, require_updated=False):
     '''
     There are four types of a downdload arxiv project
     1. It is simply a PDF file (cannot translate)
