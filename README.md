@@ -125,3 +125,9 @@ If you think this project is helping you a lot, you can support us by the Wechat
 <p align="center">
   <img width=30% src="https://github.com/SUSYUSTC/MathTranslate/assets/30529122/16f82637-e102-4330-82ad-bbcbdad1c19d">
 </p>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=SUSYUSTC/MathTranslate&type=Date&theme=dark" />
+  <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=SUSYUSTC/MathTranslate&type=Date" />
+  <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=SUSYUSTC/MathTranslate&type=Date" />
+</picture>
