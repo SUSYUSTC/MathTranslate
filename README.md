@@ -23,7 +23,6 @@
 
 <p align="center"> English | <a href="README.zh.md"> 简体中文 </a></p>
 
-<p align="center"> <a href="https://github.com/SUSYUSTC/MathTranslate/releases"> GUI download address </a></p>
 <p align="center"> <a href="http://mathtranslate.xyz"> Online translation website </a></p>
 
 
