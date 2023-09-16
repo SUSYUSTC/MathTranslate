@@ -24,8 +24,7 @@
 
 <p align="center"> <a href="README.md">English</a> |  简体中文 </p>
 
-<p align="center"> <a href="https://github.com/SUSYUSTC/MathTranslate/releases"> GUI 下载地址 </a></p>
-
+<p align="center"> <a href="http://mathtranslate.xyz"> MathTranslate 在线翻译 </a></p>
 
 大多数翻译软件无法很好地处理论文中的数学公式，许多科研工作者为此饱受困扰。本项目可以将含有大量数学公式的科研论文在任何语言之间翻译。
 
@@ -43,6 +42,8 @@
 </p>
 
 ## 发布
+### 2023年9月15日
+我们搭建了了网页版的 [MathTranslate](http://mathtranslate.xyz/) 服务器提供在线翻译。（注：服务器在海外）
 ### 2023年6月24日
 我们发布了 MathTranslate 的 [GUI](https://github.com/SUSYUSTC/MathTranslate/releases)。 无需任何额外安装，直接使用即可！
 ### 2023年5月14日
@@ -57,14 +58,6 @@
 ## 后端引擎
 默认引擎是 google 翻译，中国大陆IP无法访问。 对于中国大陆IP的用户，我们提供腾讯引擎，虽然其准确性不如 google 引擎。
 使用腾讯引擎需要注册 [腾讯翻译API](https://cloud.tencent.com/product/tmt)账号。 注册后，您可以在[腾讯控制台](https://console.cloud.tencent.com/cam/capi)中获取secret ID（不是APP ID！）和secret Key。 腾讯翻译是据我们所知除谷歌翻译外免费额度最高的翻译API，每月有500万字符免费额度，且不手动充值情况下不会扣费（即不用担心误操作）。
-
-## 代理设置
-如果您打算通过设置代理的方式使用 google 引擎，可能需要设置环境变量，否则在浏览器以外的情况下代理可能无效。需要设置的环境变量为`http_proxy`和`https_proxy`，例如
-```
-export http_proxy=http://127.0.0.1:7890
-export https_proxy=https://127.0.0.1:7890
-```
-其中的代理地址和端口会根据不同代理软件有所不同。Windows 中也可以通过非命令行的方式设置环境变量。
 
 ## GUI 安装
 只需[下载](https://github.com/SUSYUSTC/MathTranslate/releases)相应的可执行文件即可完成！
