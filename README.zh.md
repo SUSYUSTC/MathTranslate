@@ -43,7 +43,7 @@
 
 ## 发布
 ### 2023年9月15日
-我们搭建了了网页版的 [MathTranslate](http://mathtranslate.xyz/) 服务器提供在线翻译。（注：服务器在海外）
+我们搭建了了[网页版](http://mathtranslate.xyz/)的 MathTranslate 服务器提供在线翻译。（注：服务器在海外）
 ### 2023年6月24日
 我们发布了 MathTranslate 的 [GUI](https://github.com/SUSYUSTC/MathTranslate/releases)。 无需任何额外安装，直接使用即可！
 ### 2023年5月14日
