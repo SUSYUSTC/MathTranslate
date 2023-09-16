@@ -43,7 +43,7 @@ Here's an example of what you get finally.
 
 ## Releases
 ### Sep 15, 2023
-We build an online website of [MathTranslate](http://mathtranslate.xyz/) for translation.（Note: the server is at U.S.）
+We build an [online translator](http://mathtranslate.xyz/) for MathTranslate.（Note: the server is at U.S.）
 ### Jun 24, 2023
 We release the [GUI](https://github.com/SUSYUSTC/MathTranslate/releases) for MathTranslate. You can open it directly without installing anything!
 ### May 14, 2023
