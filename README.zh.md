@@ -55,6 +55,10 @@
 ### 2023年3月16日
 我们已经完成了对各操作系统的兼容。现在只需要 `pip install --upgrade mathtranslate` 就可以完成安装。
 
+## [网页服务器地址](http://mathtranslate.xyz)
+这是网站的界面:
+<img src="https://github.com/SUSYUSTC/MathTranslate/assets/30529122/edbba192-76e2-4b82-827e-11898f3cc5eb" width="1000">
+
 ## 后端引擎
 默认引擎是 google 翻译，中国大陆IP无法访问。 对于中国大陆IP的用户，我们提供腾讯引擎，虽然其准确性不如 google 引擎。
 使用腾讯引擎需要注册 [腾讯翻译API](https://cloud.tencent.com/product/tmt)账号。 注册后，您可以在[腾讯控制台](https://console.cloud.tencent.com/cam/capi)中获取secret ID（不是APP ID！）和secret Key。 腾讯翻译是据我们所知除谷歌翻译外免费额度最高的翻译API，每月有500万字符免费额度，且不手动充值情况下不会扣费（即不用担心误操作）。
