@@ -61,14 +61,6 @@ We are now supporting all operating systems! Now you can install simply by `pip 
 The default engine is google translate, which can not be accessed with IP in mainland China. For users with IP in mainland China we provide the tencent engine, although its accuracy is not as good as the google engine. 
 To use the tencent engine, you need to register the [Tencent Translation API](https://cloud.tencent.com/product/tmt) account. After registration, you can get the secret ID (not the APP ID!) and secret Key in [Tencent Console](https://console.cloud.tencent.com/cam/capi). Tencent Translate is the translation API with the highest free quota to our knowledge besides Google Translate, with a free quota of 5 million characters per month, and no fee will be deducted if there is no manual recharge (that is, there is no need to worry about misuse).
 
-## proxy settings
-If you plan to use google engine by setting a proxy, you may need to set environment variables, otherwise the proxy may not work outside of the browser. The environment variables that need to be set are `http_proxy` and `https_proxy`, for example
-```
-export http_proxy=http://127.0.0.1:7890
-export https_proxy=https://127.0.0.1:7890
-```
-The proxy address and port will be different according to different proxy software. In Windows, environment variables can also be set in a non-command-line manner.
-
 ## GUI Installation
 Simply [download](https://github.com/SUSYUSTC/MathTranslate/releases) the corresponding executable file and you are done!
 
