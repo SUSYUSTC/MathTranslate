@@ -1,0 +1,77 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-image: url('../images/logo.jpg');
+
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    color: #333;
+}
+
+.fancy-font {
+    font-family: 'Brush Script MT', cursive;
+
+    color: #215de8;
+}
+
+.bg-gradient {
+    background: linear-gradient(135deg, rgba(58, 141, 255, 0.8), rgba(134, 68, 252, 0.8));
+    border-radius: 15px;
+    color: #fff;
+}
+
+.btn {
+    border-radius: 25px;
+    transition: transform 0.3s;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+}
+
+.dark-label {
+    color: #333;
+}
+
+.github-icon {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    font-size: 60px;
+    color: #333;
+    z-index: 1000;
+}
+
+.form-control {
+    opacity: 1 !important;
+}
+
+.translation-card {
+    background-color: white !important;
+    border-radius: 15px;
+}
+
+.main-title {
+    font-weight: bold;
+    font-size: 4.5em;
+}
+
+.donate-icon {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 24px;
+    color: #fff;
+    transition: color 0.3s ease;
+}
+
+.donate-icon:hover {
+    color: #ddd;
+}
