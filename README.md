@@ -11,7 +11,12 @@
   </a>
   <!-- GUI -->
   <a href="https://github.com/SUSYUSTC/MathTranslate/releases">
-    <img src="https://img.shields.io/badge/GUI-v3.1.0-red.svg?logo=apache"/>
+    <img src="https://img.shields.io/badge/GUI-v3.1.0-red.svg?logo=appsignal"/>
+  </a>
+</p>
+  <!-- WebServer -->
+  <a href="http://mathtranslate.xyz">
+    <img src="https://img.shields.io/badge/Webserver-v3.1.0-8A2BE2.svg?logo=semanticweb"/>
   </a>
 </p>
 
