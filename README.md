@@ -25,7 +25,7 @@
   </a>
 </p>
 
-<p align="center"> English | <a href="README.zh.md"> 简体中文 | <a href="http://mathtranslate.xyz"> Online translation website </a></p>
+<p align="center"> <a href="http://mathtranslate.xyz"> Online translation website </a></p>
 
 **MathTranslate** is a project to provide translation of scientific papers with heavy math symbols from any language to any language while keeping the math symbols unchanged. In most translation softwares you wouldn't be able to keep equations and it would annoy you.
 
