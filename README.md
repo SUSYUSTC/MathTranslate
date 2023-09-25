@@ -35,7 +35,7 @@ The main work of this project is to translate LaTeX files based on [Google Trans
 
 1. 🏗️ Command-line usage: [English version](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.md) [中文版](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.zh.md)
 2. 👀 [Graphic User Interface](https://github.com/SUSYUSTC/MathTranslate/tree/main/gui/gui.md)
-3. 📄 [Web Server]()
+3. 📄 [Web Server](ttp://mathtranslate.xyz)
 
 
 ## 🥇 Releases
