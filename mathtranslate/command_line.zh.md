@@ -1,34 +1,5 @@
-# MathTranslate
+# 🏗️ 命令行使用
 
-<p align="center">
-  <!-- PyPI -->
-  <a href="https://pypi.org/project/mathtranslate/">
-    <img src="https://img.shields.io/pypi/v/mathtranslate.svg?logo=pypi"/>
-  </a>
-  <!-- License -->
-  <a href="./LICENSE">
-    <img src="https://img.shields.io/badge/license-Apache%202.0-yellow.svg?logo=apache"/>
-  </a>
-  <!-- GUI -->
-  <a href="https://github.com/SUSYUSTC/MathTranslate/releases">
-    <img src="https://img.shields.io/badge/GUI-v3.1.0-red.svg?logo=apache"/>
-  </a>
-</p>
-
-
-<p align="center">
-  <a href="https://github.com/SUSYUSTC/MathTranslate">
-    <img width=30% src="logo_zh.jpg">
-  </a>
-</p>
-
-<p align="center"> <a href="README.md">English</a> |  简体中文 </p>
-
-<p align="center"> <a href="http://mathtranslate.xyz"> MathTranslate 在线翻译 </a></p>
-
-大多数翻译软件无法很好地处理论文中的数学公式，许多科研工作者为此饱受困扰。本项目可以将含有大量数学公式的科研论文在任何语言之间翻译。
-
-该项目的主要工作是基于纯文字的谷歌翻译实现 LaTeX 文件的翻译，从而最终实现 pdf 的翻译。
 
 这里是示例:
 
@@ -41,41 +12,10 @@
 <img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/translated.png" width="400">
 </p>
 
-## 发布
-### 2023年9月15日
-我们搭建了了[网页版](http://mathtranslate.xyz/)的 MathTranslate 服务器提供在线翻译。（注：服务器在海外）
-### 2023年6月24日
-我们发布了 MathTranslate 的 [GUI](https://github.com/SUSYUSTC/MathTranslate/releases)。 无需任何额外安装，直接使用即可！
-### 2023年5月14日
-增加了一键翻译完成 arxiv 项目的功能。
-### 2023年3月24日
-增加了直接翻译 arxiv 论文的功能。
-### 2023年3月21日
-对IP地址在中国大陆的用户，我们增加了腾讯翻译的选项。
-### 2023年3月16日
-我们已经完成了对各操作系统的兼容。现在只需要 `pip install --upgrade mathtranslate` 就可以完成安装。
 
-## [网页服务器地址](http://mathtranslate.xyz)
-这是网站的界面:
-<img src="https://github.com/SUSYUSTC/MathTranslate/assets/30529122/edbba192-76e2-4b82-827e-11898f3cc5eb" width="1000">
-
-## 后端引擎
+## 后端引擎 （中文版）
 默认引擎是 google 翻译，中国大陆IP无法访问。 对于中国大陆IP的用户，我们提供腾讯引擎，虽然其准确性不如 google 引擎。
 使用腾讯引擎需要注册 [腾讯翻译API](https://cloud.tencent.com/product/tmt)账号。 注册后，您可以在[腾讯控制台](https://console.cloud.tencent.com/cam/capi)中获取secret ID（不是APP ID！）和secret Key。 腾讯翻译是据我们所知除谷歌翻译外免费额度最高的翻译API，每月有500万字符免费额度，且不手动充值情况下不会扣费（即不用担心误操作）。
-
-## GUI 安装
-只需[下载](https://github.com/SUSYUSTC/MathTranslate/releases)相应的可执行文件即可完成！
-
-## GUI 使用
-
-https://github.com/SUSYUSTC/MathTranslate/assets/30529122/04c1971d-b094-41d8-bdbb-6dd65d4b81c4
-
-您可以在 **Preferences** 页面中设置翻译引擎和语言。如果您打算使用腾讯翻译引擎，您需要设置 secret ID 和secret Key。
-1. 如果您想翻译 [arxiv](https://arxiv.org/) 上的论文，可以使用 **Arxiv Translate** 功能。 您只需输入要翻译的论文的 arxiv 编号（例如2205.15510）。翻译后你会得到一个 `.zip` 文件，其中包含 arxiv 项目的 latex 源代码。
-2. 如果您想翻译仅有 pdf 版本的论文，可以先通过 [mathpix](https://mathpix.com/) 将 pdf 转换为 latex ，然后使用**文件翻译**功能。 不幸的是， mathpix 在超过一定的使用量后需要付费。 这是[价格表](https://mathpix.com/pricing)。 翻译后您将得到一个 `.tex` 文件。
-
-翻译完成后，您可以将 `.zip`（New Project - Upload Project）或 `.tex`（New Project - Blank Project 然后复制粘贴）文件上传到 [overleaf](https://www.overleaf.com/project)在线编译。
-**注意：您必须在 `Menu - Compiler` 中将编译器设置为 XeLatex**。
 
 ## 命令行安装
 1. 安装 Python3 和 pip。
@@ -116,16 +56,3 @@ additional_commands = [
 ]
 ```
 之后加上命令行参数 `-commands MT_additional_commands.txt` 即可翻译自定义的命令。
-
-## 捐赠
-如果您觉得本软件对您非常有帮助，可以通过下面的二维码向我们捐赠
-<p align="center">
-  <img width=30% src="https://github.com/SUSYUSTC/MathTranslate/assets/30529122/16f82637-e102-4330-82ad-bbcbdad1c19d">
-</p>
-
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=SUSYUSTC/MathTranslate&type=Date&theme=dark" />
-  <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=SUSYUSTC/MathTranslate&type=Date" />
-  <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=SUSYUSTC/MathTranslate&type=Date" />
-</picture>
