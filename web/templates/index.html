@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MathTranslate</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card p-4 bg-gradient translation-card">
+                    <a href="https://github.com/SUSYUSTC/MathTranslate" target="_blank" class="github-icon">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <h2 class="text-center fancy-font main-title">MathTranslate</h2>
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ messages[0] }}
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+                    <form action="/" method="post" enctype="multipart/form-data" class="mt-4" id="mainForm">
+                        <div class="mb-3">
+                            <label for="arxiv_id" class="form-label dark-label">Arxiv ID:</label>
+                            <input type="text" name="arxiv_id" id="arxiv_id" class="form-control">
+                            <span id="error-message" style="color: red;"></span>
+                        </div>
+                        <button type="submit" name="translate_arxiv" class="btn btn-primary w-100 mb-3">Translate
+                            Arxiv</button>
+                        <!-- <div class="mb-3">
+                            <button type="submit" name="generate_pdf_from_arxiv" id="generate-pdf-btn"
+                                class="btn btn-warning w-100 mb-3">Generate PDF from Arxiv ID</button>
+                            <span id="pdf-generation-status" style="color: red;"></span>
+                        </div> -->
+                        <div class="mb-3">
+                            <label for="file" class="form-label dark-label">Or Upload .tex File:</label>
+
+                            <input type="file" name="file" id="file" accept=".tex" class="form-control"
+                                style="display: none;" onchange="updateFilename()">
+                            <button type="button" class="btn btn-secondary"
+                                onclick="document.getElementById('file').click();">Choose File</button>
+                            <span id="chosen-filename" style="color: #333;">No file chosen</span>
+
+
+                            <script>
+                                function updateFilename() {
+                                    const fileInput = document.getElementById('file');
+                                    const filenameLabel = document.getElementById('chosen-filename');
+
+                                    if (fileInput.files.length) {
+                                        filenameLabel.textContent = fileInput.files[0].name;
+                                    } else {
+                                        filenameLabel.textContent = "No file chosen";
+                                    }
+                                }
+                            </script>
+                        </div>
+                        <button type="submit" name="upload_translate" class="btn btn-success w-100 mb-3">Upload and
+                            Translate</button>
+                        <!-- <button type="submit" name="upload_translate_to_pdf" class="btn btn-info w-100">Upload and
+                            Translate to PDF</button> -->
+
+                        <div class="mb-3 mt-4">
+                            <label for="zip_file" class="form-label dark-label">Or Upload .zip File:</label>
+
+                            <input type="file" name="zip_file" id="zip_file" accept=".zip" class="form-control"
+                                style="display: none;" onchange="updateZipFilename()">
+                            <button type="button" class="btn btn-secondary"
+                                onclick="document.getElementById('zip_file').click();">Choose ZIP File</button>
+                                <span id="chosen-zipfilename" style="color: #333;">No ZIP file chosen</span>
+
+
+                            <script>
+                                function updateZipFilename() {
+                                    const zipFileInput = document.getElementById('zip_file');
+                                    const zipFilenameLabel = document.getElementById('chosen-zipfilename');
+
+                                    if (zipFileInput.files.length) {
+                                        zipFilenameLabel.textContent = zipFileInput.files[0].name;
+                                    } else {
+                                        zipFilenameLabel.textContent = "No ZIP file chosen";
+                                    }
+                                }
+                            </script>
+                        </div>
+                        <button type="submit" name="upload_zip" class="btn btn-info w-100 mb-3">Upload ZIP and Generate
+                            PDF</button>
+
+
+
+
+                    </form>
+                    {% if has_zip %}
+                    <script>
+                        function downloadZip() {
+                            window.location.href = "{{ url_for('uploaded_file', filename=zipname) }}";
+                        }
+                    </script>
+                    <div class="mt-4 text-center">
+                        <p class="text-info">Latex source code available! You can upload it to overleaf to compile by
+                            yourself. <i class="fas fa-check-circle"></i></p>
+                        <button onclick="downloadZip()" class="btn btn-dark">Download source code</button>
+                    </div>
+                    {% endif %}
+
+                    {% if has_pdf %}
+                    <script>
+                        function downloadPDF() {
+                            window.location.href = "{{ url_for('uploaded_file', filename=pdfname) }}";
+                        }
+                    </script>
+                    <div class="mt-4 text-center">
+                        <p class="text-info">PDF is successfully compiled! <i class="fas fa-check-circle"></i></p>
+                        <button onclick="downloadPDF()" class="btn btn-dark">Download PDF</button>
+                    </div>
+                    {% endif %}
+
+
+                    {% if translated %}
+                    <script>
+                        function downloadTex() {
+                            window.location.href = "{{ url_for('uploaded_file', filename=tex_filename) }}";
+                        }
+
+                        function downloadPDF() {
+                            window.location.href = "{{ url_for('uploaded_file', filename=pdf_filename) }}";
+                        }
+                    </script>
+                    <div class="mt-4 text-center">
+                        <p class="text-info">Translation complete! <i class="fas fa-check-circle"></i></p>
+                        <button onclick="downloadTex()" class="btn btn-dark">Download Translated .tex</button>
+                        <button onclick="downloadPDF()" class="btn btn-dark">Download PDF</button>
+                    </div>
+                    {% endif %}
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
+
+
+</body>
+
+</html>
