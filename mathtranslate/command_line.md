@@ -1,39 +1,7 @@
-# MathTranslate
+# 🏗️ Command line Usage
 
-<p align="center">
-  <!-- PyPI -->
-  <a href="https://pypi.org/project/mathtranslate/">
-    <img src="https://img.shields.io/pypi/v/mathtranslate.svg?logo=pypi"/>
-  </a>
-  <!-- License -->
-  <a href="./LICENSE">
-    <img src="https://img.shields.io/badge/license-Apache%202.0-yellow.svg?logo=apache"/>
-  </a>
-  <!-- GUI -->
-  <a href="https://github.com/SUSYUSTC/MathTranslate/releases">
-    <img src="https://img.shields.io/badge/GUI-v3.1.0-red.svg?logo=apache"/>
-  </a>
-</p>
 
-<p align="center">
-  <a href="https://github.com/SUSYUSTC/MathTranslate">
-    <img width=30% src="logo.jpg">
-  </a>
-</p>
-
-<p align="center"> English | <a href="README.zh.md"> 简体中文 </a></p>
-
-<p align="center"> <a href="http://mathtranslate.xyz"> Online translation website </a></p>
-
-**MathTranslate** is a project to provide translation of scientific papers with heavy math symbols from any language to any language while keeping the math symbols unchanged. In most translation softwares you wouldn't be able to keep equations and it would annoy you.
-
-The main work of this project is to translate LaTeX files based on [Google Translate](https://translate.google.com/) in plain text, and finally realize the translation of pdf. There are three ways to use our tool:
-
-1. 🏗️ [Command-line usage](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.md)
-2. 👀
-3. 
-
-Here's an example of what you get finally.
+Here is an example:
 
 <p float="left">
 <img src="https://user-images.githubusercontent.com/30529122/227698548-1cc19f7c-00e7-4312-9d58-2a7237656b51.png" width="700">
@@ -44,43 +12,10 @@ Here's an example of what you get finally.
 <img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/translated.png" width="400">
 </p>
 
-## Releases
-### Sep 15, 2023
-We build an [online translator](http://mathtranslate.xyz/) for MathTranslate.（Note: the server is at U.S.）
-### Jun 24, 2023
-We release the [GUI](https://github.com/SUSYUSTC/MathTranslate/releases) for MathTranslate. You can open it directly without installing anything!
-### May 14, 2023
-We add the ability to directly translate the whole arxiv project with just one click.
-### Mar 24, 2023
-We add the ability to directly translate arxiv papers.
-### Mar 21, 2023
-We add tencent translation option for users with IP in China mainland.
-### Mar 16, 2023
-We are now supporting all operating systems! Now you can install simply by `pip install --upgrade mathtranslate`.
-
-## 这里是[中文介绍地址](https://github.com/SUSYUSTC/MathTranslate/blob/main/README.zh.md)
-
-## [Web server address](http://mathtranslate.xyz)
-Here's a screenshot of the website:
-<img src="https://github.com/SUSYUSTC/MathTranslate/assets/30529122/edbba192-76e2-4b82-827e-11898f3cc5eb" width="1000">
 
 ## Backend engine
 The default engine is google translate, which can not be accessed with IP in mainland China. For users with IP in mainland China we provide the tencent engine, although its accuracy is not as good as the google engine. 
 To use the tencent engine, you need to register the [Tencent Translation API](https://cloud.tencent.com/product/tmt) account. After registration, you can get the secret ID (not the APP ID!) and secret Key in [Tencent Console](https://console.cloud.tencent.com/cam/capi). Tencent Translate is the translation API with the highest free quota to our knowledge besides Google Translate, with a free quota of 5 million characters per month, and no fee will be deducted if there is no manual recharge (that is, there is no need to worry about misuse).
-
-## GUI Installation
-Simply [download](https://github.com/SUSYUSTC/MathTranslate/releases) the corresponding executable file and you are done!
-
-## GUI usage
-
-https://github.com/SUSYUSTC/MathTranslate/assets/30529122/04c1971d-b094-41d8-bdbb-6dd65d4b81c4
-
-You can set the translation engine and language in the **Preference** page. If you plan to use the tencent engine, you need to set the secret ID and secret Key.
-1. If you want to translate a paper on [arxiv](https://arxiv.org/), you can use the **Arxiv Translate** function. You just need to enter the arxiv number of the paper you want to translate (for example 2205.15510). After the translation you will get a `.zip` file, which contains the latex source code of the arxiv project.
-2. If you want to translate a paper only with pdf version, you can first convert the pdf to latex by [mathpix](https://mathpix.com/) and then use the **File Translate** function. Unfortunately, mathpix requires a fee after exceeding a certain amount of usage. Here is the [price list](https://mathpix.com/pricing). After the translation you will get a `.tex` file which contains the corresponding latex file.
-
-After the translation is done you can upload either the `.zip` (New Project - Upload Project) or `.tex` (New Project - Blank Project and copy-paste) file to [overleaf](https://www.overleaf.com/project) for online compilation.
-**Note: you have to set the compiler to XeLatex in `Menu - Compiler`.**
 
 ## Command line installation
 1. Install python3 and pip.
@@ -121,15 +56,3 @@ additional_commands = [
 ]
 ```
 Then add command line parameters `-commands MT_additional_commands.txt` to translate custom commands.
-
-## Donation
-If you think this project is helping you a lot, you can support us by the Wechat QR code below
-<p align="center">
-  <img width=30% src="https://github.com/SUSYUSTC/MathTranslate/assets/30529122/16f82637-e102-4330-82ad-bbcbdad1c19d">
-</p>
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=SUSYUSTC/MathTranslate&type=Date&theme=dark" />
-  <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=SUSYUSTC/MathTranslate&type=Date" />
-  <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=SUSYUSTC/MathTranslate&type=Date" />
-</picture>
