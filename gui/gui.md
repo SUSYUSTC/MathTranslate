@@ -31,9 +31,9 @@ The main work of this project is to translate LaTeX files based on [Google Trans
 
 1. 🏗️ [Command-line usage](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.md)
 2. 👀 [Graphic User Interface](https://github.com/SUSYUSTC/MathTranslate/tree/main/gui/gui.md)
-3. [Web Server]
+3. 
 
-## 🌟 Quickstart
+Here's an example of what you get finally.
 
 <p float="left">
 <img src="https://user-images.githubusercontent.com/30529122/227698548-1cc19f7c-00e7-4312-9d58-2a7237656b51.png" width="700">
