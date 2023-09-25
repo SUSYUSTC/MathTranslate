@@ -13,7 +13,6 @@
   <a href="https://github.com/SUSYUSTC/MathTranslate/releases">
     <img src="https://img.shields.io/badge/GUI-v3.1.0-red.svg?logo=appsignal"/>
   </a>
-</p>
   <!-- WebServer -->
   <a href="http://mathtranslate.xyz">
     <img src="https://img.shields.io/badge/Webserver-v3.1.0-8A2BE2.svg?logo=semanticweb"/>
@@ -26,9 +25,7 @@
   </a>
 </p>
 
-<p align="center"> English | <a href="README.zh.md"> 简体中文 </a></p>
-
-<p align="center"> <a href="http://mathtranslate.xyz"> Online translation website </a></p>
+<p align="center"> English | <a href="README.zh.md"> 简体中文 | <a href="http://mathtranslate.xyz"> Online translation website </a></p>
 
 **MathTranslate** is a project to provide translation of scientific papers with heavy math symbols from any language to any language while keeping the math symbols unchanged. In most translation softwares you wouldn't be able to keep equations and it would annoy you.
 
