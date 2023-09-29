@@ -35,7 +35,7 @@ The main work of this project is to translate LaTeX files based on [Google Trans
 
 1. 🏗️ Command-line usage: [English version](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.md) [中文版](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.zh.md)
 2. 👀 [Graphic User Interface](https://github.com/SUSYUSTC/MathTranslate/tree/main/gui/gui.md)
-3. 📄 [Web Server](ttp://mathtranslate.xyz)
+3. 📄 [Web Server](https://github.com/SUSYUSTC/MathTranslate/tree/main/web/web.md)
 
 
 ## 🥇 Releases
@@ -44,10 +44,9 @@ The main work of this project is to translate LaTeX files based on [Google Trans
 
 
 ## 📄 Web server 
-[Web server address](http://mathtranslate.xyz) and a screenshot of the website:
-<img src="https://github.com/SUSYUSTC/MathTranslate/assets/30529122/edbba192-76e2-4b82-827e-11898f3cc5eb" width="1000">
+[Web server address](http://mathtranslate.xyz) 
 
-📘 [Learn More](http://mathtranslate.xyz)
+📘 [Learn More](https://github.com/SUSYUSTC/MathTranslate/tree/main/web/web.mds)
 
 
 ## 💰 Donation
