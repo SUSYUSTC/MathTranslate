@@ -46,7 +46,12 @@ The main work of this project is to translate LaTeX files based on [Google Trans
 ## 📄 Web server 
 [Web server address](http://mathtranslate.xyz) 
 
-📘 [Learn More](https://github.com/SUSYUSTC/MathTranslate/tree/main/web/web.md)
+📘 [Learn More](https://github.com/SUSYUSTC/MathTranslate/blob/main/web/web.md)
+
+
+## 🐛 Known issues
+
+📘 [Learn More](https://github.com/SUSYUSTC/MathTranslate/blob/main/issues.md)
 
 
 ## 💰 Donation
