@@ -34,8 +34,8 @@
 The main work of this project is to translate LaTeX files based on [Google Translate](https://translate.google.com/) in plain text, and finally realize the translation of pdf. There are three ways to use our tool:
 
 1. 🏗️ Command-line usage: [English version](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.md) [中文版](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.zh.md)
-2. 👀 [Graphic User Interface (unmaintained)](https://github.com/SUSYUSTC/MathTranslate/tree/main/gui/gui.md)
-3. 📄 [Web Server (recommended)](https://github.com/SUSYUSTC/MathTranslate/tree/main/web/web.md)
+2. 👀 [Graphic User Interface](https://github.com/SUSYUSTC/MathTranslate/tree/main/gui/gui.md) (unmaintained)
+3. 📄 [Web Server](https://github.com/SUSYUSTC/MathTranslate/tree/main/web/web.md) (recommended)
 
 
 ## 🥇 Releases
