@@ -27,15 +27,15 @@
 
 <p align="center"> <a href="http://mathtranslate.xyz"> Online translation website </a></p>
 
-**MathTranslate** is a project to provide translation of scientific papers with heavy math symbols from any language to any language while keeping the math symbols unchanged. In most translation softwares you wouldn't be able to keep equations and it would annoy you.
+This is a project to translate LaTeX documents, especially scientific papers, from any language to any language. LaTeX expressions like math expressions are perfectly kept unchanged. LaTeX documents can finally be compiled into PDF files.
 
 ## 💡 Quickstart 
 
-The main work of this project is to translate LaTeX files based on [Google Translate](https://translate.google.com/) in plain text, and finally realize the translation of pdf. There are three ways to use our tool:
+There are three ways to use our tool:
 
 1. 🏗️ Command-line usage: [English version](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.md) [中文版](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.zh.md)
 2. 👀 [Graphic User Interface](https://github.com/SUSYUSTC/MathTranslate/tree/main/gui/gui.md) (unmaintained)
-3. 📄 [Web Server](https://github.com/SUSYUSTC/MathTranslate/tree/main/web/web.md) (recommended)
+3. 📄 [Web Server](https://github.com/SUSYUSTC/MathTranslate/tree/main/web/web.md) (recommended for beginners, use the google translation backend)
 
 
 ## 🥇 Releases
