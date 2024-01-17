@@ -29,6 +29,17 @@
 
 This is a project to translate LaTeX documents, especially scientific papers, from any language to any language. LaTeX expressions like math expressions are perfectly kept unchanged. LaTeX documents can finally be compiled into PDF files.
 
+Here is an example:
+
+<p float="left">
+<img src="https://user-images.githubusercontent.com/30529122/227698548-1cc19f7c-00e7-4312-9d58-2a7237656b51.png" width="700">
+</p>
+
+<p float="left">
+<img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/screenshot.png" width="300">
+<img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/translated.png" width="400">
+</p>
+
 ## 💡 Quickstart 
 
 There are three ways to use our tool:
