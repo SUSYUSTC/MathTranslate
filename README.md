@@ -48,12 +48,6 @@ There are three ways to use our tool:
 2. 👀 [Graphic User Interface](https://github.com/SUSYUSTC/MathTranslate/tree/main/gui/gui.md) (unmaintained)
 3. 📄 [Web Server](https://github.com/SUSYUSTC/MathTranslate/tree/main/web/web.md) (recommended for beginners, use the google translation backend)
 
-
-## 🥇 Releases
-
-📘 [Learn More](https://github.com/SUSYUSTC/MathTranslate/blob/main/releases.md)
-
-
 ## 📄 Web server 
 [Web server address](http://mathtranslate.xyz) 
 
