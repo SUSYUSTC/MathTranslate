@@ -1,18 +1,6 @@
 # 🏗️ Command line Usage
 
 
-Here is an example:
-
-<p float="left">
-<img src="https://user-images.githubusercontent.com/30529122/227698548-1cc19f7c-00e7-4312-9d58-2a7237656b51.png" width="700">
-</p>
-
-<p float="left">
-<img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/screenshot.png" width="300">
-<img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/translated.png" width="400">
-</p>
-
-
 ## Backend engine
 The default engine is google translate, which can not be accessed with IP in mainland China. For users with IP in mainland China we provide the tencent engine, although its accuracy is not as good as the google engine. 
 To use the tencent engine, you need to register the [Tencent Translation API](https://cloud.tencent.com/product/tmt) account. After registration, you can get the secret ID (not the APP ID!) and secret Key in [Tencent Console](https://console.cloud.tencent.com/cam/capi). Tencent Translate is the translation API with the highest free quota to our knowledge besides Google Translate, with a free quota of 5 million characters per month, and no fee will be deducted if there is no manual recharge (that is, there is no need to worry about misuse).
