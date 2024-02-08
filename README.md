@@ -45,14 +45,8 @@ Here is an example:
 There are three ways to use our tool:
 
 1. 🏗️ Command-line usage: [English version](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.md) [中文版](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.zh.md)
-2. 👀 [Graphic User Interface](https://github.com/SUSYUSTC/MathTranslate/tree/main/gui/gui.md) (unmaintained)
-3. 📄 [Web Server](https://github.com/SUSYUSTC/MathTranslate/tree/main/web/web.md) (recommended for beginners, use the google translation backend)
-
-## 📄 Web server 
-[Web server address](http://mathtranslate.xyz) 
-
-📘 [Learn More](https://github.com/SUSYUSTC/MathTranslate/blob/main/web/web.md)
-
+2. 👀 [Tutorial of Graphic User Interface](https://github.com/SUSYUSTC/MathTranslate/tree/main/gui/gui.md) (unmaintained)
+3. 📄 [Tutorial of Web Server](https://github.com/SUSYUSTC/MathTranslate/tree/main/web/web.md) and [Web Link](http://mathtranslate.xyz) (recommended for beginners, use the google translation backend)
 
 ## 🐛 Known issues
 
