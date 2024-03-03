@@ -22,7 +22,8 @@ setuptools.setup(
                       "requests",
                       "regex",
                       "tqdm",
-                      "appdata"
+                      "appdata",
+                      "openai"
                       ],
     classifiers=[
         "Programming Language :: Python :: 3",
