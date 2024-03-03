@@ -490,3 +490,12 @@ def remove_bibnote(latex):
         else:
             return match.group(0)
     return pattern.sub(replace_function, latex)
+
+def remove_incompatible_packages(text):
+    incompatible_list=['axessibility']
+    #axessibility is incompatible with xeCJK and can be removed savely
+    #maybe more will be added
+    for package in incompatible_list:
+        pattern = re.compile(r'\\usepackage(\[[A-Za-z]*?\])?\{'+package+r'\}') 
+        text = re.sub(pattern,'',text)
+    return text

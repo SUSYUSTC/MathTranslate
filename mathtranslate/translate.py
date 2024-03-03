@@ -226,6 +226,7 @@ class LatexTranslator:
         if self.complete:
             print('It is a full latex document')
             latex_original, tex_begin, tex_end = process_latex.split_latex_document(latex_original, r'\begin{document}', r'\end{document}')
+            tex_begin = process_latex.remove_incompatible_packages(tex_begin)
             tex_begin = process_latex.remove_blank_lines(tex_begin)
             tex_begin = process_latex.insert_macro(tex_begin, '\\usepackage{xeCJK}\n\\usepackage{amsmath}')
         else:
