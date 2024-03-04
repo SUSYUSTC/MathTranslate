@@ -116,7 +116,7 @@ def process_options(options):
         config.set_variable(config.openai_api_endpoint_path, config.openai_api_endpoint_default)
         print('OpenAI api key (something like sk-xxx...):')
         config.set_variable(config.openai_api_key_path, config.openai_api_key_default)
-        print('ChatGPT model name: (leave empty for default {}'.format(config.openai_model_name_default))
+        print('ChatGPT model name: (leave empty for default {})'.format(config.openai_model_name_default))
         config.set_variable(config.openai_model_name_path,config.openai_model_name_default)
         print('saved!')
         config.load()
@@ -169,8 +169,6 @@ def process_options(options):
             print('Please setup api info for openAI api first by')
             print('translate_tex --setgpt')
             sys.exit()
-        options.threads = 1
-        print('disable mult-threading for chatGPT api')
 
     if options.threads < 0:
         print('threads must be a non-zero integer number (>=0 where 0 means auto), set to auto')

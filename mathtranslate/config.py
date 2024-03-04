@@ -29,7 +29,7 @@ class Config:
     openai_api_endpoint_default = 'https://api.openai.com'
     openai_api_key_default = None
 
-    math_code = 'XMATHX'
+    math_code = '/XMATHX' #better for gpt to understand
     log_file = f'{app_dir}/translate_log'
     raw_mularg_command_list = [('textcolor', 2, (1, ))]
     mularg_command_list = [('textcolor', 2, (1, ))]
