@@ -16,9 +16,9 @@ class GPTTranslator:
 
 
     def format_prompt(self, text, language_to, language_from):
-        PROMPT_PROTOTYPE = 'As an academic expert with specialized knowledge in various fields, please provide a proficient and precise translation translation from {} to {} of the academic text enclosed in 🔤. It is crucial to maintaining the original phrase or sentence and ensure accuracy while utilizing the appropriate language. Please provide only the translated result without any additional explanation and remove 🔤. Do not modify or delete any word contains "/XMATHX_" such as /XMATHX_0, /XMATHX_1, /XMATHX_3_4. The text is as follows: 🔤 {} 🔤  '
+        PROMPT_PROTOTYPE = 'As an academic expert with specialized knowledge in various fields, please provide a proficient and precise translation translation from {} to {} of the academic text between 🔤 and 🔠. It is crucial to maintaining the original phrase or sentence and ensure accuracy while utilizing the appropriate language. Please provide only the translated result without any additional explanation or punctuation. Please remove \"🔤\" and \"🔠\". Do not modify or delete any word contains \"#XMATHX_\" such as #XMATHX_0, #XMATHX_1, #XMATHX_3_4. The text is as follows:  🔤{}🔠'
         #prompt prototype changed from https://github.com/windingwind/zotero-pdf-translate
-        SYSTEM_PROMPT_PROTOTYPE = 'You are an academic translator with specialized knowledge in various fields, please provide a proficient and precise translation translation from {} to {} of the academic text enclosed in 🔤.Do not modify or delete any word contains "/XMATHX_" such as /XMATHX_0, /XMATHX_1, /XMATHX_3_4.'
+        SYSTEM_PROMPT_PROTOTYPE = 'You are an academic translator with specialized knowledge in various fields, please provide a proficient and precise translation translation from {} to {} of the academic text enclosed in 🔤 and 🔠.Please provide only the translated result without any additional explanation or punctuation. Do not modify or delete any word contains "#XMATHX_" such as #XMATHX_0, #XMATHX_1, #XMATHX_3_4. '
         return {'system':SYSTEM_PROMPT_PROTOTYPE.format(language_from,language_to),'user':PROMPT_PROTOTYPE.format(language_from,language_to,text)}
     
     def get_server_errormsg(self,error):
@@ -34,7 +34,7 @@ class GPTTranslator:
     
     def is_gpt_output_valid(self,masks,text_translated):
         masks_translated = self.find_all_mathmask(text_translated)
-        return (masks_translated==masks)
+        return (masks_translated==masks) and ('🔤' not in text_translated) and ('🔠' not in text_translated)
 
     def is_text_all_mask(self,masks,text):
         for mask in masks:
@@ -65,7 +65,8 @@ class GPTTranslator:
             print('OpenAI api Authentication failed ({}). please check your api setting by:\n translate_tex --setgpt'.format(self.get_server_errormsg(e)))
             sys.exit(-1)
         except openai.APIError as e:
-            print('Api requests failed with error:{}. please check your server status'.format(e.message))
+            print('Api requests failed with error:{}. please check your service status'.format(e.message))
+            raise e
 
             
         
@@ -74,10 +75,14 @@ class GPTTranslator:
         masks = self.find_all_mathmask(text)
         if self.is_text_all_mask(masks,text):
             return text
+        text = text.lstrip('\n')
         while True:
             result = self.call_openai_api(self.format_prompt(text, language_to, language_from))
-            content_translated = result.choices[0].message.content.replace('🔤','')
+            content_translated = result.choices[0].message.content
             if self.is_gpt_output_valid(masks,content_translated):
+                if content_translated.startswith('"') and content_translated.endswith('"'):
+                    content_translated=content_translated.lstrip('"').rstrip('"')
+                    #remove unexpect " " added by gpt
                 return content_translated
 
        
