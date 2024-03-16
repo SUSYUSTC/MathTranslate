@@ -27,7 +27,7 @@
 
 <p align="center"> <a href="http://mathtranslate.xyz"> Online translation website </a></p>
 
-This is a project to translate LaTeX documents, especially scientific papers, from any language to any language. LaTeX expressions like math expressions are perfectly kept unchanged. LaTeX documents can finally be compiled into PDF files.
+This is a project to translate LaTeX documents, especially scientific papers, from any language to any language. LaTeX expressions like math expressions are perfectly kept unchanged. LaTeX documents can finally be compiled into PDF files. Especially it can be directly applied to translate arXiv papers since it provides the LaTeX source code of most of the papers.
 
 Here is an example:
 
