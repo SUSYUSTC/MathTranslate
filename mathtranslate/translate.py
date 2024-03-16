@@ -30,8 +30,11 @@ class TextTranslator:
         elif engine == 'tencent':
             from mathtranslate.tencent import Translator
             translator = Translator()
+        elif engine== 'gpt':
+            from mathtranslate.chatgpt import GPTTranslator as Translator
+            translator = Translator()
         else:
-            assert False, "engine must be google or tencent"
+            assert False, "engine must be [google,tencent,gpt]"
         self.translator = translator
         self.language_to = language_to
         self.language_from = language_from
