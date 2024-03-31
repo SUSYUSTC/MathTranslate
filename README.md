@@ -65,3 +65,5 @@ If you think this project is helping you a lot, you can support us by the Wechat
   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=SUSYUSTC/MathTranslate&type=Date" />
   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=SUSYUSTC/MathTranslate&type=Date" />
 </picture>
+
+If you have any questions or have interests in making contributions, please contact me by susyustc@gmail.com or joining QQ group 288646946.
