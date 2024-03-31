@@ -42,11 +42,10 @@ Here is an example:
 
 ## 💡 Quickstart 
 
-There are three ways to use our tool:
+There are two main ways to use our tool:
 
-1. 🏗️ Command-line usage: [English version](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.md) [中文版](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.zh.md)
-2. 👀 [Tutorial of Graphic User Interface](https://github.com/SUSYUSTC/MathTranslate/tree/main/gui/gui.md) (unmaintained)
-3. 📄 [Tutorial of Web Server](https://github.com/SUSYUSTC/MathTranslate/tree/main/web/web.md) and [Web Link](http://mathtranslate.xyz) (recommended for beginners, use the google translation backend)
+1. 📄 [Web Server](http://mathtranslate.xyz) (recommended for beginners, use the google translation backend) [Tutorial of Web Server](https://github.com/SUSYUSTC/MathTranslate/tree/main/web/web.md)
+2. 🏗️ Command-line usage: [English version](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.md) [中文版](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.zh.md) (for advanced usage)
 
 ## 🐛 Known issues
 
