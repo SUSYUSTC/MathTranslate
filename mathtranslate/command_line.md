@@ -21,8 +21,6 @@ To use the tencent engine, you need to register the [Tencent Translation API](ht
 4. Compile your tex file. For a single file, you can use the command `xelatex output.tex` from [texlive](https://www.tug.org/texlive/). Chinese translation requires the xeCJK package. For arxiv projects, we recommend uploading the obtained .zip file to overleaf for online compilation (New Project - Upload Project). **Note that you need to set the compiler to XeLatex in `Menu - Compiler`.**
 5. You can change the default settings of translation language and engine through command line arguments `-engine`, `-from`, `-to`. For example, `translate_tex -engine tencent input.tex -o output.tex`. You can also permanently change the settings through `translate_tex --setdefault`. You can view more details through `translate_tex --help`. `translate_arxiv` also provides exactly the same command line arguments, which have the same effect.
 
-If you have any questions or have interests in making contributions, please contact me by susyustc@gmail.com or joining QQ group 288646946.
-
 ## Custom commands
 During the translation process, you may encounter that some content is not translated, which is generally caused by some custom commands that have not been recognized. In the command line mode, we provide the function of custom commands, you only need to create a file (such as `MT_additional_commands.txt`), which defines the commands that need to be translated, for example:
 ```
