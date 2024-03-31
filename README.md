@@ -47,10 +47,6 @@ There are two main ways to use our tool:
 1. 📄 [Web Server](http://mathtranslate.xyz) (recommended for beginners, use the google translation backend) [Tutorial of Web Server](https://github.com/SUSYUSTC/MathTranslate/tree/main/web/web.md)
 2. 🏗️ Command-line usage: [English version](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.md) [中文版](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.zh.md) (for advanced usage)
 
-## 🐛 Known issues
-
-📘 [Learn More](https://github.com/SUSYUSTC/MathTranslate/blob/main/issues.md)
-
 
 ## 💰 Donation
 If you think this project is helping you a lot, you can support us by the Wechat QR code below. 如果您觉得本软件对您非常有帮助，可以通过下面的二维码向我们捐赠
