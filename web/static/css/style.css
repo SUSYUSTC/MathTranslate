@@ -75,3 +75,13 @@ body {
 .donate-icon:hover {
     color: #ddd;
 }
+
+.language-selection-container {
+    display: flex;
+    align-items: center; /* Aligns items vertically in the center */
+    gap: 10px; /* Spacing between each item */
+}
+
+.language-field {
+    flex-grow: 1; /* Allows input fields to grow and fill the available space */
+}

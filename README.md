@@ -27,31 +27,25 @@
 
 <p align="center"> <a href="http://mathtranslate.xyz"> Online translation website </a></p>
 
-This is a project to translate LaTeX documents, especially scientific papers, from any language to any language. LaTeX expressions like math expressions are perfectly kept unchanged. LaTeX documents can finally be compiled into PDF files.
+This is a project to translate LaTeX documents, especially scientific papers, from any language to any language. LaTeX expressions like math expressions are perfectly kept unchanged. LaTeX documents can finally be compiled into PDF files. Especially it can be directly applied to translate arXiv papers since it provides the LaTeX source code of most of the papers.
+
+Here is an example:
+
+<p float="left">
+<img src="https://user-images.githubusercontent.com/30529122/227698548-1cc19f7c-00e7-4312-9d58-2a7237656b51.png" width="700">
+</p>
+
+<p float="left">
+<img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/screenshot.png" width="300">
+<img src="https://github.com/SUSYUSTC/MathTranslate/blob/main/example/translated.png" width="400">
+</p>
 
 ## 💡 Quickstart 
 
-There are three ways to use our tool:
+There are two main ways to use our tool:
 
-1. 🏗️ Command-line usage: [English version](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.md) [中文版](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.zh.md)
-2. 👀 [Graphic User Interface](https://github.com/SUSYUSTC/MathTranslate/tree/main/gui/gui.md) (unmaintained)
-3. 📄 [Web Server](https://github.com/SUSYUSTC/MathTranslate/tree/main/web/web.md) (recommended for beginners, use the google translation backend)
-
-
-## 🥇 Releases
-
-📘 [Learn More](https://github.com/SUSYUSTC/MathTranslate/blob/main/releases.md)
-
-
-## 📄 Web server 
-[Web server address](http://mathtranslate.xyz) 
-
-📘 [Learn More](https://github.com/SUSYUSTC/MathTranslate/blob/main/web/web.md)
-
-
-## 🐛 Known issues
-
-📘 [Learn More](https://github.com/SUSYUSTC/MathTranslate/blob/main/issues.md)
+1. 📄 [Web Server](http://mathtranslate.xyz) (recommended for beginners, use the google translation backend) [Tutorial of Web Server](https://github.com/SUSYUSTC/MathTranslate/tree/main/web/web.md)
+2. 🏗️ Command-line usage: [English version](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.md) [中文版](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.zh.md) (for advanced usage)
 
 
 ## 💰 Donation
@@ -66,3 +60,5 @@ If you think this project is helping you a lot, you can support us by the Wechat
   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=SUSYUSTC/MathTranslate&type=Date" />
   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=SUSYUSTC/MathTranslate&type=Date" />
 </picture>
+
+If you have any questions or have interests in making contributions, please contact me by susyustc@gmail.com or joining QQ group 288646946.
