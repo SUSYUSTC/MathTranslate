@@ -34,6 +34,7 @@ def index():
                 flash("Please enter an Arxiv ID.")
                 return render_template('index.html', translated=False)
 
+            print(arxiv_id, file=open('logging' , 'a'))
             arxiv_id1 = arxiv_id.replace('/', '-')
             folder_path = os.path.join(app.config['UPLOAD_FOLDER'], arxiv_id1)
             if not os.path.exists(folder_path):
