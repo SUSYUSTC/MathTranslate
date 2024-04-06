@@ -9,6 +9,8 @@
 
 </head>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <body>
     <div class="container mt-5">
         <div class="row justify-content-center">
@@ -25,9 +27,44 @@
                     </div>
                     {% endif %}
                     {% endwith %}
+
+                    <form action="/" method="post" enctype="multipart/form-data" class="mt-4" id="mainForm">
+                        <div class="language-selection-container" style="color: black;">
+                            <div class="language-field">
+                                <label for="inputLanguageCode">Input Language Code:</label>
+                                <input type="text" id="inputLanguageCode" name="inputLanguageCode" placeholder="en" value="en">
+                            </div>
+                            <div class="language-field" style="color: black;">
+                                <label for="outputLanguageCode">Output Language Code:</label>
+                                <input type="text" id="outputLanguageCode" name="outputLanguageCode" placeholder="zh-CN" value="zh-CN">
+                            </div>
+                            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#languageCodesModal">
+                                View Available Language Codes
+                            </button>
+                        </div>
+                        <!-- Modal -->
+                        <div class="modal fade" id="languageCodesModal" tabindex="-1" aria-labelledby="languageCodesModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="languageCodesModalLabel">Available Language Codes</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body" style="font-family: 'Courier New', Courier, monospace; color: black;">
+
+                                        <p>Language codes (google API standard)</p>
+                                        <ul> 
+                                            {% include 'lang.html' %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    <br><br>
                     <form action="/" method="post" enctype="multipart/form-data" class="mt-4" id="mainForm">
                         <div class="mb-3">
-                            <label for="arxiv_id" class="form-label dark-label">Arxiv ID:</label>
+                            <label for="arxiv_id" class="form-label dark-label">Option 1: Arxiv ID:</label>
                             <input type="text" name="arxiv_id" id="arxiv_id" class="form-control">
                             <span id="error-message" style="color: red;"></span>
                         </div>
@@ -39,7 +76,7 @@
                             <span id="pdf-generation-status" style="color: red;"></span>
                         </div> -->
                         <div class="mb-3">
-                            <label for="file" class="form-label dark-label">Or Upload .tex File:</label>
+                            <label for="file" class="form-label dark-label">Option 2: Upload .tex File:</label>
 
                             <input type="file" name="file" id="file" accept=".tex" class="form-control"
                                 style="display: none;" onchange="updateFilename()">
@@ -67,7 +104,7 @@
                             Translate to PDF</button> -->
 
                         <div class="mb-3 mt-4">
-                            <label for="zip_file" class="form-label dark-label">Or Upload .zip File:</label>
+                            <label for="zip_file" class="form-label dark-label">Option 3: Upload .zip File:</label>
 
                             <input type="file" name="zip_file" id="zip_file" accept=".zip" class="form-control"
                                 style="display: none;" onchange="updateZipFilename()">
@@ -104,7 +141,8 @@
                     </script>
                     <div class="mt-4 text-center">
                         <p class="text-info">Latex source code available! You can upload it to overleaf to compile by
-                            yourself. <i class="fas fa-check-circle"></i></p>
+                            yourself. Zip file can be directly uploaded. 
+                            You must set the compiler to XeLaTeX otherwise the compilation will fail.<i class="fas fa-check-circle"></i></p>
                         <button onclick="downloadZip()" class="btn btn-dark">Download source code</button>
                     </div>
                     {% endif %}
@@ -139,13 +177,14 @@
                     </div>
                     {% endif %}
 
+                    <p style="color: black;">Program output</p>
+                    <textarea rows="8" cols="50" readonly>{{ text }}</textarea>
 
                 </div>
             </div>
         </div>
     </div>
     <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
-
 
 </body>
 
