@@ -41,9 +41,9 @@ def translate_arxiv():
     output_text = ""
     process = subprocess.run(
         ['translate_arxiv', arxiv_id,
-            '-from', input_lang, '-to', output_lang],
-        cwd=folder_path, stdout=subprocess.PIPE, text=True, timeout=30)
-    output_text = process.stdout
+            '-from', input_lang, '-to', output_lang], cwd=folder_path,
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=30)
+    output_text = process.stdout + process.stderr
 
     # replace '/'
     arxiv_id = arxiv_id.replace('/', '-')
@@ -165,9 +165,9 @@ def upload_zip():
     output_filename = tex_to_compile.rsplit('.', 1)[0] + "_out.tex"
     output_text = ""
     process = subprocess.run(['translate_tex', tex_to_compile, '-o', output_filename,
-                    '-from', input_lang, '-to', output_lang],
-                             cwd=extract_folder, stdout=subprocess.PIPE, text=True, timeout=30)
-    output_text = process.stdout
+                    '-from', input_lang, '-to', output_lang], cwd=extract_folder,
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=30)
+    output_text = process.stdout + process.stderr
 
     # Run xelatex to generate the PDF with bibtex for references using the translated .tex file
     subprocess.run(['xelatex', '-interaction=nonstopmode',
@@ -235,9 +235,9 @@ def upload_translate():
         output_filename = filename.rsplit('.', 1)[0] + "_out.tex"
         output_text = ""
         process = subprocess.run(['translate_tex', filename, '-o', output_filename,
-                        '-from', input_lang, '-to', output_lang],
-                        cwd=app.config['UPLOAD_FOLDER'], stdout=subprocess.PIPE, text=True, timeout=30)
-        output_text = process.stdout
+                        '-from', input_lang, '-to', output_lang], cwd=app.config['UPLOAD_FOLDER'],
+                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=30)
+        output_text = process.stdout + process.stderr
 
         # generate pdf
         pdf_filename = output_filename.replace(".tex", ".pdf")
