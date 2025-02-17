@@ -8,6 +8,7 @@ import time
 import zipfile
 import shutil
 import glob
+from datetime import datetime
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'data'  # USE data as working dir
 app.config['ALLOWED_EXTENSIONS'] = {'tex'}
@@ -35,8 +36,10 @@ def translate_arxiv():
     folder_path = os.path.join(app.config['UPLOAD_FOLDER'], arxiv_id1)
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
-    print(folder_path)
-    print(arxiv_id1)
+    with open("logging", "a") as f:
+        print(datetime.now(), file=f)
+        print(folder_path, file=f)
+        print(arxiv_id1, file=f)
     # Try to generate arxiv_id.zip
     output_text = ""
     process = subprocess.run(
@@ -60,7 +63,7 @@ def translate_arxiv():
 
     # If after 30 seconds the zip file is still not found, flash an error message
     if not os.path.exists(os.path.join(folder_path, f"{arxiv_id}.zip")):
-        flash("Invalid Arxiv ID or unsupported source.")
+        flash("An error incurred. Please see the program output for details")
         return render_template('index.html', translated=False, text=output_text)
 
     # Set zipname here as the .zip file exists
@@ -89,15 +92,15 @@ def translate_arxiv():
         # Get the name of the first .tex file
         tex_to_compile = os.path.basename(tex_files[0])
 
-    # Run xelatex to generate the PDF with bibtex for references
+    latex_log_file = open(os.path.join(folder_path, 'latex_log'), "w")
     subprocess.run(['xelatex', '-interaction=nonstopmode',
-                    tex_to_compile], cwd=folder_path)  # Initial compilation
+                    tex_to_compile], cwd=folder_path, stdout=latex_log_file)  # Initial compilation
     subprocess.run(['bibtex', tex_to_compile.rsplit('.', 1)[
-                    0]], cwd=folder_path)  # Run bibtex for references
+                    0]], cwd=folder_path, stdout=latex_log_file)  # Run bibtex for references
     subprocess.run(['xelatex', '-interaction=nonstopmode',
-                    tex_to_compile], cwd=folder_path)  # Second compilation
+                    tex_to_compile], cwd=folder_path, stdout=latex_log_file)  # Second compilation
     subprocess.run(['xelatex', '-interaction=nonstopmode',
-                    tex_to_compile], cwd=folder_path)  # Third compilation
+                    tex_to_compile], cwd=folder_path, stdout=latex_log_file)  # Third compilation
 
     # Check if the .pdf version of the compiled .tex exists
     if os.path.exists(os.path.join(folder_path, tex_to_compile.rsplit('.', 1)[0] + '.pdf')):
