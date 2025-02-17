@@ -64,7 +64,7 @@
                     <br><br>
                     <form action="/" method="post" enctype="multipart/form-data" class="mt-4" id="mainForm">
                         <div class="mb-3">
-                            <label for="arxiv_id" class="form-label dark-label">Option 1: Arxiv ID:</label>
+                            <label for="arxiv_id" class="form-label dark-label">Option 1: Arxiv ID (e.g. 2403.08441):</label>
                             <input type="text" name="arxiv_id" id="arxiv_id" class="form-control">
                             <span id="error-message" style="color: red;"></span>
                         </div>
@@ -104,7 +104,7 @@
                             Translate to PDF</button> -->
 
                         <div class="mb-3 mt-4">
-                            <label for="zip_file" class="form-label dark-label">Option 3: Upload .zip File:</label>
+                            <label for="zip_file" class="form-label dark-label">Option 3 (project with multiple files): Upload .zip file:</label>
 
                             <input type="file" name="zip_file" id="zip_file" accept=".zip" class="form-control"
                                 style="display: none;" onchange="updateZipFilename()">
@@ -142,7 +142,7 @@
                     <div class="mt-4 text-center">
                         <p class="text-info">Latex source code available! You can upload it to overleaf to compile by
                             yourself. Zip file can be directly uploaded. 
-                            You must set the compiler to XeLaTeX otherwise the compilation will fail.<i class="fas fa-check-circle"></i></p>
+							You must set the compiler to <b>XeLaTeX</b> otherwise the compilation will fail.<i class="fas fa-check-circle"></i></p>
                         <button onclick="downloadZip()" class="btn btn-dark">Download source code</button>
                     </div>
                     {% endif %}
