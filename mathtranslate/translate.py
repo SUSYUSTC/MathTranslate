@@ -101,6 +101,13 @@ class LatexTranslator:
         text_translated = '\n'.join(parts_translated)
         return text_translated.replace("\u200b", "")
 
+    def replace_with_uppercase(self, text, word):
+        # Construct a regex pattern that matches the word regardless of case
+        pattern = re.compile(re.escape(word), re.IGNORECASE)
+        # Replace all matches with the uppercase version of the word
+        result = pattern.sub(word.upper(), text)
+        return result
+
     def _translate_text_in_paragraph_latex(self, latex_original_paragraph):
         '''
         Translate a latex paragraph, which means that it could contain latex objects
@@ -123,6 +130,7 @@ class LatexTranslator:
             print(f'\n\nParagraph {self.num}\n\n', file=self.f_old)
             print(text_original_paragraph, file=self.f_old)
         text_translated_paragraph = self.translate_paragraph_text(text_original_paragraph)
+        text_translated_paragraph = self.replace_with_uppercase(text_translated_paragraph, config.math_code)
         if self.debug:
             print(f'\n\nParagraph {self.num}\n\n', file=self.f_new)
             print(text_translated_paragraph, file=self.f_new)
