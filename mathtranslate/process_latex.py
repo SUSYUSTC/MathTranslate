@@ -403,9 +403,12 @@ def replace_accent(text):
 
 def recover_accent(text):
     def replace_function(match):
-        special = special_character_backward[match.group(1)]
-        char = match.group(2)
-        return rf'\{special}{{{char}}}'
+        try:
+            special = special_character_backward[match.group(1)]
+            char = match.group(2)
+            return rf'\{special}{{{char}}}'
+        except Exception:
+            return ''
 
     text = re.compile(match_code_accent).sub(replace_function, text)
 
