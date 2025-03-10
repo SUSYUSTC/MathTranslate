@@ -13,6 +13,9 @@ class Config:
     default_threads_path = 'DEFAULT_THREADS'
     tencent_secret_id_path = 'TENCENT_ID'
     tencent_secret_key_path = 'TENCENT_KEY'
+    openai_model_name_path = 'OPENAI_MODEL'
+    openai_api_endpoint_path = 'OPENAI_URL'
+    openai_api_key_path = 'OPENAI_KEY'
 
     default_engine_default = 'google'
     default_language_from_default = 'en'
@@ -22,8 +25,11 @@ class Config:
     default_threads_default = 0
     tencent_secret_id_default = None
     tencent_secret_key_default = None
+    openai_model_name_default = 'gpt-3.5-turbo'
+    openai_api_endpoint_default = 'https://api.openai.com'
+    openai_api_key_default = None
 
-    math_code = 'XMATHX'
+    math_code = '/XMATHX' #better for gpt to understand
     log_file = f'{app_dir}/translate_log'
     raw_mularg_command_list = [('textcolor', 2, (1, ))]
     mularg_command_list = [('textcolor', 2, (1, ))]
@@ -62,6 +68,9 @@ class Config:
         self.default_loading_dir = self.read_variable(self.default_loading_dir_path, self.default_loading_dir_default)
         self.default_saving_dir = self.read_variable(self.default_saving_dir_path, self.default_saving_dir_default)
         self.default_threads = int(self.read_variable(self.default_threads_path, self.default_threads_default))
+        self.openai_model_name = self.read_variable(self.openai_model_name_path,self.openai_model_name_default)
+        self.openai_api_endpoint = self.read_variable(self.openai_api_endpoint_path,self.openai_api_endpoint_default)
+        self.openai_api_key = self.read_variable(self.openai_api_key_path,self.openai_api_key_default)
         if not os.path.exists(self.default_loading_dir):
             self.default_loading_dir = self.default_loading_dir_default
         if not os.path.exists(self.default_saving_dir):

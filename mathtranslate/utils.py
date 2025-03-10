@@ -85,7 +85,7 @@ def check_update(require_updated=True):
 
 
 def add_arguments(parser):
-    parser.add_argument("-engine", default=config.default_engine, help=f'translation engine, avaiable options include google and tencent. default is {config.default_engine}')
+    parser.add_argument("-engine", default=config.default_engine, help=f'translation engine, avaiable options include [google, tencent, gpt]. default is {config.default_engine}')
     parser.add_argument("-from", default=config.default_language_from, dest='l_from', help=f'language from, default is {config.default_language_from}')
     parser.add_argument("-to", default=config.default_language_to, dest='l_to', help=f'language to, default is {config.default_language_to}')
     parser.add_argument("-threads", default=config.default_threads, type=int, help='threads for tencent translation, default is auto')
@@ -96,6 +96,7 @@ def add_arguments(parser):
     parser.add_argument("--setdefault", action='store_true', help='set default translation engine and languages')
     parser.add_argument("--debug", action='store_true', help='Debug options for developers')
     parser.add_argument("--nocache", action='store_true', help='Debug options for developers')
+    parser.add_argument("--setgpt",action='store_true',help='set baseUrl,apiKey and model name of your GPT service')
 
 
 def process_options(options):
@@ -110,8 +111,22 @@ def process_options(options):
         print('secretKey:', config.tencent_secret_key)
         sys.exit()
 
+    if options.setgpt:
+        print('OpenAI api base URL: (leave empty for default {})'.format(config.openai_api_endpoint_default))
+        config.set_variable(config.openai_api_endpoint_path, config.openai_api_endpoint_default)
+        print('OpenAI api key (something like sk-xxx...):')
+        config.set_variable(config.openai_api_key_path, config.openai_api_key_default)
+        print('ChatGPT model name: (leave empty for default {})'.format(config.openai_model_name_default))
+        config.set_variable(config.openai_model_name_path,config.openai_model_name_default)
+        print('saved!')
+        config.load()
+        print('Base URL:', config.openai_api_endpoint)
+        print('Api key:', config.openai_api_key)
+        print('Model Name:', config.openai_model_name)
+        sys.exit()
+
     if options.setdefault:
-        print('Translation engine (google or tencent, default google)')
+        print('Translation engine [google,tencent,gpt], default google)')
         config.set_variable(config.default_engine_path, config.default_engine_default)
         print('Translation language from (default en)')
         config.set_variable(config.default_language_from_path, config.default_language_from_default)
@@ -148,6 +163,12 @@ def process_options(options):
         elif options.threads > 1:
             options.threads = 1
             print('tencent engine does not support multi-threading, set to 1')
+    elif options.engine == 'gpt':
+        hasgptkey = (config.openai_api_key is not None)
+        if not hasgptkey:
+            print('Please setup api info for openAI api first by')
+            print('translate_tex --setgpt')
+            sys.exit()
 
     if options.threads < 0:
         print('threads must be a non-zero integer number (>=0 where 0 means auto), set to auto')
