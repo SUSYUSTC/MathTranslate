@@ -74,14 +74,17 @@ split = lambda s: re.split(r'\s+', s)
 
 
 def check_update(require_updated=True):
-    latest = get_latest_version()
-    updated = __version__ == latest
-    if updated:
-        print("The current mathtranslate is latest")
-    else:
-        print("The current mathtranslate is not latest, please update by `pip install --upgrade mathtranslate`")
-        if (not config.test_environment) and require_updated:
-            sys.exit()
+    try:
+        latest = get_latest_version()
+        updated = __version__ == latest
+        if updated:
+            print("The current mathtranslate is latest")
+        else:
+            print("The current mathtranslate is not latest, please update by `pip install --upgrade mathtranslate`")
+            if (not config.test_environment) and require_updated:
+                sys.exit()
+    except Exception as e:
+        print("Checking update failed, please check your network")
 
 
 def add_arguments(parser):
