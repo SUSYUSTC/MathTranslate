@@ -71,12 +71,21 @@ class LatexTranslator:
             self.threads = None
         else:
             self.threads = threads
+        self.record = True
+        self.record_data = {}
 
     def close(self):
         if self.debug:
             self.f_old.close()
             self.f_new.close()
             self.f_obj.close()
+
+    def translate_with_record(self, text):
+        if self.record:
+            self.record_data[text] = None
+            return text
+        else:
+            return self.record_data[text]
 
     def translate_paragraph_text(self, text):
         '''
@@ -97,7 +106,8 @@ class LatexTranslator:
         parts.append(part)
         parts_translated = []
         for part in parts:
-            parts_translated.append(self.translator.translate(part))
+            parts_translated.append(self.translate_with_record(part))
+            #parts_translated.append(part)
         text_translated = '\n'.join(parts_translated)
         return text_translated.replace("\u200b", "")
 
@@ -242,8 +252,18 @@ class LatexTranslator:
         latex_translated_paragraphs = []
         self.num = 0
         # tqdm with concurrent.futures.ThreadPoolExecutor()
+
+        self.record = True
+        for latex_original_paragraph in latex_original_paragraphs:
+            self.translate_paragraph_latex(latex_original_paragraph)
+
         with concurrent.futures.ThreadPoolExecutor(max_workers=self.threads) as executor:
-            latex_translated_paragraphs = list(tqdm.auto.tqdm(executor.map(self.worker, latex_original_paragraphs), total=len(latex_original_paragraphs)))
+            values = list(executor.map(self.translator.translate, self.record_data.keys()))
+            #latex_translated_paragraphs = list(tqdm.auto.tqdm(executor.map(self.worker, latex_original_paragraphs), total=len(latex_original_paragraphs)))
+        self.record_data = dict(zip(self.record_data.keys(), values))
+
+        self.record = False
+        latex_translated_paragraphs = [self.translate_paragraph_latex(latex_original_paragraph) for latex_original_paragraph in latex_original_paragraphs]
 
         latex_translated = '\n\n'.join(latex_translated_paragraphs)
 
