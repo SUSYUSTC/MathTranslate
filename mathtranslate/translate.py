@@ -27,19 +27,20 @@ class TextTranslator:
         self.engine = engine
         if engine == 'google':
             import mtranslate as translator
+            self.try_translate = lambda text: self.translator.translate(text, self.language_to, self.language_from)
+            #from mathtranslate.google import ParallelTranslator
+            #self.translator = ParallelTranslator(language_to, language_from)
+            #self.try_translate = lambda text: self.translator.translate(text)
         elif engine == 'tencent':
             from mathtranslate.tencent import Translator
-            translator = Translator()
+            self.translator = Translator()
+            self.try_translate = lambda text: self.translator.translate(text, self.language_to, self.language_from)
         else:
             assert False, "engine must be google or tencent"
-        self.translator = translator
         self.language_to = language_to
         self.language_from = language_from
         self.number_of_calls = 0
         self.tot_char = 0
-
-    def try_translate(self, text):
-        return self.translator.translate(text, self.language_to, self.language_from)
 
     def translate(self, text):
         if not re.match(re.compile(r'.*[a-zA-Z].*', re.DOTALL), text):
@@ -97,7 +98,12 @@ class LatexTranslator:
         parts.append(part)
         parts_translated = []
         for part in parts:
-            parts_translated.append(self.translator.translate(part))
+            text_original = part.strip()
+            if text_original.upper() == text_original:
+                result = text_original
+            else:
+                result = self.translator.translate(text_original)
+            parts_translated.append(result)
         text_translated = '\n'.join(parts_translated)
         return text_translated.replace("\u200b", "")
 
