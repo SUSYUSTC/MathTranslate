@@ -27,19 +27,20 @@ class TextTranslator:
         self.engine = engine
         if engine == 'google':
             import mtranslate as translator
+            self.try_translate = lambda text: self.translator.translate(text, self.language_to, self.language_from)
+            #from mathtranslate.google import ParallelTranslator
+            #self.translator = ParallelTranslator(language_to, language_from)
+            #self.try_translate = lambda text: self.translator.translate(text)
         elif engine == 'tencent':
             from mathtranslate.tencent import Translator
-            translator = Translator()
+            self.translator = Translator()
+            self.try_translate = lambda text: self.translator.translate(text, self.language_to, self.language_from)
         else:
             assert False, "engine must be google or tencent"
-        self.translator = translator
         self.language_to = language_to
         self.language_from = language_from
         self.number_of_calls = 0
         self.tot_char = 0
-
-    def try_translate(self, text):
-        return self.translator.translate(text, self.language_to, self.language_from)
 
     def translate(self, text):
         if not re.match(re.compile(r'.*[a-zA-Z].*', re.DOTALL), text):
@@ -106,10 +107,22 @@ class LatexTranslator:
         parts.append(part)
         parts_translated = []
         for part in parts:
-            parts_translated.append(self.translate_with_record(part))
-            #parts_translated.append(part)
+            text_original = part.strip()
+            if text_original.upper() == text_original:
+                result = text_original
+            else:
+                result = self.translate_with_record(part)
+                #result = self.translator.translate(part)
+            parts_translated.append(result)
         text_translated = '\n'.join(parts_translated)
         return text_translated.replace("\u200b", "")
+
+    def replace_with_uppercase(self, text, word):
+        # Construct a regex pattern that matches the word regardless of case
+        pattern = re.compile(re.escape(word), re.IGNORECASE)
+        # Replace all matches with the uppercase version of the word
+        result = pattern.sub(word.upper(), text)
+        return result
 
     def _translate_text_in_paragraph_latex(self, latex_original_paragraph):
         '''
@@ -133,6 +146,7 @@ class LatexTranslator:
             print(f'\n\nParagraph {self.num}\n\n', file=self.f_old)
             print(text_original_paragraph, file=self.f_old)
         text_translated_paragraph = self.translate_paragraph_text(text_original_paragraph)
+        text_translated_paragraph = self.replace_with_uppercase(text_translated_paragraph, config.math_code)
         if self.debug:
             print(f'\n\nParagraph {self.num}\n\n', file=self.f_new)
             print(text_translated_paragraph, file=self.f_new)

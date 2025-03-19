@@ -42,9 +42,11 @@ Here is an example:
 
 ## 💡 Quickstart 
 
+If you want to translate an arXiv paper you can directly use our tool, which provide an interface of taking arXiv number as input. Otherwise you can use [mathpix](https://mathpix.com/) to generate the LaTeX code from pdf and then use our tool to translate. However, we want to remind that mathpix is not totally free software.
+
 There are two main ways to use our tool:
 
-1. 📄 [Web Server](http://mathtranslate.xyz) (recommended for beginners, use the google translation backend) [Tutorial of Web Server](https://github.com/SUSYUSTC/MathTranslate/tree/main/web/web.md)
+1. 📄 [Web Server](http://mathtranslate.xyz) (recommended for beginners, use the google translation backend)
 2. 🏗️ Command-line usage: [English version](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.md) [中文版](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.zh.md) (for advanced usage)
 
 
