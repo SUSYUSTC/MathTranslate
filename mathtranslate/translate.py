@@ -10,7 +10,7 @@ from .encoding import get_file_encoding
 import time
 import re
 import tqdm.auto
-import concurrent.futures
+#import concurrent.futures
 default_begin = r'''
 \documentclass[UTF8]{article}
 \usepackage{xeCJK}
@@ -96,13 +96,15 @@ class LatexTranslator:
 
     def split_translation_by_record(self, text, standard):
         words = set(list(standard))
-        lines = ['']
+        lines = [[]]
         for line in text.split('\n'):
             this_words = set(list(line))
             if (len(line) < len(words) * 1.5) and (len(line) > len(words) * 0.5) and (len(this_words.intersection(words)) >= len(this_words) * 0.8):
-                lines.append('')
+                lines.append([])
             else:
-                lines[-1] += line + '\n'
+                lines[-1].append(line.strip())
+        for i in range(len(lines)):
+            lines[i] = '\n'.join(lines[i])
         return lines
 
     def translate_record_data(self):

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_from_directory, redirect, flash
+from flask import Flask, render_template, request, send_from_directory, redirect, flash, Response
 import os
 import subprocess
 import werkzeug
@@ -6,8 +6,8 @@ import shutil
 import sched
 import time
 import zipfile
-import shutil
 import glob
+import uuid
 from datetime import datetime
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'data'  # USE data as working dir
@@ -19,7 +19,33 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 
-def translate_arxiv():
+def stream_file(uid):
+    """Continuously stream the full file content every second."""
+    while True:
+        filename = f"output/{uid}"
+        content = open(filename, "r").read().strip()
+        formatted_content = "\n".join(f"data: {line}" for line in content.split("\n"))
+        yield f"{formatted_content}\n\n"
+        #yield f"data: {content}\n\n"  # SSE format
+
+        time.sleep(0.2)  # Avoid excessive CPU usage
+
+
+def return_new_index():
+    uid = str(uuid.uuid4())
+    filename = f"output/{uid}"
+    open(filename, "w").close()
+    return render_template('index.html', uid=uid, translated=False)
+
+
+@app.route('/stream')
+def stream():
+    uid = request.args.get("uid")
+    print('requested', uid)
+    return Response(stream_file(uid), mimetype='text/event-stream')
+
+
+def translate_arxiv(uid):
     has_zip = False
     has_pdf = False
     zipname = ""
@@ -30,7 +56,7 @@ def translate_arxiv():
     output_lang = request.form['outputLanguageCode']
     if not arxiv_id:
         flash("Please enter an Arxiv ID.")
-        return render_template('index.html', translated=False)
+        return return_new_index()
 
     arxiv_id1 = arxiv_id.replace('/', '-')
     folder_path = os.path.join(app.config['UPLOAD_FOLDER'], arxiv_id1)
@@ -41,12 +67,10 @@ def translate_arxiv():
         print(folder_path, file=f)
         print(arxiv_id1, file=f)
     # Try to generate arxiv_id.zip
-    output_text = ""
+    f = open(f"output/{uid}", "w")
     process = subprocess.run(
-        ['translate_arxiv', arxiv_id,
-            '-from', input_lang, '-to', output_lang], cwd=folder_path,
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=30)
-    output_text = process.stdout + process.stderr
+        ['translate_arxiv', arxiv_id, '-from', input_lang, '-to', output_lang], cwd=folder_path, stdout=f, stderr=f, text=True, timeout=300)
+    f.close()
 
     # replace '/'
     arxiv_id = arxiv_id.replace('/', '-')
@@ -64,7 +88,7 @@ def translate_arxiv():
     # If after 30 seconds the zip file is still not found, flash an error message
     if not os.path.exists(os.path.join(folder_path, f"{arxiv_id}.zip")):
         flash("An error incurred. Please see the program output for details")
-        return render_template('index.html', translated=False, text=output_text)
+        return render_template('index.html', uid=uid, translated=False)
 
     # Set zipname here as the .zip file exists
     has_zip = True
@@ -83,7 +107,7 @@ def translate_arxiv():
 
     if not tex_files:  # If no .tex files are found
         flash("No .tex files found. The paper might not be supported.")
-        return render_template('index.html', translated=False, text=output_text)
+        return render_template('index.html', uid=uid, translated=False)
 
     # Choose the main.tex file if it exists, otherwise choose the first .tex file
     if os.path.join(folder_path, 'main.tex') in tex_files:
@@ -115,12 +139,12 @@ def translate_arxiv():
         pdfname = ""
         flash('PDF generation failed. Please try on Overleaf. You can directly upload the zip file. You must set the compiler to XeLaTeX otherwise it would fail.')
     if has_pdf or has_zip:
-        return render_template('index.html', has_pdf=has_pdf, has_zip=has_zip, pdfname=pdfname, zipname=zipname, text=output_text)
+        return render_template('index.html', uid=uid, has_pdf=has_pdf, has_zip=has_zip, pdfname=pdfname, zipname=zipname)
     else:
-        return render_template('index.html', translated=False, text=output_text)
+        return render_template('index.html', uid=uid, translated=False)
 
 
-def upload_zip():
+def upload_zip(uid):
     has_zip = False
     has_pdf = False
     zipname = ""
@@ -128,7 +152,7 @@ def upload_zip():
     # Check if a file is present
     if 'zip_file' not in request.files:
         flash('No file part')
-        return render_template('index.html', translated=False)
+        return return_new_index()
 
     zip_file = request.files['zip_file']
     input_lang = request.form['inputLanguageCode']
@@ -155,7 +179,7 @@ def upload_zip():
 
     if not tex_files:  # If no .tex files are found
         flash("No .tex files found. The ZIP might not be supported.")
-        return render_template('index.html', translated=False)
+        return return_new_index()
 
     # Choose the main.tex file if it exists, otherwise choose the first .tex file
     if os.path.join(extract_folder, 'main.tex') in tex_files:
@@ -166,11 +190,11 @@ def upload_zip():
 
     # Translate the chosen .tex file
     output_filename = tex_to_compile.rsplit('.', 1)[0] + "_out.tex"
-    output_text = ""
+    f = open(f"output/{uid}", "w")
     process = subprocess.run(['translate_tex', tex_to_compile, '-o', output_filename,
                     '-from', input_lang, '-to', output_lang], cwd=extract_folder,
-                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=30)
-    output_text = process.stdout + process.stderr
+                             stdout=f, stderr=f, text=True, timeout=30)
+    f.close()
 
     # Run xelatex to generate the PDF with bibtex for references using the translated .tex file
     subprocess.run(['xelatex', '-interaction=nonstopmode',
@@ -192,14 +216,14 @@ def upload_zip():
                     0] + '.pdf'), os.path.join(app.config['UPLOAD_FOLDER'], pdfname))
     else:
         flash('Compile Error. Please try on Overleaf. You can directly upload the zip file. You must set the compiler to XeLaTeX otherwise it would fail.')
-        return render_template('index.html', translated=False, text=output_text)
+        return render_template('index.html', uid=uid, translated=False)
     if has_pdf or has_zip:
-        return render_template('index.html', has_pdf=has_pdf, has_zip=has_zip, pdfname=pdfname, zipname=zipname, text=output_text)
+        return render_template('index.html', uid=uid, has_pdf=has_pdf, has_zip=has_zip, pdfname=pdfname, zipname=zipname)
     else:
-        return render_template('index.html', translated=False, text=output_text)
+        return render_template('index.html', uid=uid, translated=False)
 
 
-def upload_translate():
+def upload_translate(uid):
     has_zip = False
     has_pdf = False
     zipname = ""
@@ -209,14 +233,14 @@ def upload_translate():
     # Check if a file is present
     if 'file' not in request.files:
         flash('No file part')
-        return render_template('index.html', translated=False)
+        return return_new_index()
 
     file = request.files['file']
 
     # If no file is selected
     if file.filename == '':
         flash('No selected file')
-        return render_template('index.html', translated=False)
+        return return_new_index()
 
     # file is allowed
     if file and allowed_file(file.filename):
@@ -236,22 +260,21 @@ def upload_translate():
 
         # translate
         output_filename = filename.rsplit('.', 1)[0] + "_out.tex"
-        output_text = ""
+        f = open(f"output/{uid}", "w")
         process = subprocess.run(['translate_tex', filename, '-o', output_filename,
                         '-from', input_lang, '-to', output_lang], cwd=app.config['UPLOAD_FOLDER'],
-                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=30)
-        output_text = process.stdout + process.stderr
-
+                                 stdout=f, stderr=f, text=True, timeout=30)
+        f.close()
         # generate pdf
         pdf_filename = output_filename.replace(".tex", ".pdf")
         subprocess.run(['xelatex', '-interaction=nonstopmode',
                         output_filename], cwd=app.config['UPLOAD_FOLDER'])
 
-        return render_template('index.html', translated=True, tex_filename=output_filename, pdf_filename=pdf_filename, text=output_text)
+        return render_template('index.html', uid=uid, translated=True, tex_filename=output_filename, pdf_filename=pdf_filename)
     if has_pdf or has_zip:
-        return render_template('index.html', has_pdf=has_pdf, has_zip=has_zip, pdfname=pdfname, zipname=zipname, text=output_text)
+        return render_template('index.html', uid=uid, has_pdf=has_pdf, has_zip=has_zip, pdfname=pdfname, zipname=zipname)
     else:
-        return render_template('index.html', translated=False, text=output_text)
+        return render_template('index.html', uid=uid, translated=False)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -261,18 +284,20 @@ def index():
 
         # Check if the "Translate arxiv" button was clicked
         if 'translate_arxiv' in request.form:
-            return translate_arxiv()
+            uid = request.form['uid']
+            return translate_arxiv(uid)
         elif 'upload_zip' in request.form:
-            return upload_zip()
+            uid = request.form['uid']
+            return upload_zip(uid)
         elif 'upload_translate' in request.form:
-            return upload_translate()
+            uid = request.form['uid']
+            return upload_translate(uid)
 
-    return render_template('index.html', translated=False)
+    return return_new_index()
 
 
 @app.route('/<filename>')
 def uploaded_file(filename):
-
     response = send_from_directory(
         app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
 

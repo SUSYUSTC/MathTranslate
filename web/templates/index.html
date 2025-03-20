@@ -68,8 +68,15 @@
                             <input type="text" name="arxiv_id" id="arxiv_id" class="form-control">
                             <span id="error-message" style="color: red;"></span>
                         </div>
-                        <button type="submit" name="translate_arxiv" class="btn btn-primary w-100 mb-3">Translate
-                            Arxiv</button>
+                        <!--<button type="submit" name="translate_arxiv" class="btn btn-primary w-100 mb-3">Translate Arxiv</button> -->
+                        <form action="/submit" method="post">
+                            <!-- Hidden input to include user_id -->
+                            <input type="hidden" name="uid" value="{{ uid }}">
+
+                            <button type="submit" name="translate_arxiv" class="btn btn-primary w-100 mb-3">
+                                Translate Arxiv
+                            </button>
+                        </form>
                         <!-- <div class="mb-3">
                             <button type="submit" name="generate_pdf_from_arxiv" id="generate-pdf-btn"
                                 class="btn btn-warning w-100 mb-3">Generate PDF from Arxiv ID</button>
@@ -178,7 +185,27 @@
                     {% endif %}
 
                     <p style="color: black;">Program output</p>
-                    <textarea rows="8" cols="50" readonly>{{ text }}</textarea>
+                    <textarea id="output" rows="8" cols="50" readonly></textarea>
+                    <!-- <textarea rows="8" cols="50" readonly>{{ text }}</textarea> -->
+                    <script>
+                        const outputBox = document.getElementById('output');
+                        const eventSource = new EventSource(`/stream?uid={{ uid }}`);
+
+                        eventSource.onmessage = function(event) {
+                            const isAtBottom = outputBox.scrollHeight - outputBox.scrollTop <= outputBox.clientHeight + 5;  // Detect if user is at bottom
+
+                            outputBox.value = event.data;  // Update content
+
+                            if (isAtBottom) {
+                                outputBox.scrollTop = outputBox.scrollHeight;  // Auto-scroll only if user was at bottom
+                            }
+                        };
+
+                        eventSource.onerror = function() {
+                            console.log("Stream closed.");
+                            eventSource.close();
+                        };
+                    </script>
 
                 </div>
             </div>

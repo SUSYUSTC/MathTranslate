@@ -47,7 +47,7 @@ class Translator:
 
         # Step 1: Start a hidden virtual display (Xvfb)
         if not GUI:
-            self.xvfb_process = subprocess.Popen(["Xvfb", f":{port}", "-screen", "0", "1920x1080x24"], preexec_fn=set_pdeathsig)
+            self.xvfb_process = subprocess.Popen(["Xvfb", f":{port}", "-screen", "0", "1920x1080x24"], preexec_fn=set_pdeathsig, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             time.sleep(2)  # Wait for Xvfb to start
 
         # Step 2: Start Chrome in the hidden display
