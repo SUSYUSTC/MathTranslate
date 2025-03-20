@@ -19,7 +19,7 @@ get_pattern_env = lambda name: rf"\\begin{spaces}\{{({name})\}}{spaces}({options
 def get_pattern_command_full(name, n=None):
     pattern = rf'\\({name})'
     if n is None:
-        pattern += rf'{spaces}({options})?'
+        pattern += rf'({spaces}{options})'+'{0,2}'
         n = 1
         begin_brace = 3
     else:
