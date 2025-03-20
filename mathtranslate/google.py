@@ -23,6 +23,8 @@ def find_free_port():
 
 
 libc = ctypes.CDLL("libc.so.6")
+
+
 def set_pdeathsig():
     """Ensures the subprocess is killed if the parent process exits."""
     import signal
@@ -64,7 +66,7 @@ class Translator:
             "--disable-features=UseOzonePlatform"  # Fix Wayland-related issues
         ], **opts)
 
-        time.sleep(3)  # Wait for Chrome to start 
+        time.sleep(3)  # Wait for Chrome to start
 
         options = webdriver.ChromeOptions()
         options.debugger_address = f"127.0.0.1:{port}"
@@ -87,7 +89,7 @@ class Translator:
         self.input_box.clear()
         self.driver.execute_script("arguments[0].value = arguments[1];", self.input_box, text)
         self.input_box.send_keys(' ')
-        
+
         def updated(driver):
             try:
                 result = driver.find_element(By.XPATH, self.output_box_xpath)

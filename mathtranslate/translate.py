@@ -26,15 +26,17 @@ class TextTranslator:
     def __init__(self, engine, language_to, language_from):
         self.engine = engine
         if engine == 'google':
-            import mtranslate as translator
-            self.try_translate = lambda text: self.translator.translate(text, self.language_to, self.language_from)
-            #from mathtranslate.google import ParallelTranslator
-            #self.translator = ParallelTranslator(language_to, language_from)
-            #self.try_translate = lambda text: self.translator.translate(text)
+            #import mtranslate as translator
+            #self.try_translate = lambda text: self.translator.translate(text, self.language_to, self.language_from)
+            from mathtranslate.google import ParallelTranslator
+            self.translator = ParallelTranslator(language_to, language_from)
+            self.try_translate = lambda text: self.translator.translate(text)
+            self.combined_char_limit = 5000
         elif engine == 'tencent':
             from mathtranslate.tencent import Translator
             self.translator = Translator()
             self.try_translate = lambda text: self.translator.translate(text, self.language_to, self.language_from)
+            self.combined_char_limit = 2000
         else:
             assert False, "engine must be google or tencent"
         self.language_to = language_to
@@ -72,7 +74,7 @@ class LatexTranslator:
             self.threads = None
         else:
             self.threads = threads
-        self.record = True
+        self.stage = None
         self.record_data = {}
 
     def close(self):
@@ -82,11 +84,53 @@ class LatexTranslator:
             self.f_obj.close()
 
     def translate_with_record(self, text):
-        if self.record:
+        if self.stage == 'record':
             self.record_data[text] = None
             return text
-        else:
+        elif self.stage == 'load':
             return self.record_data[text]
+        elif self.stage == 'translate':
+            return self.translator.translate(text)
+        else:
+            raise ValueError("stage must be 'record', 'load' or 'translate'")
+
+    def split_translation_by_record(self, text, standard):
+        words = set(list(standard))
+        lines = ['']
+        for line in text.split('\n'):
+            this_words = set(list(line))
+            if (len(line) < len(words) * 1.5) and (len(line) > len(words) * 0.5) and (len(this_words.intersection(words)) >= len(this_words) * 0.8):
+                lines.append('')
+            else:
+                lines[-1] += line + '\n'
+        return lines
+
+    def translate_record_data(self):
+        sep = 'This is a translation software.'
+        sep_translated = self.translator.translate(sep)
+        sep_length = len(sep) + 4
+        combined_text_all = []
+        texts_to_combine = []
+        length_left = self.translator.combined_char_limit
+        keys = list(self.record_data.keys())
+        for key in keys:
+            if length_left < sep_length + len(key):
+                combined_text_all.append(f'\n\n{sep}\n\n'.join(texts_to_combine))
+                texts_to_combine = [key]
+                length_left = self.translator.combined_char_limit - len(key)
+            else:
+                texts_to_combine.append(key)
+                length_left -= sep_length + len(key)
+        combined_text_all.append(f'\n\n{sep}\n\n'.join(texts_to_combine))
+        translation_results = []
+        for item in tqdm.tqdm(combined_text_all):
+            result = self.translator.translate(item)
+            results = self.split_translation_by_record(result, sep_translated)
+            if len(results) != len(item.split(sep)):
+                raise ValueError()
+            translation_results += results
+        assert len(translation_results) == len(keys)
+        self.record_data = dict(zip(keys, translation_results))
 
     def translate_paragraph_text(self, text):
         '''
@@ -267,16 +311,17 @@ class LatexTranslator:
         self.num = 0
         # tqdm with concurrent.futures.ThreadPoolExecutor()
 
-        self.record = True
+        self.stage = 'record'
         for latex_original_paragraph in latex_original_paragraphs:
             self.translate_paragraph_latex(latex_original_paragraph)
 
-        with concurrent.futures.ThreadPoolExecutor(max_workers=self.threads) as executor:
-            values = list(executor.map(self.translator.translate, self.record_data.keys()))
-            #latex_translated_paragraphs = list(tqdm.auto.tqdm(executor.map(self.worker, latex_original_paragraphs), total=len(latex_original_paragraphs)))
-        self.record_data = dict(zip(self.record_data.keys(), values))
+        #with concurrent.futures.ThreadPoolExecutor(max_workers=self.threads) as executor:
+        #    values = list(executor.map(self.translator.translate, self.record_data.keys()))
+        #    #latex_translated_paragraphs = list(tqdm.auto.tqdm(executor.map(self.worker, latex_original_paragraphs), total=len(latex_original_paragraphs)))
+        #self.record_data = dict(zip(self.record_data.keys(), values))
+        self.translate_record_data()
 
-        self.record = False
+        self.stage = 'load'
         latex_translated_paragraphs = [self.translate_paragraph_latex(latex_original_paragraph) for latex_original_paragraph in latex_original_paragraphs]
 
         latex_translated = '\n\n'.join(latex_translated_paragraphs)
@@ -285,6 +330,7 @@ class LatexTranslator:
 
         # Title is probably outside the body part
         self.num = 'title'
+        self.stage = 'translate'
         latex_translated = process_latex.process_specific_command(latex_translated, self.translate_text_in_paragraph_latex, 'title')
 
         latex_translated = latex_translated.replace('%', '\\%')
