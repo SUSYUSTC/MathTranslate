@@ -64,7 +64,7 @@ class Translator:
             "--disable-gpu",
             "--disable-software-rasterizer",
             "--disable-features=UseOzonePlatform"  # Fix Wayland-related issues
-        ], **opts)
+        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, **opts)
 
         time.sleep(3)  # Wait for Chrome to start
 

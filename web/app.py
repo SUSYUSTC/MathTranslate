@@ -193,7 +193,7 @@ def upload_zip(uid):
     f = open(f"output/{uid}", "w")
     process = subprocess.run(['translate_tex', tex_to_compile, '-o', output_filename,
                     '-from', input_lang, '-to', output_lang], cwd=extract_folder,
-                             stdout=f, stderr=f, text=True, timeout=30)
+                             stdout=f, stderr=f, text=True, timeout=300)
     f.close()
 
     # Run xelatex to generate the PDF with bibtex for references using the translated .tex file
@@ -263,7 +263,7 @@ def upload_translate(uid):
         f = open(f"output/{uid}", "w")
         process = subprocess.run(['translate_tex', filename, '-o', output_filename,
                         '-from', input_lang, '-to', output_lang], cwd=app.config['UPLOAD_FOLDER'],
-                                 stdout=f, stderr=f, text=True, timeout=30)
+                                 stdout=f, stderr=f, text=True, timeout=300)
         f.close()
         # generate pdf
         pdf_filename = output_filename.replace(".tex", ".pdf")
