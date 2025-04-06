@@ -13,6 +13,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'data'  # USE data as working dir
 app.config['ALLOWED_EXTENSIONS'] = {'tex'}
 app.secret_key = "some_secret_key"
+timeout = 600
 
 
 def allowed_file(filename):
@@ -21,6 +22,7 @@ def allowed_file(filename):
 
 def stream_file(uid):
     """Continuously stream the full file content every second."""
+    print('streamed uid', uid)
     while True:
         filename = f"output/{uid}"
         content = open(filename, "r").read().strip()
@@ -66,10 +68,12 @@ def translate_arxiv(uid):
         print(datetime.now(), file=f)
         print(folder_path, file=f)
         print(arxiv_id1, file=f)
+    with open("/home/mtserver/MathTranslate/web/debug", "a") as f:
+        print(arxiv_id1, file=f)
     # Try to generate arxiv_id.zip
     f = open(f"output/{uid}", "w")
     process = subprocess.run(
-        ['translate_arxiv', arxiv_id, '-from', input_lang, '-to', output_lang], cwd=folder_path, stdout=f, stderr=f, text=True, timeout=300)
+        ['translate_arxiv', arxiv_id, '-from', input_lang, '-to', output_lang], cwd=folder_path, stdout=f, stderr=f, text=True, timeout=timeout)
     f.close()
 
     # replace '/'
@@ -193,7 +197,7 @@ def upload_zip(uid):
     f = open(f"output/{uid}", "w")
     process = subprocess.run(['translate_tex', tex_to_compile, '-o', output_filename,
                     '-from', input_lang, '-to', output_lang], cwd=extract_folder,
-                             stdout=f, stderr=f, text=True, timeout=300)
+                             stdout=f, stderr=f, text=True, timeout=timeout)
     f.close()
 
     # Run xelatex to generate the PDF with bibtex for references using the translated .tex file
@@ -263,7 +267,7 @@ def upload_translate(uid):
         f = open(f"output/{uid}", "w")
         process = subprocess.run(['translate_tex', filename, '-o', output_filename,
                         '-from', input_lang, '-to', output_lang], cwd=app.config['UPLOAD_FOLDER'],
-                                 stdout=f, stderr=f, text=True, timeout=300)
+                                 stdout=f, stderr=f, text=True, timeout=timeout)
         f.close()
         # generate pdf
         pdf_filename = output_filename.replace(".tex", ".pdf")
