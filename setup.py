@@ -1,15 +1,22 @@
 import setuptools
 
-from mathtranslate import __version__, __author__
-
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 
+def read_text_file(path):
+    with open(path, encoding="utf-8") as f:
+        return f.read().strip()
+
+
+here = os.path.abspath(os.path.dirname(__file__))
+version = read_text_file(os.path.join(here, "mathtranslate", "version.txt"))
+author = read_text_file(os.path.join(here, "mathtranslate", "author.txt"))
+
 setuptools.setup(
     name="mathtranslate",
-    version=__version__,
-    author=__author__,
+    version=version,
+    author=author,
     author_email="susyustc@gmail.com",
     description="Translate math-heavy papers",
     long_description=long_description,
