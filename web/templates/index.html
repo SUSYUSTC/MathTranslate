@@ -29,6 +29,7 @@
                     {% endwith %}
 
                     <form action="/" method="post" enctype="multipart/form-data" class="mt-4" id="mainForm">
+						<input type="hidden" name="uid" value="{{ uid }}">
                         <div class="language-selection-container" style="color: black;">
                             <div class="language-field">
                                 <label for="inputLanguageCode">Input Language Code:</label>
@@ -68,15 +69,7 @@
                             <input type="text" name="arxiv_id" id="arxiv_id" class="form-control">
                             <span id="error-message" style="color: red;"></span>
                         </div>
-                        <!--<button type="submit" name="translate_arxiv" class="btn btn-primary w-100 mb-3">Translate Arxiv</button> -->
-                        <form action="/submit" method="post">
-                            <!-- Hidden input to include user_id -->
-                            <input type="hidden" name="uid" value="{{ uid }}">
-
-                            <button type="submit" name="translate_arxiv" class="btn btn-primary w-100 mb-3">
-                                Translate Arxiv
-                            </button>
-                        </form>
+						<button type="submit" name="translate_arxiv" class="btn btn-primary w-100 mb-3"> Translate Arxiv </button>
                         <!-- <div class="mb-3">
                             <button type="submit" name="generate_pdf_from_arxiv" id="generate-pdf-btn"
                                 class="btn btn-warning w-100 mb-3">Generate PDF from Arxiv ID</button>
@@ -105,8 +98,7 @@
                                 }
                             </script>
                         </div>
-                        <button type="submit" name="upload_translate" class="btn btn-success w-100 mb-3">Upload and
-                            Translate</button>
+						<button type="submit" name="upload_translate" class="btn btn-success w-100 mb-3">Upload and Translate</button>
                         <!-- <button type="submit" name="upload_translate_to_pdf" class="btn btn-info w-100">Upload and
                             Translate to PDF</button> -->
 
@@ -133,11 +125,7 @@
                                 }
                             </script>
                         </div>
-                        <button type="submit" name="upload_zip" class="btn btn-info w-100 mb-3">Upload ZIP and Generate
-                            PDF</button>
-
-
-
+                        <button type="submit" name="upload_zip" class="btn btn-info w-100 mb-3">Upload ZIP and Generate PDF</button>
 
                     </form>
                     {% if has_zip %}
