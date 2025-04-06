@@ -1,6 +1,13 @@
-__version__ = "3.1.2"
-__author__ = "MathTranslate developers"
 import os
+import os
+
+def _read_file(filename):
+    here = os.path.abspath(os.path.dirname(__file__))
+    with open(os.path.join(here, filename), encoding="utf-8") as f:
+        return f.read().strip()
+
+__version__ = _read_file("version.txt")
+__author__ = _read_file("author.txt")
 import appdata
 app_paths = appdata.AppDataPaths('mathtranslate')
 app_dir = app_paths.app_data_path
