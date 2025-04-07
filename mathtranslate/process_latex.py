@@ -120,15 +120,17 @@ def replace_latex_objects(text, brace=True, command_simple=True):
     # You need to make sure that the input does not contain {math_code}
     # define regular expressions for each LaTeX object
     patterns_mularg_command = [get_pattern_command_full(name, n) for name, n, index in config.mularg_command_list]
-    latex_obj_regex = [
+    patterns_math = [
         r"\$\$(.*?)\$\$",  # $$ $$
         r"\$(.*?)\$",  # $ $
         r"\\\[(.*?)\\\]",  # \[ xxx \]
         r"\\\((.*?)\\\)",  # \( xxx \)
+    ]
+    latex_obj_regex = [
         pattern_env,  # \begin{xxx} \end{xxx}
         pattern_set1,
         pattern_set2,
-    ] + patterns_mularg_command + [pattern_command_full]  # \xxx[xxx]{xxx}
+    ] + patterns_mularg_command + [pattern_command_full] + patterns_math  # \xxx[xxx]{xxx}
     if brace:
         latex_obj_regex.append(pattern_brace)
     if command_simple:
