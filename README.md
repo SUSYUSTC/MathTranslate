@@ -14,7 +14,7 @@
     <img src="https://img.shields.io/badge/GUI-v3.1.0-red.svg?logo=appsignal"/>
   </a>
   <!-- WebServer -->
-  <a href="http://mathtranslate.xyz">
+  <a href="http://mathtranslate.online">
     <img src="https://img.shields.io/badge/Webserver-v3.1.0-8A2BE2.svg?logo=semanticweb"/>
   </a>
 </p>
@@ -25,7 +25,9 @@
   </a>
 </p>
 
-<p align="center"> <a href="http://mathtranslate.xyz"> Online translation website </a></p>
+<p align="center"> <a href="http://mathtranslate.online"> Online translation website </a></p>
+
+Notice: website moved from mathtranslate.xyz to mathtranslate.online starting from 09/26/2025
 
 This is a project to translate LaTeX documents, especially scientific papers, from any language to any language. LaTeX expressions like math expressions are perfectly kept unchanged. LaTeX documents can finally be compiled into PDF files. Especially it can be directly applied to translate arXiv papers since it provides the LaTeX source code of most of the papers.
 
@@ -46,7 +48,7 @@ If you want to translate an arXiv paper you can directly use our tool, which pro
 
 There are two main ways to use our tool:
 
-1. 📄 [Web Server](http://mathtranslate.xyz) (recommended for beginners, use the google translation backend)
+1. 📄 [Web Server](http://mathtranslate.online) (recommended for beginners, use the google translation backend)
 2. 🏗️ Command-line usage: [English version](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.md) [中文版](https://github.com/SUSYUSTC/MathTranslate/tree/main/mathtranslate/command_line.zh.md) (for advanced usage)
 
 
